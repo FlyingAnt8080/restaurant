@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzy.liujing.restaurant.dao.SysUserDao">
+    <sql id="fields">
+        user_id,
+        login_code,
+        password,
+        name,
+        phone,
+        email,
+        gender,
+        birthday,
+        id_number,
+        address,
+        create_time,
+        modify_time
+    </sql>
+    <select id="findAll" resultType="com.lzy.liujing.restaurant.entity.SysUser">
+        SELECT
+        <include refid="fields"/>
+        FROM sys_user WHERE del = 0
+    </select>
+
+    <select id="findByLoginCode" parameterType="com.lzy.liujing.restaurant.entity.SysUser" resultType="com.lzy.liujing.restaurant.entity.SysUser">
+        SELECT
+        <include refid="fields"/>
+        FROM sys_user
+        WHERE login_code = #{loginCode} AND del = 0
+    </select>
+</mapper>

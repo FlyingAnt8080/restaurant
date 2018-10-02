@@ -1,0 +1,40 @@
+spring:
+  #数据源配置
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: 1
+    url: jdbc:mysql://127.0.0.1:3306/restaurant?useUnicode=true&characterEncoding=utf-8
+    hikari:
+      read-only: false
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 60
+      minimum-idle: 10
+#配置日志
+logging:
+  level:
+    root: info
+    ied.smbms: debug
+#配置mybatis
+mybatis:
+#配置驼峰命名转换
+  configuration:
+    map-underscore-to-camel-case: true
+  #配置mapping文件路径
+  mapper-locations: classpath:/mappings/**/*.xml
+  type-aliases-package: tk.mybatis.springboot.model
+
+#mapper插件配置
+mapper:
+    mappers:
+        - tk.mybatis.mapper.common.Mapper
+    mapper.not-empty: false
+    mapper.identity: MYSQL
+#pageHelper配置
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql

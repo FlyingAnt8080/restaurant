@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+		<meta charset="utf-8"/>
+		<title>餐厅点餐系统</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" th:href="@{/layui/css/layui.css}" href="../../static/layui/css/layui.css"/>
+		<link rel="stylesheet" th:href="@{/css/login.css}" href="../../static/css/login.css"/>
+	</head>
+	<body>
+		<div class="layui-carousel video_mask" id="login_carousel">
+			<div carousel-item>
+				<div class="carousel_div1"></div>
+				<div class="carousel_div2"></div>
+				<div class="carousel_div3"></div>
+			</div>
+			<div class="login layui-anim layui-anim-up">
+				<fieldset class="layui-elem-field layui-field-title">
+					<legend class="text-white">餐厅点餐系统</legend>
+				</fieldset>
+				<div class="layui-form" action="" method="post">
+					<div class="layui-form-item">
+						<input type="text" id="loginCode" lay-verify="required|loginCode" maxlength="20" placeholder="请输入账号" autocomplete="off" autofocus="autofocus" class="layui-input"/>
+					</div>
+					<div class="layui-form-item">
+						<input type="password" id="password" lay-verify="required" maxlength="20" placeholder="请输入密码" autocomplete="off" class="layui-input"/>
+					</div>
+					<!--<div class="layui-form-item form_code">
+						<input type="text" id="code" lay-verify="required|code" maxlength="6" placeholder="请输入验证码" autocomplete="off" class="layui-input">
+						<div class="code"><img id="refCode_login_img" width="118" height="38"></div>
+					</div>-->
+					<button class="login_btn layui-btn layui-btn-radius layui-btn-normal" lay-submit lay-filter="login">登录</button>
+					<strong class="text-white">忘记密码？ <a href="#" onclick="alert('请联系经理')" style="color: cornflowerblue;" id="#a">找回密码&raquo;</a></strong>
+				</div>
+				<hr class="layui-bg-gray"/>
+				<div class="layui-footer text-white">
+					<!-- 底部固定区域 -->
+					&copy;2018-2019 泸职院版权所有
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" th:src="@{/js/jquery.min.js}"  src="../../static/js/jquery.min.js"></script>
+		<script type="text/javascript" th:src="@{/layui/layui.all.js}"  src="../../static/layui/layui.all.js"></script>
+		<script type="text/javascript" th:src="@{/js/login.js}"  src="../../static/js/login.js"></script>
+	</body>
+</html>
