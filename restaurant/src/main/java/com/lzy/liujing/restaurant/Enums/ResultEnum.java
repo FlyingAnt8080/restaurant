@@ -10,8 +10,9 @@ package com.lzy.liujing.restaurant.Enums;
 public enum ResultEnum {
     UNKNOWN_ERROR(-1,"未知错误!"),
     SUCCESS(200,"成功!"),
-    USER_NO_FOUND(101,"用户未找到!"),
-    PWD_ERROR(101,"密码错误!");
+    USER_NO_FOUND(101,"账号未找到!"),
+    PWD_ERROR(101,"密码错误!"),
+    FIELD_VALIDATION_FAILS(202,"验证失败");
     private Integer code;
     private String msg;
 

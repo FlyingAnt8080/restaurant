@@ -51,7 +51,10 @@ public class SysUser extends BaseBean{
      * 家庭住址
      */
     private String address;
-
+    /**
+     * 用户角色
+     */
+    public SysRole role;
 
     public Long getUserId() {
         return userId;
@@ -134,6 +137,13 @@ public class SysUser extends BaseBean{
         this.address = address;
     }
 
+    public SysRole getRole() {
+        return role;
+    }
+
+    public void setRole(SysRole role) {
+        this.role = role;
+    }
 
     @Override
     public String toString() {
@@ -148,6 +158,7 @@ public class SysUser extends BaseBean{
                 ", birthday=" + birthday +
                 ", idNumber='" + idNumber + '\'' +
                 ", address='" + address + '\'' +
+                ", role=" + role +
                 '}';
     }
 }

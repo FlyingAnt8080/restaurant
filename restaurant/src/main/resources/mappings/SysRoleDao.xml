@@ -3,5 +3,14 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lzy.liujing.restaurant.dao.SysRoleDao">
-
+    <sql id="join">
+        INNER JOIN sys_user_role as ur on r.role_id = ur.role_id
+        INNER JOIN sys_user as u on u.user_id = ur.user_id
+    </sql>
+    <select id="findRoleNamesByUser" parameterType="com.lzy.liujing.restaurant.entity.SysUser" resultType="String">
+        select r.role_name
+        from sys_role as r
+        <include refid="join"/>
+        where u.user_id = #{userId} and u.del = 0
+    </select>
 </mapper>

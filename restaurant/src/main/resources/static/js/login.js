@@ -27,7 +27,7 @@
 	//监听提交  
 	form.on("submit(login)", function() {
 		$.ajax({
-			url: "/sysuser/login.do",
+			url: "/restaurant/sysuser/login.do",
 			type: "post",
             dataType: "JSON",
 			data: {
@@ -36,7 +36,7 @@
 			},
 			success: function(result) {
 				if(result.code == 200) {
-					location = "admin.html";
+					location = "/restaurant/sysuser/admin.html";
 				} else {
 					$("#password").val("");
 					layer.alert(result.msg, {

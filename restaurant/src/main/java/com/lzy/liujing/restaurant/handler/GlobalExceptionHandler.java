@@ -2,8 +2,10 @@ package com.lzy.liujing.restaurant.handler;
 
 import com.lzy.liujing.restaurant.Enums.ResultEnum;
 import com.lzy.liujing.restaurant.entity.Result;
+import com.lzy.liujing.restaurant.exception.CustomAuthenticationException;
 import com.lzy.liujing.restaurant.exception.SysUserImplException;
 import com.lzy.liujing.restaurant.utils.ResultUtil;
+import org.apache.shiro.authc.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -28,6 +30,9 @@ public class GlobalExceptionHandler {
         if(e instanceof SysUserImplException){
             SysUserImplException sysUserImplException = (SysUserImplException) e;
             return ResultUtil.error(sysUserImplException.getCode(),sysUserImplException.getMessage());
+        }else if(e instanceof CustomAuthenticationException){
+            CustomAuthenticationException customAuthenticationException = (CustomAuthenticationException) e;
+            return ResultUtil.error(customAuthenticationException.getCode(),customAuthenticationException.getMessage());
         }else{
             logger.info("[系统错误]={}",e);
             return ResultUtil.error(ResultEnum.UNKNOWN_ERROR.getCode(),ResultEnum.UNKNOWN_ERROR.getMsg());

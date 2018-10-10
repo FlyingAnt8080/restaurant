@@ -16,5 +16,19 @@ public interface SysUserDao extends tk.mybatis.mapper.common.Mapper<SysUser>{
      * 根据账号查询
      * @return
      */
-    SysUser findByLoginCode(SysUser sysUser);
+    SysUser findByLoginCode(String loginCode);
+
+    /**
+     * 修改删除
+     * @param sysUser
+     * @return
+     */
+    int update(SysUser sysUser);
+
+    /**
+     * 插入用
+     * @param sysUser
+     * @return
+     */
+    int insert(SysUser sysUser);
 }

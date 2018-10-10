@@ -3,30 +3,90 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lzy.liujing.restaurant.dao.SysUserDao">
-    <sql id="fields">
-        user_id,
-        login_code,
-        password,
-        name,
-        phone,
-        email,
-        gender,
-        birthday,
-        id_number,
-        address,
-        create_time,
-        modify_time
+    <sql id="join">
+        INNER JOIN sys_user_role as ur on u.user_id = ur.user_id
+        INNER JOIN sys_role as r on r.role_id = ur.role_id
     </sql>
-    <select id="findAll" resultType="com.lzy.liujing.restaurant.entity.SysUser">
-        SELECT
-        <include refid="fields"/>
-        FROM sys_user WHERE del = 0
+    <resultMap id="sysUserResultMap" type="com.lzy.liujing.restaurant.entity.SysUser">
+        <id column="user_id" property="userId"/>
+        <result column="login_code" property="loginCode"/>
+        <result column="password" property="password"/>
+        <result column="name" property="name"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="gender" property="gender"/>
+        <result column="birthday" property="birthday"/>
+        <result column="id_number" property="idNumber"/>
+        <result column="address" property="address"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+       <association property="role" javaType="com.lzy.liujing.restaurant.entity.SysRole">
+            <id property="roleId" column="role_id"/>
+            <result property="roleName"  column="role_name"/>
+        </association>
+    </resultMap>
+
+    <select id="findAll" resultMap="sysUserResultMap">
+      SELECT *
+      FROM  sys_user as u
+      <include refid="join"/>
+      WHERE u.del = 0
     </select>
 
-    <select id="findByLoginCode" parameterType="com.lzy.liujing.restaurant.entity.SysUser" resultType="com.lzy.liujing.restaurant.entity.SysUser">
-        SELECT
-        <include refid="fields"/>
-        FROM sys_user
-        WHERE login_code = #{loginCode} AND del = 0
-    </select>
+     <select id="findByLoginCode" parameterType="String" resultMap="sysUserResultMap">
+      SELECT *
+      FROM sys_user as u
+      <include refid="join"/>
+      WHERE login_code = #{loginCode} AND u.del = 0
+  </select>
+
+  <insert id="insert" parameterType="com.lzy.liujing.restaurant.entity.SysUser">
+      INSERT INTO sys_user(login_code,password,name,phone,email,gender,birthday,id_number,address,create_time)
+      VALUE (#{loginCode},#{password},#{name},#{phone},#{email},#{gender},#{birthday},#{idNumber},
+      #{address},#{createTime})
+  </insert>
+
+  <update id="update" parameterType="com.lzy.liujing.restaurant.entity.SysUser">
+      UPDATE FROM sys_user
+      <include refid="setFields"/>
+      WHERE user_id = #{userId} AND del = 0
+  </update>
+
+  <sql id="setFields">
+    <set>
+        <if test="loginCode!=null">
+          login_code = #{loginCode},
+        </if>
+        <if test="password!=null">
+            password = #{password},
+        </if>
+        <if test="name!=null">
+            name = #{name},
+        </if>
+        <if test="phone!=null">
+            phone = #{phone},
+        </if>
+        <if test="email!=null">
+            email = #{email},
+        </if>
+        <if test="gender!=null">
+            gender = #{gender},
+        </if>
+        <if test="birthday!=null">
+            birthday = #{birthday},
+        </if>
+        <if test="idNumber!=null">
+            id_number = #{idNumber},
+        </if>
+        <if test="address!=null">
+            address = #{address},
+        </if>
+        <if test="createTime!=null">
+            createTime = #{createTime},
+        </if>
+        <if test="updateTime!=null">
+            update_time = #{updateTime},
+        </if>
+    </set>
+  </sql>
 </mapper>

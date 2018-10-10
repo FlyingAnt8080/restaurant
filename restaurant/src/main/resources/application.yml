@@ -1,3 +1,4 @@
+
 spring:
   #数据源配置
   datasource:
@@ -12,16 +13,22 @@ spring:
       max-lifetime: 1800000
       maximum-pool-size: 60
       minimum-idle: 10
-#配置日志
+  #去掉theymeleaf的HTML5效验
+  thymeleaf:
+    cache: false
+    mode: LEGACYHTML5
+
+#配置日志信息
 logging:
   level:
     root: info
-    ied.smbms: debug
+    com.lzy.liujing.restaurant: debug
+
 #配置mybatis
 mybatis:
 #配置驼峰命名转换
   configuration:
-    map-underscore-to-camel-case: true
+     map-underscore-to-camel-case: true
   #配置mapping文件路径
   mapper-locations: classpath:/mappings/**/*.xml
   type-aliases-package: tk.mybatis.springboot.model
@@ -38,3 +45,8 @@ pagehelper:
     reasonable: true
     supportMethodsArguments: true
     params: count=countSql
+#配置项目访问端口和地址
+server:
+  port: 8080
+  servlet:
+    context-path: /restaurant

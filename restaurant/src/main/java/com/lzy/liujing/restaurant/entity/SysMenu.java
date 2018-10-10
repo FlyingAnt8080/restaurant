@@ -1,5 +1,10 @@
 package com.lzy.liujing.restaurant.entity;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public class SysMenu extends BaseBean{
     /**
      * 功能菜单id
@@ -41,8 +46,14 @@ public class SysMenu extends BaseBean{
      * 菜单描述
      */
     private String description;
-
-
+    /**
+     * 查询条件
+     */
+    private Map<String,Object> condition;
+    /**
+     * 子菜单
+     */
+    private List<SysMenu> childMenus;
     public Long getMenuId() {
         return menuId;
     }
@@ -123,6 +134,25 @@ public class SysMenu extends BaseBean{
         this.description = description;
     }
 
+    public Map<String, Object> getCondition() {
+        if(condition==null){
+            condition = new HashMap<String,Object>();
+        }
+        return condition;
+    }
+
+    public void setCondition(Map<String, Object> condition) {
+        this.condition = condition;
+    }
+
+    public List<SysMenu> getChildMenus() {
+        return childMenus;
+    }
+
+    public void setChildMenus(List<SysMenu> childMenus) {
+        this.childMenus = childMenus;
+    }
+
     @Override
     public String toString() {
         return "SysMenu{" +
@@ -136,6 +166,7 @@ public class SysMenu extends BaseBean{
                 ", menuIcon='" + menuIcon + '\'' +
                 ", weight=" + weight +
                 ", description='" + description + '\'' +
+                ", condition=" + condition +
                 '}';
     }
 }

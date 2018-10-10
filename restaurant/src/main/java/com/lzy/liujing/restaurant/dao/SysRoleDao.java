@@ -1,7 +1,10 @@
 package com.lzy.liujing.restaurant.dao;
 
 import com.lzy.liujing.restaurant.entity.SysRole;
+import com.lzy.liujing.restaurant.entity.SysUser;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.Set;
 
 /**
  * Created with IDEA
@@ -11,6 +14,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface SysRoleDao extends tk.mybatis.mapper.common.Mapper<SysRole>{
-
+    Set<String> findRoleNamesByUser(SysUser sysUser);
 }
 
