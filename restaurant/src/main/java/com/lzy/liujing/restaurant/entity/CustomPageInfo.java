@@ -14,7 +14,7 @@ import java.util.Map;
  * 分页查询类
  */
 
-public class Page<T> extends PageInfo<T> {
+public class CustomPageInfo<T> extends PageInfo<T> {
     /**
      * 用于储存实体
      */
@@ -27,14 +27,18 @@ public class Page<T> extends PageInfo<T> {
      * 条件
      */
     private Map<String,Object> condition;
+    public CustomPageInfo(){
 
+    }
     public T getT() {
         return t;
     }
-    public Page(T t){
+
+    public CustomPageInfo(T t){
         this.t = t;
     }
-    public Page(List<T> list){
+
+    public CustomPageInfo(List<T> list){
         super(list);
     }
 

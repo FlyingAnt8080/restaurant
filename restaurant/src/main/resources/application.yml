@@ -13,11 +13,13 @@ spring:
       max-lifetime: 1800000
       maximum-pool-size: 60
       minimum-idle: 10
+  transaction:
+    rollback-on-commit-failure: true
   #去掉theymeleaf的HTML5效验
   thymeleaf:
     cache: false
     mode: LEGACYHTML5
-
+  jackson: time-zone=GMT+8
 #配置日志信息
 logging:
   level:

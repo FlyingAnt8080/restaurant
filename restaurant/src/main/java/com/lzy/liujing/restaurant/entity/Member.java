@@ -1,9 +1,7 @@
 package com.lzy.liujing.restaurant.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
@@ -19,10 +17,6 @@ public class Member extends BaseBean {
      */
     private Long memberId;
     /**
-     * 微信小程序openId
-     */
-    private String openId;
-    /**
      * 会员号
      */
     private String memberCode;
@@ -34,19 +28,18 @@ public class Member extends BaseBean {
      * 性别
      */
     private String gender;
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+
     /**
      * 生日
      */
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")//用于返回json数据时格式化日期
+    @DateTimeFormat(pattern = "yyyy-MM-dd")//用接口传入String类型时间转换成date类型
     private Date birthday;
     /**
      * 电话号
      */
     private String phone;
-    /**
-     * 邮箱
-     */
-    private String email;
+
     /**
      * 会员类型
      */
@@ -62,15 +55,6 @@ public class Member extends BaseBean {
 
     public void setMemberId(Long memberId) {
         this.memberId = memberId;
-    }
-
-    public String getOpenId() {
-        return openId;
-    }
-
-
-    public void setOpenId(String openId) {
-        this.openId = openId;
     }
 
     public String getMemberCode() {
@@ -113,14 +97,6 @@ public class Member extends BaseBean {
         this.phone = phone;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public Double getTotalMoney() {
         return totalMoney;
     }
@@ -141,13 +117,11 @@ public class Member extends BaseBean {
     public String toString() {
         return "Member{" +
                 "memberId=" + memberId +
-                ", openId='" + openId + '\'' +
                 ", memberCode='" + memberCode + '\'' +
                 ", name='" + name + '\'' +
                 ", gender='" + gender + '\'' +
                 ", birthday=" + birthday +
                 ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
                 ", memberCategory=" + memberCategory +
                 ", totalMoney=" + totalMoney +
                 '}';

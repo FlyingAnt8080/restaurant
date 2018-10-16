@@ -22,7 +22,7 @@ public class SysUserDaoTest {
     private SysUserDao sysUserDao;
     @Test
     public void findAll() {
-        System.out.println(sysUserDao.findAll());
+        //System.out.println(sysUserDao.findAll());
     }
 
     @Test

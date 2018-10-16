@@ -3,6 +3,7 @@ package com.lzy.liujing.restaurant.handler;
 import com.lzy.liujing.restaurant.Enums.ResultEnum;
 import com.lzy.liujing.restaurant.entity.Result;
 import com.lzy.liujing.restaurant.exception.CustomAuthenticationException;
+import com.lzy.liujing.restaurant.exception.CustomException;
 import com.lzy.liujing.restaurant.exception.SysUserImplException;
 import com.lzy.liujing.restaurant.utils.ResultUtil;
 import org.apache.shiro.authc.AuthenticationException;
@@ -33,6 +34,9 @@ public class GlobalExceptionHandler {
         }else if(e instanceof CustomAuthenticationException){
             CustomAuthenticationException customAuthenticationException = (CustomAuthenticationException) e;
             return ResultUtil.error(customAuthenticationException.getCode(),customAuthenticationException.getMessage());
+        }else if(e instanceof CustomException){
+            CustomException exception = (CustomException) e;
+            return ResultUtil.error(exception.getCode(),exception.getMessage());
         }else{
             logger.info("[系统错误]={}",e);
             return ResultUtil.error(ResultEnum.UNKNOWN_ERROR.getCode(),ResultEnum.UNKNOWN_ERROR.getMsg());

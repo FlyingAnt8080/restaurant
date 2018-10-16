@@ -1,8 +1,10 @@
 package com.lzy.liujing.restaurant.dao;
 
-import com.lzy.liujing.restaurant.entity.Category;
+
 import com.lzy.liujing.restaurant.entity.Member;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * Created with IDEA
@@ -12,5 +14,10 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface MemberDao extends tk.mybatis.mapper.common.Mapper<Member>{
-
+    List<Member> findPage(Member condition);
+    Member searchByPhone(Member member);
+    Member searchByMemberCode(Member member);
+    int insert(Member member);
+    int deleteByIds(List<Long> idList);
+    int update(Member member);
 }

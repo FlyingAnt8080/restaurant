@@ -8,7 +8,7 @@ public class Result<T>{
     private Integer code;
     private String msg;
     private T data;
-    private Integer count;
+    private Long count;
 
     public Integer getCode() {
         return code;
@@ -34,11 +34,11 @@ public class Result<T>{
         this.data = data;
     }
 
-    public Integer getCount() {
+    public Long getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(Long count) {
         this.count = count;
     }
 

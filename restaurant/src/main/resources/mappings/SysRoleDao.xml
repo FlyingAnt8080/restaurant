@@ -13,4 +13,8 @@
         <include refid="join"/>
         where u.user_id = #{userId} and u.del = 0
     </select>
+    <select id="findAll" resultType="com.lzy.liujing.restaurant.entity.SysRole">
+        select * from sys_role
+        where del=0
+    </select>
 </mapper>

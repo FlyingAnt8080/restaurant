@@ -4,17 +4,17 @@ public class SysRole extends BaseBean{
     /**
      * 角色id
      */
-    private Long roleId;
+    private Integer roleId;
     /**
      * 角色名
      */
     private String roleName;
 
-    public Long getRoleId() {
+    public Integer getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Long roleId) {
+    public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
 

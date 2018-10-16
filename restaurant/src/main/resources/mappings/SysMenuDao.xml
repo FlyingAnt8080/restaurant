@@ -28,6 +28,7 @@
                     #{item}
                 </foreach>
             </if>
+            and m.del = 0
         </where>
     </sql>
     <select id="findById" parameterType="Long" resultType="com.lzy.liujing.restaurant.entity.SysMenu">

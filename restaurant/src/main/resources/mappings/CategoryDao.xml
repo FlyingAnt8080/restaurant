@@ -2,6 +2,53 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lzy.liujing.restaurant.dao.CategoryDao">
+<mapper namespace="com.lzy.liujing.restaurant.dao.GoodsCategoryDao">
+    <sql id="set">
+        <set>
+            <if test="categoryId!=null">
+                category_id = #{categoryId},
+            </if>
+            <if test="categoryName!=null">
+                category_name = #{categoryName},
+            </if>
+        </set>
+    </sql>
 
+    <select id="findAll" resultType="com.lzy.liujing.restaurant.entity.GoodsCategory">
+        select * from r_category
+        where del = 0
+    </select>
+
+    <select id="findById" parameterType="Long" resultType="com.lzy.liujing.restaurant.entity.GoodsCategory">
+        select * from r_category
+        where category_id = #{categoryId} and  del = 0
+    </select>
+
+    <select id="findByCategoryName" parameterType="com.lzy.liujing.restaurant.entity.GoodsCategory" resultType="com.lzy.liujing.restaurant.entity.GoodsCategory">
+        select * from r_category
+        where category_name = #{categoryName}
+        <if test="mcId!=null">
+            and category_id != #{categoryId}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.lzy.liujing.restaurant.entity.GoodsCategory">
+        insert into r_category
+        <include refid="set"/>
+    </insert>
+
+    <update id="update" parameterType="com.lzy.liujing.restaurant.entity.GoodsCategory">
+        update r_category
+        <include refid="set"/>
+        where category_id = #{categoryId} and del = 0
+    </update>
+
+    <update id="deleteByIds" parameterType="java.util.List">
+        update r_category
+        set del = 1
+        where category_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
 </mapper>

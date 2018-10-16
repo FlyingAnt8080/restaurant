@@ -1,7 +1,7 @@
 package com.lzy.liujing.restaurant.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
+import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -42,6 +42,7 @@ public class SysUser extends BaseBean{
      * 生日
      */
     @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthday;
     /**
      * 身份证号
@@ -136,6 +137,8 @@ public class SysUser extends BaseBean{
     public void setAddress(String address) {
         this.address = address;
     }
+
+
 
     public SysRole getRole() {
         return role;

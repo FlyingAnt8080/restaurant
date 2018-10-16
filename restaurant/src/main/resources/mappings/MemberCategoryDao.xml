@@ -3,5 +3,61 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lzy.liujing.restaurant.dao.MemberCategoryDao">
+    <sql id="set">
+        <set>
+            <if test="mcName!=null">
+                mc_name = #{mcName},
+            </if>
+            <if test="discount!=null">
+                discount = #{discount},
+            </if>
+            <if test="amount!=null">
+                amount = #{amount},
+            </if>
+            <if test="createTime!=null">
+                create_time = #{createTime},
+            </if>
+            <if test="modifyTime!=null">
+                modify_time = #{ modifyTime},
+            </if>
+        </set>
+    </sql>
 
+    <select id="findAll" resultType="com.lzy.liujing.restaurant.entity.MemberCategory">
+        select * from r_merber_category
+        where del = 0
+    </select>
+
+    <select id="findById" parameterType="Long" resultType="com.lzy.liujing.restaurant.entity.MemberCategory">
+        select * from r_merber_category
+        where mc_id = #{mcId} and  del = 0
+    </select>
+
+    <select id="findByMcName" parameterType="com.lzy.liujing.restaurant.entity.MemberCategory" resultType="com.lzy.liujing.restaurant.entity.MemberCategory">
+        select * from r_merber_category
+        where mc_name = #{mcName}
+        <if test="mcId!=null">
+            and mc_id != #{mcId}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.lzy.liujing.restaurant.entity.MemberCategory">
+        insert into r_merber_category
+        <include refid="set"/>
+    </insert>
+
+    <update id="update" parameterType="com.lzy.liujing.restaurant.entity.MemberCategory">
+        update r_merber_category
+        <include refid="set"/>
+        where mc_id =#{mcId} and del = 0
+    </update>
+
+    <update id="deleteByIds" parameterType="java.util.List">
+        update r_merber_category
+        set del = 1
+        where mc_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
 </mapper>

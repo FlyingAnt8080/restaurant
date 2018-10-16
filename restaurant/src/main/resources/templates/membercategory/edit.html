@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加会员类型</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" href="../../static/layui/css/layui.css"
+          media="all"/>
+    <style>
+        body{
+            margin: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = function(){
+            var discount = document.getElementById("discount");
+            var btnMinus = document.getElementById("btn_minus");
+            var btnPlus = document.getElementById("btn_plus");
+            btnMinus.onclick = function (){
+                var num = parseFloat(discount.value);
+                if(num>0.0){
+                    discount.value = (num-0.01).toFixed(2);
+                }
+            }
+            btnPlus.onclick = function (){
+                var num = parseFloat(discount.value);
+                if(num<1){
+                    discount.value = (num+0.01).toFixed(2);
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form layui-form-pane" action="" lay-filter="component-form-element">
+            <div class="layui-form-item">
+                <div class="layui-input-inline layui-hide">
+                    <input type="text" name="mcId" th:value="${memberCategory.mcId}" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">类型名称</label>
+                    <div class="layui-inline">
+                        <input type="text" th:value="${memberCategory.mcName}" name="mcName" lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">享有折扣</label>
+                    <div class="layui-inline">
+                        <div class="layui-btn-group">
+                            <a class="layui-btn" id="btn_minus">
+                                <i class="layui-icon">&#xe603;</i>
+                            </a>
+                            <input class="layui-btn layui-btn-primary" type="text" th:value="${memberCategory.discount}" id="discount" name="discount" style="width:72px">
+                            <a class="layui-btn" id="btn_plus">
+                                <i class="layui-icon">&#xe602;</i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">消费条件</label>
+                    <div class="layui-inline">
+                        <input type="text" th:value="${memberCategory.amount}" name="amount" lay-verify="required|number|positive_number" placeholder="" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <div class="layui-form-item layui-hide">
+                        <input type="button" lay-submit lay-filter="LAY-user-front-submit" id="LAY-user-front-submit" value="确认">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+<script th:src="@{/layuiadmin/layui/layui.js}" src="../../static/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.use(['form','slider',"layer"], function(){
+        var $ = layui.$
+            ,form = layui.form
+            ,slider = layui.slider;
+
+        //获取from表单提交事件
+        //此处submit中的值是lay-filter
+        form.on('submit(component-form-element)', function(data){
+        });
+        //自定义验证
+        form.verify({
+            //验证正数
+            positive_number:function (value,item) {
+                if(parseFloat(value)<0){
+                    return '金额不能为负';
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

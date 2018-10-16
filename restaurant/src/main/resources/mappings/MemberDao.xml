@@ -3,5 +3,153 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lzy.liujing.restaurant.dao.MemberDao">
+    <sql id="join">
+        inner join r_merber_category as b on a.mc_id = b.mc_id
+    </sql>
+    <sql id="where">
+        <where>
+            <if test="memberId!=null and memberId!=''">
+                a.member_id = #{memberId} and
+            </if>
+            <if test="memberCode!=null and memberCode!=''">
+                a.member_code = #{memberCode} and
+            </if>
+            <if test="name!=null and name!=''">
+                a.name like '%${name}%' and
+            </if>
+            <if test="birthday!=null">
+                a.birthday = #{birthday} and
+            </if>
+            <if test="gender!=null and gender!=''">
+                a.gender = #{gender} and
+            </if>
+            <if test="phone!=null and phone!=''">
+                a.phone = #{phone} and
+            </if>
+            <if test="memberCategory!=null">
+                <if test="memberCategory.mcId!=null and memberCategory.mcId!=''">
+                    b.mc_id = #{memberCategory.mcId} and
+                </if>
+            </if>
+            a.del =0
+        </where>
+    </sql>
+    <sql id="set2">
+        <set>
+            <if test="memberCode!=null and memberCode!=''">
+                member_code = #{memberCode},
+            </if>
+            <if test="name!=null and name!=''">
+                name =#{name},
+            </if>
+            <if test="gender!=null and gender!=''">
+                gender = #{gender},
+            </if>
+            <if test="birthday!=null">
+                birthday = #{birthday},
+            </if>
+            <if test="memberCategory!=null">
+                <if test="memberCategory.mcId!=null and memberCategory.mcId!=''">
+                    mc_id = #{memberCategory.mcId},
+                </if>
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone = #{phone},
+            </if>
+            <if test="phone!=null and phone!=''">
+                create_time = #{createTime},
+            </if>
+        </set>
+    </sql>
+    <sql id="set">
+        <set>
+            <if test="memberCode!=null and memberCode!=''">
+                a.member_code = #{memberCode},
+            </if>
+            <if test="name!=null and name!=''">
+                a.name =#{name},
+            </if>
+            <if test="gender!=null and gender!=''">
+                a.gender = #{gender},
+            </if>
+            <if test="birthday!=null">
+                a.birthday = #{birthday},
+            </if>
+            <if test="phone!=null and phone!=''">
+                a.phone = #{phone},
+            </if>
+            <if test="createTime!=null">
+                a.create_time = #{createTime},
+            </if>
+            <if test="memberCategory!=null">
+                <if test="memberCategory.mcId!=null and memberCategory.mcId!=''">
+                    a.mc_id = #{memberCategory.mcId},
+                </if>
+            </if>
+            <if test="modifyTime!=null">
+                a.modify_time = #{modifyTime},
+            </if>
+        </set>
+    </sql>
+    <resultMap id="memberResultMap" type="com.lzy.liujing.restaurant.entity.Member">
+        <id column="member_id" property="memberId"/>
+        <result column="member_code" property="memberCode"/>
+        <result column="name" property="name"/>
+        <result column="gender" property="gender"/>
+        <result column="birthday" property="birthday"/>
+        <result column="phone" property="phone"/>
+        <result column="total_money" property="totalMoney"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="a.del" property="del"/>
+        <association property="memberCategory" javaType="com.lzy.liujing.restaurant.entity.MemberCategory">
+            <id column="mc_id" property="mcId"/>
+            <result column="mc_name" property="mcName"/>
+            <result column="discount" property="discount"/>
+            <result column="amount" property="amount"/>
+            <result column="create_time" property="createTime"/>
+            <result column=" modify_time" property="modifyTime"/>
+            <result column="b.del" property="del"/>
+        </association>
+    </resultMap>
+    <select id="findPage" parameterType="com.lzy.liujing.restaurant.entity.Member" resultMap="memberResultMap">
+        select * from r_member as a
+        <include refid="join"/>
+        <include refid="where"/>
+    </select>
 
+    <select id="searchByPhone" parameterType="com.lzy.liujing.restaurant.entity.Member" resultMap="memberResultMap">
+        select * from r_member as a
+        <include refid="join"/>
+         where a.phone = #{phone}
+         <if test="memberId!=null and memberId!=''">
+             and a.member_id !=#{memberId}
+         </if>
+    </select>
+
+    <select id="searchByMemberCode" parameterType="com.lzy.liujing.restaurant.entity.Member" resultMap="memberResultMap">
+        select * from r_member as a
+        <include refid="join"/>
+        where a.member_code = #{memberCode}
+    </select>
+
+    <insert id="insert" parameterType="com.lzy.liujing.restaurant.entity.Member" keyColumn="member_id" keyProperty="memberId" useGeneratedKeys="true">
+        insert into r_member
+        <include refid="set2"/>
+    </insert>
+
+    <update id="deleteByIds" parameterType="java.util.List">
+        update r_member
+        set del = 1
+        where member_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="update" parameterType="com.lzy.liujing.restaurant.entity.Member">
+        update r_member as a
+        <include refid="set"/>
+        where a.member_id = #{memberId} and a.del = 0
+    </update>
 </mapper>

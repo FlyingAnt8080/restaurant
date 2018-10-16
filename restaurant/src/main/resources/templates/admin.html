@@ -9,8 +9,7 @@
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" href="../static/layuiadmin/layui/css/layui.css"
           media="all"/>
-    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" href="../static/layuiadmin/style/admin.css"
-          media="all"/>
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" href="../static/layuiadmin/style/admin.css" media="all"/>
 </head>
 <body class="layui-layout-body">
 
@@ -111,7 +110,7 @@
                     <!--动态菜单-->
                     <th:block th:each="menu:${menuList}">
                         <li data-name="component" class="layui-nav-item">
-                            <a href="javascript:;" lay-tips="组件" lay-direction="2">
+                            <a href="javascript:;" th:attr="lay-tips=${menu.menuName}" lay-direction="2">
                                 <!--th:attrappend 给元素追加值而不覆盖原有值-->
                                 <i class="layui-icon " th:attrappend="class=${menu.menuIcon}"></i>
                                 <cite th:text="${menu.menuName}"></cite>

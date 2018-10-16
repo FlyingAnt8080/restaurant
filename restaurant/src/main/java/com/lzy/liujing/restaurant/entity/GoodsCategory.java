@@ -1,6 +1,6 @@
 package com.lzy.liujing.restaurant.entity;
 
-public class Category extends BaseBean{
+public class GoodsCategory extends BaseBean{
     /**
      * 菜品类型id
      */
@@ -28,7 +28,7 @@ public class Category extends BaseBean{
 
     @Override
     public String toString() {
-        return "Category{" +
+        return "GoodsCategory{" +
                 "categoryId=" + categoryId +
                 ", categoryName='" + categoryName + '\'' +
                 '}';

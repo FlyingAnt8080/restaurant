@@ -52,7 +52,8 @@ public class ShiroConfig {
             }
         }*/
         //其余url一律拦截
-        filterChainDefinitionMap.put("/**", "authc");
+        //测试时注释，以防被拦截
+        //filterChainDefinitionMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
