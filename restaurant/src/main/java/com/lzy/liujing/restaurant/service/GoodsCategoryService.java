@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 菜品类型管理
  */
-public interface CategoryService {
+public interface GoodsCategoryService {
     /**
      * 查询所有菜品类型
      * @return

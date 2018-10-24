@@ -3,5 +3,75 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lzy.liujing.restaurant.dao.DeskDao">
+    <sql id="set">
+        <set>
+            <if test="deskCode!=null">
+                desk_code = #{deskCode},
+            </if>
+            <if test="peopleCount!=null">
+                people_count = #{peopleCount},
+            </if>
+            <if test="idleStatus!=null">
+                idle_status = #{idleStatus},
+            </if>
+            <if test="createTime!=null">
+                create_time = #{createTime},
+            </if>
+            <if test="modifyTime!=null">
+                modify_time = #{ modifyTime},
+            </if>
+        </set>
+    </sql>
+    <sql id="where">
+        <where>
+            <if test="deskCode!=null and deskCode!=''">
+                desk_code = #{deskCode} and
+            </if>
+            <if test="idleStatus!=null">
+                idle_status = #{idleStatus} and
+            </if>
+            <if test="peopleCount!=null and peopleCount!=''">
+                people_count = #{peopleCount} and
+            </if>
+            del = 0
+        </where>
+    </sql>
 
+    <select id="findPage" resultType="com.lzy.liujing.restaurant.entity.Desk">
+        select * from r_desk
+        <include refid="where"/>
+    </select>
+
+    <select id="findById" parameterType="Integer" resultType="com.lzy.liujing.restaurant.entity.Desk">
+        select * from r_desk
+        where desk_id = #{deskId} and  del = 0
+    </select>
+
+    <select id="findByDeskCode" parameterType="com.lzy.liujing.restaurant.entity.Desk" resultType="com.lzy.liujing.restaurant.entity.Desk">
+        select * from r_desk
+        where desk_code = #{deskCode}
+        <if test="deskId!=null">
+            and desk_id != #{deskId}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.lzy.liujing.restaurant.entity.Desk">
+        insert into r_desk
+        <include refid="set"/>
+    </insert>
+
+    <update id="update" parameterType="com.lzy.liujing.restaurant.entity.Desk">
+        update r_desk
+        <include refid="set"/>
+        where desk_id =#{deskId} and del = 0
+    </update>
+
+    <update id="deleteByIds" parameterType="java.util.List">
+        update r_desk
+        set del = 1
+        where desk_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
 </mapper>

@@ -82,5 +82,6 @@ public interface SysUserService {
      * @return
      */
     SysUser findById(Long id);
+    void resetPwd(SysUser sysUser);
     void updatePwd(SysUser sysUser);
 }

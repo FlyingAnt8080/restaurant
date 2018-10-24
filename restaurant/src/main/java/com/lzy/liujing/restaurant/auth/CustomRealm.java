@@ -69,7 +69,7 @@ public class CustomRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         //获取用户的输入的账号.
-        String loginCode = (String) SecurityUtils.getSubject().getPrincipal();
+        String loginCode = ((SysUser) SecurityUtils.getSubject().getPrincipal()).getLoginCode();
         //根据账号查询用户
         SysUser param = sysUserService.findByLoginCode(loginCode);
         //授权信息对象info,用来存放查出的用户的所有的角色（role）及权限（permission）
@@ -87,6 +87,7 @@ public class CustomRealm extends AuthorizingRealm {
                 System.out.println(menu.getPermission());
             }
         }
+        //set集合不会出现重复数据
         info.addStringPermissions(permissions);
         return info;
     }

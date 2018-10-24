@@ -6,7 +6,8 @@ import com.lzy.liujing.restaurant.exception.CustomAuthenticationException;
 import com.lzy.liujing.restaurant.exception.CustomException;
 import com.lzy.liujing.restaurant.exception.SysUserImplException;
 import com.lzy.liujing.restaurant.utils.ResultUtil;
-import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authz.UnauthenticatedException;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -28,6 +29,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public Result handlerException(Exception e){
+        if(e instanceof UnauthenticatedException){
+            UnauthenticatedException exception = new UnauthenticatedException();
+            return ResultUtil.error(ResultEnum.UNAUTHENTICATED_ERROR.getCode(),ResultEnum.UNAUTHENTICATED_ERROR.getMsg());
+        }
+        if(e instanceof UnauthorizedException){
+            return ResultUtil.error(ResultEnum.UNAUTHENTICATED_ERROR.getCode(),ResultEnum.UNAUTHENTICATED_ERROR.getMsg());
+        }
         if(e instanceof SysUserImplException){
             SysUserImplException sysUserImplException = (SysUserImplException) e;
             return ResultUtil.error(sysUserImplException.getCode(),sysUserImplException.getMessage());

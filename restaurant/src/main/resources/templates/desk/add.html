@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加桌位</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" href="../../static/layui/css/layui.css"
+          media="all"/>
+    <style>
+        body {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form layui-form-pane" action="" lay-filter="component-form-element">
+            <div class="layui-form-item">
+                <label class="layui-form-label">桌位编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="deskCode" id="deskCode" lay-verify="required|number"
+                           placeholder="桌位编号"
+                           autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">座位人数</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="peopleCount" id="peopleCount" lay-verify="required|number|int_number"
+                           placeholder="座位人数"
+                           autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">空闲状态</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="idleStatus" value="0" title="空闲" checked>
+                    <input type="radio" name="idleStatus" value="1" title="有人">
+                </div>
+            </div>
+            <div class="layui-form-item layui-hide">
+                <input type="button" lay-submit lay-filter="LAY-user-front-submit" id="LAY-user-front-submit"
+                       value="确认">
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+<script th:src="@{/layuiadmin/layui/layui.js}" src="../../static/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'laydate', "layer"], function () {
+        var $ = layui.$
+            , form = layui.form
+
+        //获取from表单提交事件
+        //此处submit中的值是lay-filter
+        form.on('submit(component-form-element)', function (data) {
+        });
+        //自定义验证
+        form.verify({
+            //验证正数
+            positive_number: function (value, item) {
+                if (parseFloat(value) < 0) {
+                    return '必须为正数';
+                }
+            },
+            int_number: function (value, item) {
+                if (!/^(0|\+?[1-9][0-9]*)$/.test(value)) {
+                    return '必须为正整数';
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

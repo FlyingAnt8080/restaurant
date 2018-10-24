@@ -4,4 +4,138 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lzy.liujing.restaurant.dao.GoodsDao">
 
+    <select id="findPage" parameterType="com.lzy.liujing.restaurant.entity.Goods" resultMap="goodsResultMap">
+        select * from r_goods as a
+        <include refid="join"/>
+        <include refid="where"/>
+    </select>
+
+    <select id="findById" parameterType="Integer" resultMap="goodsResultMap">
+        select * from r_goods as a
+        <include refid="join"/>
+        where goods_id = #{id} and a.del = 0
+    </select>
+
+    <select id="findByGoodsName" parameterType="com.lzy.liujing.restaurant.entity.Goods" resultMap="goodsResultMap">
+        select * from r_goods as a
+        <include refid="join"/>
+        where goods_name = #{goodsName}
+        <if test="goodsId!=null">
+            and goods_id != #{goodsId}
+        </if>
+        and a.del = 0
+    </select>
+
+    <insert id="insert" parameterType="com.lzy.liujing.restaurant.entity.Goods">
+        insert into r_goods
+        <include refid="set"/>
+    </insert>
+
+    <update id="update" parameterType="com.lzy.liujing.restaurant.entity.Goods">
+        update r_goods
+        <include refid="set"/>
+        where goods_id = #{goodsId}
+    </update>
+
+    <update id="deleteByIds" parameterType="java.util.List">
+        update r_goods
+        set del = 1
+        where goods_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <sql id="join">
+        inner join r_category as b on a.category_id = b.category_id
+    </sql>
+
+    <resultMap id="goodsResultMap" type="com.lzy.liujing.restaurant.entity.Goods">
+        <id column="goods_id" property="goodsId"/>
+        <result column="goods_name" property="goodsName"/>
+        <result column=" img_small_url" property="imgSmallUrl"/>
+        <result column="img_url" property="imgUrl"/>
+        <result column="img_circle_url" property="imgCircleUrl"/>
+        <result column="description" property="description"/>
+        <result column="cost" property="cost"/>
+        <result column="price" property="price"/>
+        <result column="discount" property="discount"/>
+        <result column="sold_state" property="soldState"/>
+        <result column="sold_count" property="soldCount"/>
+        <result column="store_count" property="storeCount"/>
+        <result column="putaway_status" property="putawayStatus"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <association property="goodsCategory" javaType="com.lzy.liujing.restaurant.entity.GoodsCategory">
+            <id column="category_id" property="categoryId"/>
+            <result column="category_name" property="categoryName"/>
+        </association>
+    </resultMap>
+    <sql id="where">
+        <where>
+            <if test="goodsName!=null and goodsName!=''">
+                a.goods_name = #{goodsName} and
+            </if>
+            <if test="putawayStatus!=null">
+                a.putaway_status = #{putawayStatus} and
+            </if>
+            <if test="soldState!=null">
+                a.sold_state = #{soldState} and
+            </if>
+            <if test="goodsCategory!=null">
+                <if test="goodsCategory.categoryId!=null">
+                    b.category_id = #{goodsCategory.categoryId} and
+                </if>
+            </if>
+            a.del = 0 order by a.goods_id
+        </where>
+    </sql>
+    <sql id="set">
+        <set>
+            <if test="goodsName!=null and goodsName!=''">
+                goods_name = #{goodsName},
+            </if>
+            <if test="imgSmallUrl!=null and imgSmallUrl!=''">
+                img_small_url = #{imgSmallUrl},
+            </if>
+            <if test="imgUrl!=null and imgUrl!=''">
+                img_url = #{imgUrl},
+            </if>
+            <if test="imgCircleUrl!=null and imgCircleUrl!=''">
+                img_circle_url = #{imgCircleUrl},
+            </if>
+            <if test="description!=null and description!=''">
+                description = #{description},
+            </if>
+            <if test="putawayStatus!=null">
+                putaway_status = #{putawayStatus},
+            </if>
+            <if test="soldCount!=null">
+                sold_count = #{soldCount},
+            </if>
+            <if test="storeCount!=null">
+                store_count = #{storeCount},
+            </if>
+            <if test="soldState!=null">
+                sold_state = #{soldState},
+            </if>
+            <if test="cost!=null">
+                cost = #{cost},
+            </if>
+            <if test="price!=null">
+                price = #{price},
+            </if>
+            <if test="createTime!=null">
+                create_time = #{createTime},
+            </if>
+            <if test="modifyTime!=null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="goodsCategory!=null">
+                <if test="goodsCategory.categoryId!=null">
+                    category_id = #{goodsCategory.categoryId},
+                </if>
+            </if>
+        </set>
+    </sql>
 </mapper>

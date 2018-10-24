@@ -10,12 +10,14 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 
 @Configuration
-public class ShiroConfig {
+public class ShiroConfig{
     @Bean
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager){
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
@@ -26,7 +28,7 @@ public class ShiroConfig {
         //登录成功后要跳转的链接
         shiroFilterFactoryBean.setSuccessUrl("/sysuser/admin.html");
         // 设置无权限时跳转的 url;
-        shiroFilterFactoryBean.setUnauthorizedUrl("/sysuser/login.html");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/error/403.html");
         //设置拦截器
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<>();
         //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
@@ -90,4 +92,12 @@ public class ShiroConfig {
         return advisor;
     }
 
+    @Bean
+    public SimpleMappingExceptionResolver exceptionResolver(){
+        SimpleMappingExceptionResolver exceptionResolver = new SimpleMappingExceptionResolver();
+        Properties properties = new Properties();
+        properties.setProperty("org.apache.shiro.authz.UnauthorizedException","/error/403");
+        exceptionResolver.setExceptionMappings(properties);
+        return exceptionResolver;
+    }
 }

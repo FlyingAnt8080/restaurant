@@ -3,6 +3,8 @@ package com.lzy.liujing.restaurant.dao;
 import com.lzy.liujing.restaurant.entity.Goods;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * Created with IDEA
  * author:LiuJing
@@ -11,5 +13,10 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface GoodsDao extends tk.mybatis.mapper.common.Mapper<Goods>{
-
+    List<Goods> findPage(Goods goods);
+    Goods findById(Integer goodsId);
+    Goods findByGoodsName(Goods goods);
+    int insert(Goods goods);
+    int update(Goods goods);
+    int deleteByIds(List<Integer> idList);
 }

@@ -10,13 +10,10 @@ public class Goods extends BaseBean{
      */
     private String goodsName;
     /**
-     * 菜品类型id
+     * 菜品类型
      */
-    private Integer categoryId;
-    /**
-     * 烹饪时长
-     */
-    private Long cookingTime;
+    private GoodsCategory goodsCategory;
+
     /**
      * 菜小图片
      */
@@ -45,36 +42,26 @@ public class Goods extends BaseBean{
      * 折扣
      */
     private double discount;
-    /**
-     * 销量
-     */
-    private Long totalCount;
+
     /**
      * 菜品上架状态(0下架，1上架)
      */
     private Integer putawayStatus;
+    /**
+     * 销售量
+     */
+    private Long soldCount;
+    /**
+     * 库存量
+     */
+    private Long storeCount;
+    /**
+     * 销售状态(0 在售，1销售完)
+     */
+    private Integer soldState;
 
     public Integer getGoodsId() {
         return goodsId;
-    }
-
-    @Override
-    public String toString() {
-        return "Goods{" +
-                "goodsId=" + goodsId +
-                ", goodsName='" + goodsName + '\'' +
-                ", categoryId=" + categoryId +
-                ", cookingTime=" + cookingTime +
-                ", imgSmallUrl='" + imgSmallUrl + '\'' +
-                ", imgUrl='" + imgUrl + '\'' +
-                ", imgCircleUrl='" + imgCircleUrl + '\'' +
-                ", description='" + description + '\'' +
-                ", cost=" + cost +
-                ", price=" + price +
-                ", discount=" + discount +
-                ", totalCount=" + totalCount +
-                ", putawayStatus=" + putawayStatus +
-                '}';
     }
 
     public void setGoodsId(Integer goodsId) {
@@ -89,20 +76,12 @@ public class Goods extends BaseBean{
         this.goodsName = goodsName;
     }
 
-    public Integer getCategoryId() {
-        return categoryId;
+    public GoodsCategory getGoodsCategory() {
+        return goodsCategory;
     }
 
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public Long getCookingTime() {
-        return cookingTime;
-    }
-
-    public void setCookingTime(Long cookingTime) {
-        this.cookingTime = cookingTime;
+    public void setGoodsCategory(GoodsCategory goodsCategory) {
+        this.goodsCategory = goodsCategory;
     }
 
     public String getImgSmallUrl() {
@@ -161,19 +140,55 @@ public class Goods extends BaseBean{
         this.discount = discount;
     }
 
-    public Long getTotalCount() {
-        return totalCount;
-    }
-
-    public void setTotalCount(Long totalCount) {
-        this.totalCount = totalCount;
-    }
-
     public Integer getPutawayStatus() {
         return putawayStatus;
     }
 
     public void setPutawayStatus(Integer putawayStatus) {
         this.putawayStatus = putawayStatus;
+    }
+
+    public Long getSoldCount() {
+        return soldCount;
+    }
+
+    public void setSoldCount(Long soldCount) {
+        this.soldCount = soldCount;
+    }
+
+    public Long getStoreCount() {
+        return storeCount;
+    }
+
+    public void setStoreCount(Long storeCount) {
+        this.storeCount = storeCount;
+    }
+
+    public Integer getSoldState() {
+        return soldState;
+    }
+
+    public void setSoldState(Integer soldState) {
+        this.soldState = soldState;
+    }
+
+    @Override
+    public String toString() {
+        return "Goods{" +
+                "goodsId=" + goodsId +
+                ", goodsName='" + goodsName + '\'' +
+                ", goodsCategory=" + goodsCategory +
+                ", imgSmallUrl='" + imgSmallUrl + '\'' +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", imgCircleUrl='" + imgCircleUrl + '\'' +
+                ", description='" + description + '\'' +
+                ", cost=" + cost +
+                ", price=" + price +
+                ", discount=" + discount +
+                ", putawayStatus=" + putawayStatus +
+                ", soldCount=" + soldCount +
+                ", storeCount=" + storeCount +
+                ", soldState=" + soldState +
+                '}';
     }
 }

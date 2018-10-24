@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>菜品列表</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" href="../../static/layuiadmin/layui/css/layui.css"
+          media="all"/>
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" href="../../static/layuiadmin/layui/css/layui.css"
+          media="all"/>
+    <style>
+        body{
+            margin: 10px;
+            background: #eeeeee;
+        }
+        .laytable-cell-1-imgUrl{  /*最后的pic为字段的field*/
+            width: 66px;
+            height: 88px;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">查询条件</label>
+                    <div class="layui-input-inline" style="width:100px;">
+                        <input type="text" name="goodsName" id="goodsName" placeholder="菜名" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline" style="width: 180px">
+                        <label class="layui-form-label" style="width:60px;;padding: 9px 0px">上架状态</label>
+                        <div class="layui-input-block" style="margin-left:70px;">
+                            <select name="putawayStatus">
+                                <option value="">不限</option>
+                                <option value="1">上架</option>
+                                <option value="0">下架</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline" style="width: 180px">
+                        <label class="layui-form-label" style="width:60px;;padding: 9px 0px">销售状态</label>
+                        <div class="layui-input-block" style="margin-left:70px;">
+                            <select name="soldState">
+                                <option value="">不限</option>
+                                <option value="0">未售完</option>
+                                <option value="1">已售完</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline" style="width: 180px">
+                        <label class="layui-form-label" style="width:60px;;padding: 9px 0px">菜品类型</label>
+                        <div class="layui-input-block" style="margin-left:70px;">
+                            <select name="categoryId">
+                                <option value="">不限</option>
+                                <th:block th:each="goodsCategory:${goodsCategoryList}">
+                                    <option th:value="${goodsCategory.categoryId}" th:text="${goodsCategory.categoryName}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline" style="width:200px;">
+                        <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="Search">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <script th:inline="javascript" type="text/html" id="test-table-toolbar-toolbarDemo">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-sm" lay-event="add"><i class="layui-icon layui-icon-add-1"></i>
+                    </button>
+                    <button class="layui-btn layui-btn-sm" lay-event="update"><i class="layui-icon layui-icon-edit"></i>
+                    </button>
+                    {{#
+                    if( [[${role.roleId}]]==1)
+                    { }}
+                    <button class="layui-btn layui-btn-sm" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>
+                    </button>
+                    {{#  } else { }}
+                    <button class="layui-btn layui-btn-disabled layui-btn-sm"><i class="layui-icon layui-icon-delete"></i>
+                    </button>
+                    {{#  } }}
+
+                </div>
+            </script>
+            <!-- table表格-->
+            <table id="tableList" lay-filter="tableList"></table>
+            <!--右边工具栏-->
+            <script th:inline="javascript" type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                <!--在该语法中通过模板Thymeleaf模板引擎获取中文会被转换成编码-->
+                {{#
+                if( [[${role.roleId}]]==1)
+                { }}
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                {{#  } else { }}
+                <a class="layui-btn layui-btn-disabled layui-btn-xs">删除</a>
+                {{#  } }}
+            </script>
+            <script th:inline="javascript" type="text/html" id="putawayStatus">
+                {{#
+                if(d.putawayStatus==0)
+                { }}
+                <button class="layui-btn layui-btn-primary layui-btn-sm">下架</button>
+                {{#  } else { }}
+                <button class="layui-btn layui-btn-sm">上架</button>
+                {{#  } }}
+            </script>
+            <script th:inline="javascript" type="text/html" id="soldState">
+                {{#
+                if( d.soldState==0)
+                { }}
+                <button class="layui-btn  layui-btn-primary layui-btn-sm">未售完</button>
+                {{#  } else { }}
+                <button class="layui-btn layui-btn-danger layui-btn-sm">已售完</button>
+                {{#  } }}
+            </script>
+            <script th:inline="javascript" type="text/html" id="imgCircleUrl">
+                {{#
+                if( d.imgCircleUrl==null||d.imgCircleUrl=='')
+                { }}
+                <div style="color:red">无图片</div>
+                {{#  } else { }}
+                <img src="/restaurant{{d.imgCircleUrl}}" class="laytable-cell-1-imgUrl">
+                {{#  } }}
+            </script>
+            <script th:inline="javascript" type="text/html" id="imgUrl">
+                {{#
+                if( d.imgUrl==null||d.imgUrl=='')
+                { }}
+                <div style="color:red">无图片</div>
+                {{#  } else { }}
+                <img src="/restaurant/{{d.imgUrl}}" class="laytable-cell-1-imgUrl">
+                {{#  } }}
+            </script>
+            <!--下边分页条-->
+            <div class="layui-tab-item">
+                <div id="pageDemo"></div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/layuiadmin/layui/layui.js}" src="../../static/layuiadmin/layui/layui.js"></script>
+
+    <script th:inline="javascript">
+        layui.use(['table','laydate'], function () {
+            var $ = layui.$
+                ,form = layui.form
+                ,table = layui.table
+                ,laydate = layui.laydate;
+            //执行一个 table 实例
+            table.render({
+                elem: '#tableList'
+                , height: "full"
+                , url: "/restaurant/goods/list.do" //数据接口
+                , method: 'post'
+                , request: {
+                    pageName: 'pageNum' //页码的参数名称，默认：page
+                    , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                }
+                ,height:511
+                , response: {
+                    statusCode: 200
+                }
+                //,toolbar:'#test-table-toolbar-toolbarDemo'
+                , limits: [5,7, 10, 20, 30]
+                , title: '菜品列表'
+                , page: true //开启分页
+                , even: true//开启背景隔行
+                ,size:"lg"//设置表格尺寸
+                , toolbar: '#test-table-toolbar-toolbarDemo' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+                , cols: [[ //表头
+                    {type: 'checkbox', fixed: 'left'}
+                    , {field: 'goodsId', title: 'ID',align:'center', width: 60, sort: true, fixed: 'left',hide:true}
+                    , {field: 'goodsName', title: '菜品名', width: 150, sort: true}
+                    , {field: 'goodsCategory', title: '菜品类型', align:'center',width: 100, templet: '<div>{{d.goodsCategory.categoryName}}</div>'}
+                    , {field: 'imgUrl', title: '菜品图片',align:'center', width:120, templet:'#imgUrl'}
+                    , {field: 'description', title: '菜品描述', width: 100, sort: true, totalRow: true}
+                    , {field: 'cost', title: '成本',align:'center', width: 100,sort:true,templet:'<div>{{d.cost}}元</div>'}
+                    , {field: 'price', title: '价格',align:'center', width: 100,sort: true,templet:'<div>{{d.price}}元</div>'}
+                    , {field: 'storeCount', title: '库存量',align:'center',width: 100,sort: true,templet:'<div>{{d.storeCount}}份</div>'}
+                    , {field: 'putawayStatus', title: '上架状态',align:'center',templet: '#putawayStatus',width: 100}
+                    , {field: 'soldState', title: '销售状态',align:'center',templet: '#soldState',width: 100}
+                    , {field: 'imgCircleUrl', title: '轮播图片',align:'center', width:120,templet:'#imgCircleUrl'}
+                    , {field: 'createTime', title: '创建时间', width: 170,sort: true}
+                    , {field: 'modifyTime', title: '修改时间', width: 170,sort: true}
+                    , {fixed: 'right', title: "工具栏",align:'center', width: 180, toolbar: '#barDemo'}
+                ]]
+            });
+
+            //监听头工具栏事件
+            table.on('toolbar(tableList)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id)
+                    , data = checkStatus.data; //获取选中的数据
+                switch (obj.event) {
+                    case 'add':
+                        layer.open({
+                            type: 2
+                            ,title: '添加菜品'
+                            ,content: '/restaurant/goods/add.html'
+                            ,maxmin: true
+                            ,area: ['800px', '450px']
+                            ,btn: ['确定', '取消']
+                            ,yes: function(index, layero){
+                                var iframeWindow = window['layui-layer-iframe'+ index]
+                                    //该id是窗口打开html页面中表单提交按钮的id
+                                    ,submitID = 'LAY-user-front-submit'
+                                    ,submit = layero.find('iframe').contents().find('#'+ submitID);
+                                //监听提交
+                                iframeWindow.layui.form.on('submit('+ submitID +')', function(data){
+                                    var field = data.field; //获取提交的字段
+                                    //提交 Ajax 成功后，静态更新表格中的数据
+                                    $.ajax({
+                                        url: "/restaurant/goods/add.do",
+                                        type: "post",
+                                        dataType: "JSON",
+                                        data: data.field,
+                                        success: function(result) {
+                                            if(result.code == 200) {
+                                                table.reload('tableList'); //数据刷新
+                                                layer.close(index); //关闭弹层
+                                            }else {
+                                                layer.alert(result.msg, {
+                                                    title: '提交结果'
+                                                    ,anim: 6
+                                                });
+                                            }
+                                        },
+                                        error: function (result, type) {
+                                            layer.msg('添加失败！', {icon: 2, time: 1000});
+                                        }
+                                    });
+                                });
+                                submit.trigger('click');
+                            }
+                        });
+                        break;
+                    case 'update':
+                        if (data.length === 0) {
+                            layer.msg('请选择一行');
+                        } else if (data.length > 1) {
+                            layer.msg('只能同时编辑一个');
+                        } else {
+                            var goodsId = checkStatus.data[0].goodsId;
+                            var url = '/restaurant/goods/edit.html/'+goodsId;
+                            layer.open({
+                                type: 2
+                                ,title: '编辑菜品'
+                                ,content:url
+                                ,maxmin: true
+                                ,area: ['800px', '450px']
+                                ,btn: ['确定', '取消']
+                                ,yes: function(index, layero){
+                                    var iframeWindow = window['layui-layer-iframe'+ index]
+                                        ,submitID = 'LAY-user-front-submit'
+                                        ,submit = layero.find('iframe').contents().find('#'+ submitID);
+
+                                    //监听提交
+                                    iframeWindow.layui.form.on('submit('+ submitID +')', function(data){
+                                        var field = data.field; //获取提交的字段
+                                        //提交 Ajax 成功后，静态更新表格中的数据
+                                        $.ajax({
+                                            url: "/restaurant/goods/edit.do",
+                                            type: "post",
+                                            dataType: "JSON",
+                                            data:field,
+                                            success: function(result) {
+                                                if(result.code == 200){
+                                                    table.reload('tableList'); //数据刷新
+                                                    layer.close(index); //关闭弹层
+                                                }else {
+                                                    layer.alert(result.msg, {
+                                                        title: '提交结果'
+                                                        ,anim: 6
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    });
+                                    submit.trigger('click');
+                                }
+                            });
+                        }
+                        break;
+                    case 'delete':
+                        if (data.length === 0) {
+                            layer.msg('请选择一行');
+                        } else {
+                            layer.confirm('确定删除?', function(){
+                                var ids = '';
+                                for (var i = 0; i < data.length; i++) {
+                                    ids += data[i].goodsId + ",";
+                                }
+                                $.ajax({
+                                    url: "/restaurant/goods/del.do",
+                                    type: "post",
+                                    dataType: "JSON",
+                                    data: {ids:ids},
+                                    success: function(result) {
+                                        if(result.code == 200) {
+                                            table.reload('tableList'); //数据刷新
+                                            layer.msg('删除成功!', {icon: 6});
+                                        }else {
+                                            layer.alert(result.msg, {
+                                                title: '提交结果'
+                                                ,anim: 6
+                                            });
+                                        }
+                                    },
+                                    error: function (result, type) {
+                                        layer.msg('删除失败！', {icon: 2, time: 1000});
+                                    }
+                                });
+                            });
+                        }
+                        break;
+                };
+            });
+
+            //监听行工具事件
+            table.on('tool(tableList)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                var data = obj.data //获得当前行数据
+                    , layEvent = obj.event; //获得 lay-event 对应的值
+                if (layEvent === 'del') {
+                    layer.confirm('确定要删除【'+data.goodsName+'】?', function (index) {
+                        $.ajax({
+                            url: "/restaurant/goods/del.do",
+                            type: "post",
+                            dataType: "JSON",
+                            data: {ids:data.goodsId},
+                            success: function(result) {
+                                if(result.code == 200) {
+                                    obj.del(); //删除对应行（tr）的DOM结构
+                                    layer.msg('删除成功!', {icon: 6});
+                                }else {
+                                    layer.alert(result.msg, {
+                                        title: '提交结果'
+                                        ,anim: 6
+                                    });
+                                }
+                            }
+                        });
+                        layer.close(index);
+                        //向服务端发送删除指令
+                    });
+                } else if (layEvent === 'edit') {
+                    var url = '/restaurant/goods/edit.html/'+data.goodsId;
+                    layer.open({
+                        type: 2
+                        ,title: '编辑菜品'
+                        ,content:url
+                        ,maxmin: true
+                        ,area: ['800px', '450px']
+                        ,btn: ['确定', '取消']
+                        ,yes: function(index, layero){
+                            var iframeWindow = window['layui-layer-iframe'+ index]
+                                ,submitID = 'LAY-user-front-submit'
+                                ,submit = layero.find('iframe').contents().find('#'+ submitID);
+
+                            //监听提交
+                            iframeWindow.layui.form.on('submit('+ submitID +')', function(data){
+                                var field = data.field; //获取提交的字段
+                                //提交 Ajax 成功后，静态更新表格中的数据
+                                $.ajax({
+                                    url: "/restaurant/goods/edit.do",
+                                    type: "post",
+                                    dataType: "JSON",
+                                    data:field,
+                                    success: function(result) {
+                                        if(result.code == 200) {
+                                            table.reload('tableList'); //数据刷新
+                                            layer.close(index); //关闭弹层
+                                        }else {
+                                            layer.alert(result.msg, {
+                                                title: '提交结果'
+                                                ,anim: 6
+                                            });
+                                        }
+                                    }
+                                });
+                            });
+                            submit.trigger('click');
+                        }
+                    });
+                }
+            });
+
+            //监听搜索
+            form.on('submit(Search)', function(data){
+                var field = data.field;
+                //执行重载
+                table.reload('tableList', {
+                    where: field
+                    ,page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            });
+
+            //日期选择器
+            laydate.render({
+                elem: '#test1'
+                ,format: 'yyyy-MM-dd' //可任意组合
+            });
+            //弹出图片层
+            layer.photos({
+                photos: '#layer-photos-demo'
+                ,anim: 5
+            });
+        });
+    </script>
+</body>
+</html>

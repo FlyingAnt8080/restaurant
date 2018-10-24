@@ -58,13 +58,13 @@
                 , toolbar: '#test-table-toolbar-toolbarDemo' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
                 , cols: [[ //表头
                     {type: 'checkbox', fixed: 'left'}
-                    , {field: 'mcId', title: 'ID', cellMinWidth: 80, sort: true, fixed: 'left', totalRowText: '合计：'}
-                    , {field: 'mcName', title: '类型名', cellMinWidth: 150}
-                    , {field: 'discount', title: '享有折扣', cellMinWidth: 80, sort: true}
-                    , {field: 'amount', title: '消费金额条件',templet: '<div>{{d.amount}}<span>元</span></div>', cellMinWidth: 60, sort: true}
+                    , {field: 'mcId', title: 'ID',align:'center', cellMinWidth: 80, sort: true, fixed: 'left',hide:true}
+                    , {field: 'mcName', title: '类型名',align:'center', cellMinWidth: 150}
+                    , {field: 'discount', title: '享有折扣',align:'center', cellMinWidth: 80, sort: true}
+                    , {field: 'amount', title: '消费金额条件',align:'center',templet: '<div>{{d.amount}}<span>元</span></div>', cellMinWidth: 60, sort: true}
                     , {field: 'createTime', title: '创建时间', cellMinWidth: 150,sort: true}
                     , {field: 'modifyTime', title: '修改时间', cellMinWidth: 150,sort: true}
-                    , {fixed: 'right', title: "工具栏", width: 180, toolbar: '#barDemo'}
+                    , {fixed: 'right', title: "工具栏",align:'center', width: 180, toolbar: '#barDemo'}
                 ]]
             });
 
@@ -79,7 +79,7 @@
                             ,title: '添加会员类型'
                             ,content: '/restaurant/membercategory/add.html'
                             ,maxmin: true
-                            ,area: ['500px', '450px']
+                            ,area: ['500px', '340px']
                             ,btn: ['确定', '取消']
                             ,yes: function(index, layero){
                                 var iframeWindow = window['layui-layer-iframe'+ index]
@@ -126,7 +126,7 @@
                                 ,title: '编辑会员类型'
                                 ,content:url
                                 ,maxmin: true
-                                ,area: ['500px', '450px']
+                                ,area: ['500px', '340px']
                                 ,btn: ['确定', '取消']
                                 ,yes: function(index, layero){
                                     var iframeWindow = window['layui-layer-iframe'+ index]
@@ -226,7 +226,7 @@
                         ,title: '编辑会员类型'
                         ,content:url
                         ,maxmin: true
-                        ,area: ['500px', '450px']
+                        ,area: ['500px', '340px']
                         ,btn: ['确定', '取消']
                         ,yes: function(index, layero){
                             var iframeWindow = window['layui-layer-iframe'+ index]

@@ -52,6 +52,8 @@ public class SysUser extends BaseBean{
      * 家庭住址
      */
     private String address;
+    private String oldPwd;
+    private String newPwd;
     /**
      * 用户角色
      */
@@ -138,7 +140,21 @@ public class SysUser extends BaseBean{
         this.address = address;
     }
 
+    public String getOldPwd() {
+        return oldPwd;
+    }
 
+    public void setOldPwd(String oldPwd) {
+        this.oldPwd = oldPwd;
+    }
+
+    public String getNewPwd() {
+        return newPwd;
+    }
+
+    public void setNewPwd(String newPwd) {
+        this.newPwd = newPwd;
+    }
 
     public SysRole getRole() {
         return role;
@@ -161,6 +177,8 @@ public class SysUser extends BaseBean{
                 ", birthday=" + birthday +
                 ", idNumber='" + idNumber + '\'' +
                 ", address='" + address + '\'' +
+                ", oldPwd='" + oldPwd + '\'' +
+                ", newPwd='" + newPwd + '\'' +
                 ", role=" + role +
                 '}';
     }

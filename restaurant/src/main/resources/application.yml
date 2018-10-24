@@ -19,7 +19,17 @@ spring:
   thymeleaf:
     cache: false
     mode: LEGACYHTML5
+  #配置时间(接口将字符串映射到实体的date类型时会用到，不配置时间会有偏差)
   jackson: time-zone=GMT+8
+  #表示所有的访问都经过静态资源路径
+  mvc:
+    static-path-pattern: /**
+    #在这里配置静态资源路径，前面说了这里的配置是覆盖默认配置，
+    #所以需要将默认的也加上否则static、public等这些路径将不能被当作静态资源路径，
+    #在这个最末尾的file:${web.upload-path}之所有要加file:是因为指定的是一个具体的硬盘路径，
+    #其他的使用classpath指的是系统环境变量
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${web.upload-image-path}
 #配置日志信息
 logging:
   level:
@@ -49,6 +59,9 @@ pagehelper:
     params: count=countSql
 #配置项目访问端口和地址
 server:
-  port: 8080
+  port: 8181
   servlet:
     context-path: /restaurant
+
+web:
+  upload-image-path: F:/restaurant/upload

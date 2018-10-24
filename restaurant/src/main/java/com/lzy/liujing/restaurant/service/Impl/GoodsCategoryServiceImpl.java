@@ -5,7 +5,7 @@ import com.lzy.liujing.restaurant.dao.GoodsCategoryDao;
 
 import com.lzy.liujing.restaurant.entity.GoodsCategory;
 import com.lzy.liujing.restaurant.exception.CustomException;
-import com.lzy.liujing.restaurant.service.CategoryService;
+import com.lzy.liujing.restaurant.service.GoodsCategoryService;
 import com.lzy.liujing.restaurant.utils.SplitIdsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.util.List;
  * 菜品类型管理
  */
 @Service
-public class CategoryServiceImpl implements CategoryService {
+public class GoodsCategoryServiceImpl implements GoodsCategoryService {
     @Autowired
     private GoodsCategoryDao goodsCategoryDao;
     /**

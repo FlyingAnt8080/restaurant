@@ -2,17 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>员工列表</title>
-    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" href="../static/layuiadmin/layui/css/layui.css"
+    <title>会员表</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" href="../../static/layuiadmin/layui/css/layui.css"
           media="all"/>
-    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" href="../static/layuiadmin/layui/css/layui.css"
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" href="../../static/layuiadmin/layui/css/layui.css"
           media="all"/>
-    <style>
-        body{
-            margin: 10px;
-            background: #eeeeee;
-        }
-    </style>
 </head>
 <body>
     <div class="layui-card">
@@ -69,22 +63,37 @@
             </div>
         </div>
         <div class="layui-card-body">
-            <script type="text/html" id="test-table-toolbar-toolbarDemo">
+            <script th:inline="javascript" type="text/html" id="test-table-toolbar-toolbarDemo">
                 <div class="layui-btn-container">
                     <button class="layui-btn layui-btn-sm" lay-event="add"><i class="layui-icon layui-icon-add-1"></i>
                     </button>
                     <button class="layui-btn layui-btn-sm" lay-event="update"><i class="layui-icon layui-icon-edit"></i>
                     </button>
+                    {{#
+                    if( [[${role.roleId}]]==1)
+                    { }}
                     <button class="layui-btn layui-btn-sm" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>
                     </button>
+                    {{#  } else { }}
+                    <button class="layui-btn layui-btn-disabled layui-btn-sm"><i class="layui-icon layui-icon-delete"></i>
+                    </button>
+                    {{#  } }}
+
                 </div>
             </script>
             <!-- table表格-->
             <table id="tableList" lay-filter="tableList"></table>
             <!--右边工具栏-->
-            <script type="text/html" id="barDemo">
+            <script th:inline="javascript" type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                <!--在该语法中通过模板Thymeleaf模板引擎获取中文会被转换成编码-->
+                {{#
+                if( [[${role.roleId}]]==1)
+                { }}
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                {{#  } else { }}
+                <a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                {{#  } }}
             </script>
             <!--下边分页条-->
             <div class="layui-tab-item">
@@ -93,13 +102,13 @@
         </div>
     </div>
     <script th:src="@{/layuiadmin/layui/layui.js}" src="../static/layuiadmin/layui/layui.js"></script>
+
     <script th:inline="javascript">
         layui.use(['table','laydate'], function () {
             var $ = layui.$
                 ,form = layui.form
                 ,table = layui.table
                 ,laydate = layui.laydate;
-
             //执行一个 table 实例
             table.render({
                 elem: '#tableList'
@@ -115,25 +124,25 @@
                 }
                 //,toolbar:'#test-table-toolbar-toolbarDemo'
                 , limits: [1,2, 5, 10, 20, 30]
-                , title: '用户表'
+                , title: '会员表'
                 , page: true //开启分页
                 , even: true//开启背景隔行
                 //,size:"lg"设置表格尺寸
                 , toolbar: '#test-table-toolbar-toolbarDemo' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
                 , cols: [[ //表头
                     {type: 'checkbox', fixed: 'left'}
-                    , {field: 'memberId', title: 'ID', cellMinWidth: 80, sort: true, fixed: 'left', totalRowText: '合计：'}
-                    , {field: 'memberCode', title: '账号', cellMinWidth: 150}
-                    , {field: 'name', title: '姓名', cellMinWidth: 80, sort: true, totalRow: true}
-                    , {field: 'gender', title: '性别', cellMinWidth: 60, sort: true}
-                    , {field: 'phone', title: '电话', cellMinWidth: 100, sort: true, totalRow: true}
-                    , {field: 'birthday', title: '生日', cellMinWidth: 150}
-                    , {field: 'totalMoney', title: '总消费金额', cellMinWidth: 220,sort: true}
+                    , {field: 'memberId', title: 'ID',align:'center', width: 80, sort: true, fixed: 'left',hide:true}
+                    , {field: 'memberCode', title: '账号',align:'center', width: 140}
+                    , {field: 'name', title: '姓名', align:'center',width: 80, sort: true, totalRow: true}
+                    , {field: 'gender', title: '性别',align:'center', width: 80, sort: true}
+                    , {field: 'phone', title: '电话',align:'center', width: 140, sort: true, totalRow: true}
+                    , {field: 'birthday', title: '生日',align:'center', width: 150}
+                    , {field: 'totalMoney', title: '总消费金额',align:'center', width: 180,sort: true}
                     /*取嵌套json数据用模板 templet: '<div>{{d.role.roleName}}</div>'*/
-                    , {field: 'role', title: '会员类型', cellMinWidth: 100, templet: '<div>{{d.memberCategory.mcName}}</div>'}
-                    , {field: 'createTime', title: '创建时间', cellMinWidth: 150,sort: true}
-                    , {field: 'modifyTime', title: '修改时间', cellMinWidth: 150,sort: true}
-                    , {fixed: 'right', title: "工具栏", width: 180, toolbar: '#barDemo'}
+                    , {field: 'role', title: '会员类型',align:'center', width: 100, templet: '<div>{{d.memberCategory.mcName}}</div>'}
+                    , {field: 'createTime', align:'center',title: '创建时间', width: 180,sort: true}
+                    , {field: 'modifyTime',align:'center', title: '修改时间', width: 180,sort: true}
+                    , {fixed: 'right', title: "工具栏",align:'center', width: 180, toolbar: '#barDemo'}
                 ]]
             });
 
@@ -145,17 +154,16 @@
                     case 'add':
                         layer.open({
                             type: 2
-                            ,title: '添加用户'
+                            ,title: '添加会员'
                             ,content: '/restaurant/member/add.html'
                             ,maxmin: true
-                            ,area: ['700px', '450px']
+                            ,area: ['650px', '345px']
                             ,btn: ['确定', '取消']
                             ,yes: function(index, layero){
                                 var iframeWindow = window['layui-layer-iframe'+ index]
                                     //该id是窗口打开html页面中表单提交按钮的id
                                     ,submitID = 'LAY-user-front-submit'
                                     ,submit = layero.find('iframe').contents().find('#'+ submitID);
-
                                 //监听提交
                                 iframeWindow.layui.form.on('submit('+ submitID +')', function(data){
                                     var field = data.field; //获取提交的字段
@@ -192,10 +200,10 @@
                             var url = '/restaurant/member/edit.html/'+memberId;
                             layer.open({
                                 type: 2
-                                ,title: '编辑用户'
+                                ,title: '编辑会员'
                                 ,content:url
                                 ,maxmin: true
-                                ,area: ['700px', '450px']
+                                ,area: ['650px', '345px']
                                 ,btn: ['确定', '取消']
                                 ,yes: function(index, layero){
                                     var iframeWindow = window['layui-layer-iframe'+ index]
@@ -292,10 +300,10 @@
                     var url = '/restaurant/member/edit.html/'+data.memberId;
                     layer.open({
                         type: 2
-                        ,title: '编辑用户'
+                        ,title: '编辑会员'
                         ,content:url
                         ,maxmin: true
-                        ,area: ['700px', '450px']
+                        ,area: ['650px', '345px']
                         ,btn: ['确定', '取消']
                         ,yes: function(index, layero){
                             var iframeWindow = window['layui-layer-iframe'+ index]

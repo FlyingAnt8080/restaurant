@@ -26,8 +26,8 @@
 
     <select id="findByCategoryName" parameterType="com.lzy.liujing.restaurant.entity.GoodsCategory" resultType="com.lzy.liujing.restaurant.entity.GoodsCategory">
         select * from r_category
-        where category_name = #{categoryName}
-        <if test="mcId!=null">
+        where category_name = #{categoryName} and del = 0
+        <if test="categoryId!=null">
             and category_id != #{categoryId}
         </if>
     </select>

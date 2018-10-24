@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -39,9 +38,11 @@ public class LoginController{
             //202 验证失败
             return ResultUtil.error(202,bindingResult.getFieldError().getDefaultMessage());
         }
+
         //获取主体
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(user.getLoginCode(),user.getPassword());
+        System.out.println(session.getMaxInactiveInterval());
         //将登录交个shiro
         subject.login(token);
         //登录成功后
@@ -65,7 +66,7 @@ public class LoginController{
      * @return
      */
     @GetMapping("/login.html")
-    public String login(){
+    public String login(HttpSession session){
         return "/login/login";
     }
 
@@ -88,5 +89,9 @@ public class LoginController{
    @GetMapping("/console.html")
     public String console(){
         return "/home/console";
+    }
+    @GetMapping("/403.html")
+    public String eorror(){
+       return "/eorror/403";
     }
 }

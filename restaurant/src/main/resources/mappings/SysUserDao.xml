@@ -20,56 +20,32 @@
         <result column="address" property="address"/>
         <result column="create_time" property="createTime"/>
         <result column="modify_time" property="modifyTime"/>
-       <association property="role" javaType="com.lzy.liujing.restaurant.entity.SysRole">
+        <association property="role" javaType="com.lzy.liujing.restaurant.entity.SysRole">
             <id property="roleId" column="role_id"/>
-            <result property="roleName"  column="role_name"/>
+            <result property="roleName" column="role_name"/>
         </association>
     </resultMap>
 
     <select id="findAll" resultMap="sysUserResultMap">
-      SELECT *
-      FROM  sys_user as u
-      <include refid="join"/>
-      WHERE u.del = 0
-    </select>
-    <sql id="where">
-       <where>
-           <if test="loginCode!=null and loginCode!=''">
-              u.login_code = #{loginCode} and
-           </if>
-           <if test="name!=null and name!=''">
-               u.name like '%${name}%' and
-           </if>
-           <if test="idNumber!=null and idNumber!=''">
-               u.id_number = #{idNumber} and
-           </if>
-           <if test="birthday!=null">
-               u.birthday = #{birthday} and
-           </if>
-           <if test="gender!=null and gender!=''">
-               u.gender = #{gender} and
-           </if>
-           <if test="role!=null">
-               <if test="role.roleId!=null and role.roleId!=''">
-                 r.role_id = #{role.roleId} and
-               </if>
-           </if>
-           u.del = 0
-       </where>
-    </sql>
-    <select id="findPage" parameterType="com.lzy.liujing.restaurant.entity.request.UserRequest" resultMap="sysUserResultMap">
         SELECT *
-        FROM  sys_user as u
+        FROM sys_user as u
         <include refid="join"/>
-        <include refid="where"/>
-        ORDER BY 'u.user_id'
+        WHERE u.del = 0
     </select>
 
-     <select id="findByLoginCode" parameterType="String" resultMap="sysUserResultMap">
-      SELECT *
-      FROM sys_user as u
-      <include refid="join"/>
-      WHERE login_code = #{loginCode} AND u.del = 0
+    <select id="findPage" parameterType="com.lzy.liujing.restaurant.entity.request.UserRequest"
+            resultMap="sysUserResultMap">
+        SELECT *
+        FROM sys_user as u
+        <include refid="join"/>
+        <include refid="where"/>
+    </select>
+
+    <select id="findByLoginCode" parameterType="String" resultMap="sysUserResultMap">
+        SELECT *
+        FROM sys_user as u
+        <include refid="join"/>
+        WHERE login_code = #{loginCode} AND u.del = 0
     </select>
 
     <select id="findById" parameterType="Long" resultMap="sysUserResultMap">
@@ -85,13 +61,14 @@
         <include refid="join"/>
         WHERE login_code = #{loginCode}
     </select>
+
     <select id="searchPhone" parameterType="com.lzy.liujing.restaurant.entity.SysUser" resultMap="sysUserResultMap">
         SELECT *
         FROM sys_user as u
         <include refid="join"/>
         WHERE u.phone = #{phone}
         <if test="userId!=null">
-          and u.user_id != #{userId}
+            and u.user_id != #{userId}
         </if>
     </select>
 
@@ -105,7 +82,8 @@
         </if>
     </select>
 
-  <insert id="insert" parameterType="com.lzy.liujing.restaurant.entity.SysUser" keyColumn="user_id" keyProperty="userId" useGeneratedKeys="true">
+    <insert id="insert" parameterType="com.lzy.liujing.restaurant.entity.SysUser" keyColumn="user_id"
+            keyProperty="userId" useGeneratedKeys="true">
       INSERT INTO sys_user(login_code,password,name,phone,email,gender,birthday,id_number,address,create_time)
       VALUE (#{loginCode},#{password},#{name},#{phone},#{email},#{gender},#{birthday},#{idNumber},
       #{address},#{createTime})
@@ -120,47 +98,72 @@
         </foreach>
     </update>
 
-  <update id="update" parameterType="com.lzy.liujing.restaurant.entity.SysUser">
-      UPDATE sys_user
-      <include refid="setFields"/>
-      WHERE user_id = #{userId} AND del = 0
-  </update>
+    <update id="update" parameterType="com.lzy.liujing.restaurant.entity.SysUser">
+        UPDATE sys_user
+        <include refid="setFields"/>
+        WHERE user_id = #{userId} AND del = 0
+    </update>
 
-  <sql id="setFields">
-    <set>
-        <if test="loginCode!=null and loginCode!=''">
-          login_code = #{loginCode},
-        </if>
-        <if test="password!=null and password!=''">
-            password = #{password},
-        </if>
-        <if test="name!=null and name!=''">
-            name = #{name},
-        </if>
-        <if test="phone!=null and phone!=''">
-            phone = #{phone},
-        </if>
-        <if test="email!=null and email!=''">
-            email = #{email},
-        </if>
-        <if test="gender!=null and gender!=''">
-            gender = #{gender},
-        </if>
-        <if test="birthday!=null">
-            birthday = #{birthday},
-        </if>
-        <if test="idNumber!=null and idNumber!=''">
-            id_number = #{idNumber},
-        </if>
-        <if test="address!=null and address!=''">
-            address = #{address},
-        </if>
-        <if test="createTime!=null">
-            createTime = #{createTime},
-        </if>
-        <if test="modifyTime!=null">
-            modify_time = #{modifyTime},
-        </if>
-    </set>
-  </sql>
+    <sql id="setFields">
+        <set>
+            <if test="loginCode!=null and loginCode!=''">
+                login_code = #{loginCode},
+            </if>
+            <if test="password!=null and password!=''">
+                password = #{password},
+            </if>
+            <if test="name!=null and name!=''">
+                name = #{name},
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone = #{phone},
+            </if>
+            <if test="email!=null and email!=''">
+                email = #{email},
+            </if>
+            <if test="gender!=null and gender!=''">
+                gender = #{gender},
+            </if>
+            <if test="birthday!=null">
+                birthday = #{birthday},
+            </if>
+            <if test="idNumber!=null and idNumber!=''">
+                id_number = #{idNumber},
+            </if>
+            <if test="address!=null and address!=''">
+                address = #{address},
+            </if>
+            <if test="createTime!=null">
+                createTime = #{createTime},
+            </if>
+            <if test="modifyTime!=null">
+                modify_time = #{modifyTime},
+            </if>
+        </set>
+    </sql>
+    <sql id="where">
+        <where>
+            <if test="loginCode!=null and loginCode!=''">
+                u.login_code = #{loginCode} and
+            </if>
+            <if test="name!=null and name!=''">
+                u.name like '%${name}%' and
+            </if>
+            <if test="idNumber!=null and idNumber!=''">
+                u.id_number = #{idNumber} and
+            </if>
+            <if test="birthday!=null">
+                u.birthday = #{birthday} and
+            </if>
+            <if test="gender!=null and gender!=''">
+                u.gender = #{gender} and
+            </if>
+            <if test="role!= null">
+                <if test="role.roleId!=null and role.roleId!=''">
+                    r.role_id = #{role.roleId} and
+                </if>
+            </if>
+            u.del = 0 order by  u.user_id
+        </where>
+    </sql>
 </mapper>

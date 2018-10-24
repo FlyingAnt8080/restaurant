@@ -31,7 +31,7 @@
                     b.mc_id = #{memberCategory.mcId} and
                 </if>
             </if>
-            a.del =0
+            a.del =0 order by a.member_id
         </where>
     </sql>
     <sql id="set2">

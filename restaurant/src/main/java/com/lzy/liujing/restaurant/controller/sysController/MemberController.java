@@ -5,6 +5,8 @@ import com.lzy.liujing.restaurant.entity.*;
 import com.lzy.liujing.restaurant.service.MemberCategoryService;
 import com.lzy.liujing.restaurant.service.MemberService;
 import com.lzy.liujing.restaurant.utils.ResultUtil;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,18 +27,23 @@ public class MemberController {
      * @param model
      * @return
      */
+    @RequiresPermissions("manage:cashier:view")
     @GetMapping("/list.html")
     public String memberList(Model model){
         model.addAttribute("memberCategoryList",memberCategoryService.findAll());
+        SysUser user = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("user");
+        model.addAttribute("role",user.getRole());
         return "/member/list";
     }
 
+    @RequiresPermissions("manage:cashier:edit")
     @GetMapping("/add.html")
     public String addMember(Model model){
         model.addAttribute("memberCategoryList",memberCategoryService.findAll());
         return "/member/add";
     }
 
+    @RequiresPermissions("manage:cashier:edit")
     @PostMapping("/add.do")
     @ResponseBody
     public Result<Member> addMember(Member member,MemberCategory memberCategory){
@@ -45,6 +52,7 @@ public class MemberController {
         return ResultUtil.success();
     }
 
+    @RequiresPermissions("manage:cashier:edit")
     @GetMapping("/edit.html/{memberId}")
     public String editMember(@PathVariable("memberId") Long memberId, Model model){
         Member member = new Member();
@@ -58,6 +66,7 @@ public class MemberController {
         return "/member/edit";
     }
 
+    @RequiresPermissions("manage:cashier:edit")
     @PostMapping("/edit.do")
     @ResponseBody
     public Result<Member> editMember(Member member,MemberCategory memberCategory){
@@ -65,6 +74,8 @@ public class MemberController {
         memberService.update(member);
         return ResultUtil.success();
     }
+
+    @RequiresPermissions("manage:del")
     @PostMapping("/del.do")
     @ResponseBody
     public Result<Member> deleteMember(@RequestParam String ids){
@@ -79,9 +90,11 @@ public class MemberController {
      * @return
      */
 
+    @RequiresPermissions("manage:cashier:view")
     @PostMapping("/list.do")
     @ResponseBody
-    public Result<List<Member>> memberList(CustomPageInfo<Member> pageInfo,Member member,MemberCategory memberCategory){
+    public Result<List<Member>> memberList(CustomPageInfo<Member> pageInfo,Member member,
+                                           MemberCategory memberCategory){
         member.setMemberCategory(memberCategory);
         pageInfo.setT(member);
         CustomPageInfo<Member> resultPageInfo = memberService.findPage(pageInfo);

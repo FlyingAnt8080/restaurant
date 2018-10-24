@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>修改密码</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" href="../../static/layui/css/layui.css"
+          media="all"/>
+    <style>
+        body {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-card">
+        <div class="layui-card-header">修改密码</div>
+        <div class="layui-card-body">
+            <form class="layui-form layui-form-pane" action="">
+                <div class="layui-input-inline layui-hide">
+                    <input type="text" name="userId" th:value="${session.user.userId}" autocomplete="off"
+                           class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">当前密码</label>
+                    <div class="layui-input-inline">
+                        <input type="password" name="oldPwd" lay-verType="tips"  lay-verify="required"  autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">新密码</label>
+                    <div class="layui-input-inline">
+                        <input type="password"id="newPassword" name="newPwd" lay-verType="tips" lay-verify="required|format_verify"  autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">8-16位的数字和字母组成</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">确认密码</label>
+                    <div class="layui-input-inline">
+                        <input type="password" id="rePassword" name="rePassword"  lay-verType="tips" lay-verify="required|new_re_same" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <input type="button" class="layui-btn" lay-verType="tips" lay-submit lay-filter="updatePwd"
+                           id="component-form-element"
+                           value="确认修改">
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script th:src="@{/layuiadmin/layui/layui.js}" src="../../static/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'laydate', "layer"], function () {
+        var $ = layui.$
+            , form = layui.form
+            , laydate = layui.laydate
+            , layer = layui.layer;
+
+        //获取from表单提交事件
+        //此处submit中的值是lay-filter
+        form.on('submit(updatePwd)', function (data) {
+            var field = data.field; //获取提交的字段
+            //提交 Ajax 成功后，静态更新表格中的数据
+            $.ajax({
+                url: "/restaurant/user/updatepwd.do",
+                type: "post",
+                dataType: "JSON",
+                data: field,
+                success: function (result) {
+                    if (result.code == 200) {
+                        layer.msg("修改密码成功!下次登录生效！", {icon: 6});
+                    } else {
+                        layer.alert(result.msg, {
+                            title: '提交结果'
+                            , anim: 5
+                        });
+                    }
+                }
+            });
+        });
+        //日期选择器
+        laydate.render({
+            elem: '#birthday'
+            , format: 'yyyy-MM-dd' //可任意组合
+        });
+        //自定义验证
+        form.verify({
+            //验证两次输入密码是否相同
+            new_re_same: function (value, item) {
+               var newPwd =  $('#newPassword').val();
+               var rePwd = $('#rePassword').val();
+                if (newPwd!=rePwd) {
+                    return '两次输入的密码不相同!';
+                }
+            },
+            //验证密码格式是否合格
+            format_verify:function (value,item) {
+                if(!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/.test(value)){
+                    return "密码格式不正确！";
+                }
+            }
+        });
+    });
+</script>
+</html>

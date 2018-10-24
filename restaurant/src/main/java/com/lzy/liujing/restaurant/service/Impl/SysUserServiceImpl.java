@@ -109,7 +109,9 @@ public class SysUserServiceImpl implements SysUserService {
         UserRole userRole = new UserRole();
         userRole.setUserId(sysUser.getUserId());
         userRole.setRoleId(sysUser.getRole().getRoleId());
-        userRoleDao.update(userRole);
+        if(sysUser.getRole().getRoleId()!=null){
+            userRoleDao.update(userRole);
+        }
     }
 
     /**
@@ -201,7 +203,23 @@ public class SysUserServiceImpl implements SysUserService {
      * 重置密码
      * @param sysUser
      */
-    public void updatePwd(SysUser sysUser){
+    public void resetPwd(SysUser sysUser){
         sysUserDao.update(sysUser);
+    }
+
+    /**
+     * 修改密码
+     * @param sysUser
+     */
+    @Override
+    public void updatePwd(SysUser sysUser) {
+       SysUser findUser = sysUserDao.findById(sysUser.getUserId());
+       if(!findUser.getPassword().equals(sysUser.getOldPwd())){
+           throw  new CustomException(ResultEnum.PWD_ERROR);
+       }
+       SysUser user = new SysUser();
+       user.setUserId(sysUser.getUserId());
+       user.setPassword(sysUser.getNewPwd());
+       sysUserDao.update(user);
     }
 }

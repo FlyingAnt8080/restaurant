@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>桌位页面</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" href="../../static/layui/css/layui.css"
+          media="all"/>
+    <style>
+        * {
+            margin: 0px
+        }
+
+        body {
+            background: url(../image/background.jpg) fixed center center;
+            font-family:"宋体";
+        }
+
+        .nav {
+            font-size: 30px;
+            line-height: 40px;
+            text-align: center;
+            background-color:rgba(0,0,0,0);
+            color: #FFFFFF;
+            margin-top: 20px;
+        }
+
+        .statue {
+            font-size: 18px;
+            position: relative;
+            left: -42px;
+            top: 46px;
+        }
+
+        .people {
+            font-size: 14px;
+            position: relative;
+            left: 40px;
+            top: 117px;
+        }
+
+        .desk_code {
+            font-size: 48px;
+            position: relative;
+            top: 10px;
+        }
+
+        .color1 {
+            color: #FFFFFF;
+        }
+
+        .color2 {
+            color: #FFB800;
+        }
+
+        .con {
+            overflow: hidden;
+            margin-top: 30px;
+        }
+
+        .c_con {
+            overflow: hidden;
+            width: 1200px;
+            position: relative;
+            left: 50%;
+            margin-left: -600px;
+            text-align: center;
+        }
+
+        .desk {
+            float: left;
+            width: 140px;
+            height: 140px;
+            border-radius: 4%;
+            margin: 15px 50px;
+            overflow: hidden;
+            background-color:rgba(0,0,0,0.35);
+        }
+        .footer{
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-card nav">
+        <div class="title">
+            请选择当前桌位
+        </div>
+    </div>
+    <div class="con">
+        <div class="c_con" id="c_con">
+            <th:block th:each="desk:${page.list}">
+                <th:block th:if="${desk.idleStatus}==0">
+                    <div class="desk color1 click" style="text-align:center;">
+                        <input type="hidden" name="deskId" th:value="${desk.deskId}">
+                        <div class="people"><span th:text="${desk.peopleCount}"></span><span>人/桌</span></div>
+                        <div class="desk_code" th:text="${desk.deskCode}"></div>
+                        <div class="statue">
+                            <input type="hidden" th:value="${desk.idleStatus}">
+                            空闲
+                        </div>
+                    </div>
+                </th:block>
+                <th:block th:if="${desk.idleStatus}==1">
+                    <div class="desk color2 click" style="text-align:center;">
+                        <input type="hidden" name="deskId" th:value="${desk.deskId}">
+                        <div class="people"><span th:text="${desk.peopleCount}"></span><span>人/桌</span></div>
+                        <div class="desk_code" th:text="${desk.deskCode}"></div>
+                        <div class="statue">
+                            <input type="hidden" th:value="${desk.idleStatus}">
+                            有人
+                        </div>
+                    </div>
+                </th:block>
+            </th:block>
+        </div>
+    </div>
+    <div class="footer">
+        <div id="test1"></div>
+    </div>
+</body>
+<script th:src="@{/layuiadmin/layui/layui.js}" src="../../static/layuiadmin/layui/layui.js"></script>
+<script th:inline="javascript">
+    layui.use(['jquery','layer','laypage'], function(){
+        var $ = jQuery = layui.$,
+            layer = layui.layer,
+            laypage = layui.laypage;
+        var totalNum = [[${page.total}]]
+        var limit = 15;//一页显示条数
+        var currentPage = [[${page.pageNum}]];//当前页
+        //初始化数据
+        $(".click").click(function (){
+          var deskState = $(this).find(".statue input").val();
+          var deskCode = $(this).find(".desk_code").text();
+          if(deskState==0){
+              layer.msg("正在登录！");
+            $.ajax({
+                url:'',
+                type:'get',
+                dataType:'json',
+                data:{
+                    "deskCode":deskCode,
+                },
+                success:function (res) {
+                    if(res.code==200){
+                        layer.msg("登录中");
+                        location = "";
+                    }else{
+                        layer.msg("登录失败,请重新点击！");
+                    }
+                }
+            });
+          }else{
+              layer.msg("非空闲状态,不能选择！",{icon:5});
+          }
+        });
+
+        //调用分页
+        laypage.render({
+            elem: 'test1'
+            , count: totalNum //数据总数
+            , limit: limit//设置每页条数
+            , curr:currentPage
+            ,theme:'#FFB800'
+            , jump: function (obj, first){
+                console.log(obj.curr);
+                console.log(obj.limit);
+                var clickPage = obj.curr;
+                //首次不执行
+                if (!first) {
+                    location = "/restaurant/guest/desklist.html?pageNum="+clickPage;
+                }
+            }
+        });
+    });
+
+</script>
+</html>

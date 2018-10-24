@@ -65,12 +65,11 @@
                 </li>
                 <li class="layui-nav-item" lay-unselect>
                     <a href="javascript:;">
-                        <cite>admin</cite>
-                        <!--<cite th:text="${session.user.name}"></cite>-->
+                        <cite th:text="${session.user.name}"></cite>
                     </a>
                     <dl class="layui-nav-child">
-                        <dd><a lay-href="set/user/info.html">基本资料</a></dd>
-                        <dd><a lay-href="set/user/password.html">修改密码</a></dd>
+                        <dd><a th:attr="lay-href=@{/user/curuserinfo.html}">基本资料</a></dd>
+                        <dd><a th:attr="lay-href=@{/user/updatepwd.html}">修改密码</a></dd>
                         <hr>
                         <dd layadmin-event="logout" style="text-align: center;"><a th:href="@{/sysuser/logout.do}">退出</a></dd>
                     </dl>

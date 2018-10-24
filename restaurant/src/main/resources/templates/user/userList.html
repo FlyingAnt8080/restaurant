@@ -123,22 +123,23 @@
                 , title: '用户表'
                 , page: true //开启分页
                 , even: true//开启背景隔行
+                ,height:500
                 //,size:"lg"设置表格尺寸
                 , toolbar: '#test-table-toolbar-toolbarDemo' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
                 , cols: [[ //表头
                     {type: 'checkbox', fixed: 'left'}
-                    , {field: 'userId', title: 'ID', cellMinWidth: 60, sort: true, fixed: 'left', totalRowText: '合计：'}
-                    , {field: 'loginCode', title: '账号', cellMinWidth: 150}
-                    , {field: 'name', title: '姓名', cellMinWidth: 80, sort: true, totalRow: true}
-                    , {field: 'gender', title: '性别', cellMinWidth: 60, sort: true}
-                    , {field: 'phone', title: '电话', cellMinWidth: 100, sort: true, totalRow: true}
-                    , {field: 'email', title: '邮箱', cellMinWidth: 100}
-                    , {field: 'birthday', title: '生日', cellMinWidth: 150}
-                    , {field: 'idNumber', title: '身份证号', cellMinWidth: 200}
-                    , {field: 'address', title: '家庭住址', cellMinWidth: 160, sort: true, totalRow: true}
+                    , {field: 'userId', title: 'ID',align:'center', width:160, sort: true, fixed: 'left',sort: true,hide:true}
+                    , {field: 'loginCode', title: '账号',align:'center', width: 150}
+                    , {field: 'name', title: '姓名',align:'center', width: 100, sort: true}
+                    , {field: 'gender', title: '性别',align:'center', width: 100,}
+                    , {field: 'phone', title: '电话',align:'center', width: 160,sort: true}
+                    , {field: 'email', title: '邮箱',align:'center', width: 200}
+                    , {field: 'birthday', title: '生日',align:'center', width: 150}
+                    , {field: 'idNumber', title: '身份证号',align:'center', width: 200}
+                    , {field: 'address', title: '家庭住址',align:'center', width: 160, sort: true}
                     /*取嵌套json数据用模板 templet: '<div>{{d.role.roleName}}</div>'*/
-                    , {field: 'role', title: '角色', cellMinWidth: 100, templet: '<div>{{d.role.roleName}}</div>'}
-                    , {fixed: 'right', title: "工具栏", width: 165, toolbar: '#barDemo'}
+                    , {field: 'role', title: '角色',align:'center', width: 100, templet: '<div>{{d.role.roleName}}</div>'}
+                    , {fixed: 'right', title: "工具栏",align:'center', width: 180, toolbar: '#barDemo'}
                 ]]
             });
 
