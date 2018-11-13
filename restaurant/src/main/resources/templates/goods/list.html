@@ -12,10 +12,6 @@
             margin: 10px;
             background: #eeeeee;
         }
-        .laytable-cell-1-imgUrl{  /*最后的pic为字段的field*/
-            width: 66px;
-            height: 88px;
-        }
     </style>
 </head>
 <body>
@@ -116,6 +112,7 @@
                 <button class="layui-btn layui-btn-sm">上架</button>
                 {{#  } }}
             </script>
+
             <script th:inline="javascript" type="text/html" id="soldState">
                 {{#
                 if( d.soldState==0)
@@ -125,15 +122,24 @@
                 <button class="layui-btn layui-btn-danger layui-btn-sm">已售完</button>
                 {{#  } }}
             </script>
-            <script th:inline="javascript" type="text/html" id="imgCircleUrl">
+            <script th:inline="javascript" type="text/html" id="typeState">
                 {{#
-                if( d.imgCircleUrl==null||d.imgCircleUrl=='')
-                { }}
-                <div style="color:red">无图片</div>
-                {{#  } else { }}
-                <img src="/restaurant{{d.imgCircleUrl}}" class="laytable-cell-1-imgUrl">
-                {{#  } }}
+                    if( d.typeState==1){
+                }}
+                <b style="color: #2F4056;">普通菜</b>
+                {{#
+                    } else if(d.typeState==2){
+                }}
+                <b style="color: #FFB800;">新菜</b>
+                {{#
+                    }else if(d.typeState==3){
+                }}
+                <b style="color: #FF5722;">特色菜</b>
+                {{#
+                    }
+                }}
             </script>
+
             <script th:inline="javascript" type="text/html" id="imgUrl">
                 {{#
                 if( d.imgUrl==null||d.imgUrl=='')
@@ -190,7 +196,7 @@
                     , {field: 'storeCount', title: '库存量',align:'center',width: 100,sort: true,templet:'<div>{{d.storeCount}}份</div>'}
                     , {field: 'putawayStatus', title: '上架状态',align:'center',templet: '#putawayStatus',width: 100}
                     , {field: 'soldState', title: '销售状态',align:'center',templet: '#soldState',width: 100}
-                    , {field: 'imgCircleUrl', title: '轮播图片',align:'center', width:120,templet:'#imgCircleUrl'}
+                    , {field:  'typeState',title: '销售状态',align:'center',templet: '#typeState',width: 100}
                     , {field: 'createTime', title: '创建时间', width: 170,sort: true}
                     , {field: 'modifyTime', title: '修改时间', width: 170,sort: true}
                     , {fixed: 'right', title: "工具栏",align:'center', width: 180, toolbar: '#barDemo'}

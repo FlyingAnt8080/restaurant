@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>销量统计</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" href="../../static/layui/css/layui.css"
+          media="all"/>
+    <style>
+        body, html {
+            background: #eeeeee;
+            margin-top: 4px;
+            height: 98%;
+        }
+
+        .height100 {
+            height: 100%;
+        }
+
+        .height98 {
+            height: 98%;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-fluid" style="height:100%">
+    <div class="layui-row layui-col-space10" style="height: 25%">
+        <div class="layui-col-md4 height98">
+            <div class="layui-card height100">
+                <div class="layui-card-body">
+                    <div class="layui-row">
+                        <div class="layui-col-md2" style="height:120px"><span>总营业额</span></div>
+                        <div class="layui-col-md8"
+                             style="height:120px;font-size: 26px;line-height:120px;color: #FF5722;text-align: center">
+                            <span id="mustPay"></span><span>元</span></div>
+                        <div class="layui-col-md2" style="height:120px;text-align: right"><span class="day">今日</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4 height98">
+            <div class="layui-card height100">
+                <div class="layui-card-body">
+                    <div class="layui-row">
+                        <div class="layui-col-md2" style="height:120px"><span>总利润</span></div>
+                        <div class="layui-col-md8"
+                             style="height:120px;font-size: 26px;line-height:120px;color: #FFB800;text-align: center">
+                            <span id="totalProfit"></span><span>元</span></div>
+                        <div class="layui-col-md2" style="height:120px;text-align: right"><span class="day">今日</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4 height98">
+            <div class="layui-card height100">
+                <div class="layui-card-body">
+                    <div class="layui-row">
+                        <div class="layui-col-md2" style="height:120px"><span>订单数</span></div>
+                        <div class="layui-col-md8"
+                             style="height:120px;font-size: 26px;line-height:120px;color: #01AAED;text-align: center">
+                            <span id="totalOrder"></span><span>笔</span></div>
+                        <div class="layui-col-md2" style="height:120px;text-align: right"><span class="day">今日</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-card" style="height:78%;margin-top: 5px">
+        <div class="layui-card-header">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md2">
+                            <div class="layui-inline">
+                                <select name="day" lay-filter="salesStatisticsChartDay" style="border-color: #00FF00">
+                                    <option value="7" selected>近7天</option>
+                                    <option value="14">近15天</option>
+                                    <option value="29">近30天</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="layui-card-body" style="height: 88%">
+            <div id="salesStatisticsChart" class="height100">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/layuiadmin/layui/layui.js}" src="../../static/layuiadmin/layui/layui.js"></script>
+<script th:src="@{/js/dist/echarts.js}"></script>
+<script th:src="@{/js/macarons.js}" src="../../static/js/macarons.js"></script>
+<script type="text/javascript">
+    require.config({
+        paths: {
+            echarts: '/restaurant/js/dist'
+        }
+    });
+    layui.use(['table', 'laydate'], function () {
+        var $ = layui.$;
+        var form = layui.form;
+        //默认初始化近七天的销售额统计数据
+        ssChartNetworkRequest(6);
+        form.on('select(salesStatisticsChartDay)', function (data) {
+            var day = data.value;
+            ssChartNetworkRequest(day);
+        });
+
+        /**
+         * 销售额统计网络请求数据
+         */
+        function ssChartNetworkRequest(day) {
+            $.ajax({
+                url: '/restaurant/analysis/ssByDays.do',
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    day: day
+                },
+                success: function (res) {
+                    if (res.code == 200) {
+                        var data = res.data;
+                        var mustPayArray = [];
+                        var totalProfitArray = [];
+                        var totalOrderArray = [];
+                        var dateArray = [];
+                        for (var i = 0; i < data.length; i++) {
+                            dateArray.push(data[i].date);
+                            mustPayArray.push(data[i].mustPay);
+                            totalProfitArray.push(data[i].totalProfit);
+                            totalOrderArray.push(data[i].totalOrder);
+                        }
+                        //加载当天销售情况
+                        loadCurDaySalesStatistics(mustPayArray[mustPayArray.length - 1]
+                            , totalProfitArray[totalProfitArray.length - 1], totalOrderArray[totalOrderArray.length - 1]);
+                        //加载销售额统计图表
+                        loadSalesStatisticsChart(dateArray, mustPayArray, totalProfitArray, totalOrderArray);
+                    } else {
+                        layer.msg(res.msg, {icon: 5});
+                    }
+                }
+            });
+        }
+
+        function loadCurDaySalesStatistics(mustPay, totalProfit, totalOrder) {
+            $("#mustPay").text(mustPay);
+            $("#totalProfit").text(totalProfit);
+            $("#totalOrder").text(totalOrder);
+        }
+
+        /**
+         * 加载销售额统计图表
+         * @param dateArray
+         * @param mustPayArray
+         * @param totalProfitArray
+         * @param totalOrderArray
+         */
+        function loadSalesStatisticsChart(dateArray, mustPayArray, totalProfitArray, totalOrderArray) {
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar'
+                ],
+                function (echarts) {
+                    var salesStatisticsChart = echarts.init(document.getElementById('salesStatisticsChart'), 'macarons');
+                    var salesStatisticsOption = {
+                        title: {
+                            text: '销售统计',
+                            // subtext: '纯属虚构'
+                        },
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'cross',
+                                crossStyle: {
+                                    color: '#1e90ff',
+                                    width: 1,
+                                    type: 'dashed'
+                                },
+
+                            }
+                        },
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                dataZoom: {show: true},
+                                dataView: {show: true, readOnly: false},
+                                magicType: {show: true, type: ['line', 'bar']},
+                                restore: {show: true},
+                                saveAsImage: {show: true}
+                            }
+                        },
+                        dataZoom: {
+                            show: true,
+                            realtime: true,
+                            start: 0,
+                            end: 100
+                        },
+                        calculable: true,
+                        itemStyle: {
+                            //默认样式
+                            normal: {
+                                //设置柱状条圆角
+                                barBorderRadius: [20, 20, 12, 12]
+                            }
+                        },
+                        legend: {
+                            data: ['营业额', '利润', '订单数']
+                        },
+                        xAxis: [
+                            {
+                                type: 'category',
+                                data: dateArray
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value',
+                                //name : '金额',
+                                axisLabel: {
+                                    formatter: '{value}元',
+                                    show: true,
+                                    interval: 'auto',    // {number}
+                                    margin: 10,
+                                    textStyle: {
+                                        color: '#5FB878',
+                                        fontFamily: 'verdana',
+                                        fontSize: 12,
+                                        fontStyle: 'normal',
+                                    }
+                                }
+                            },
+                            {
+                                type: 'value',
+                                //name : '订单',
+                                axisLabel: {
+                                    formatter: '{value}笔',
+                                    show: true,
+                                    interval: 'auto',
+                                    margin: 40,
+                                    textStyle: {
+                                        color: '#1e90ff',
+                                        fontFamily: 'verdana',
+                                        fontSize: 12,
+                                        fontStyle: 'normal',
+                                    }
+                                }
+                            }
+                        ],
+                        series: [
+
+                            {
+                                name: '营业额',
+                                type: 'bar',
+                                data: mustPayArray
+                                , markPoint: {
+                                    data: [
+                                        {type: 'max', name: '最大值'},
+                                        {type: 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine: {
+                                    data: [
+                                        {type: 'average', name: '平均值'}
+                                    ]
+                                }
+                            },
+                            {
+                                name: '利润',
+                                type: 'bar',
+                                data: totalProfitArray,
+                                markPoint: {
+                                    data: [
+                                        {type: 'max', name: '最大值'},
+                                        {type: 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine: {
+                                    data: [
+                                        {type: 'average', name: '平均值'}
+                                    ]
+                                }
+                            },
+                            {
+                                name: '订单数',
+                                type: 'line',
+                                yAxisIndex: 1,
+                                data: totalOrderArray
+                                , markPoint: {
+                                    data: [
+                                        {type: 'max', name: '最大值'},
+                                        {type: 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine: {
+                                    data: [
+                                        {type: 'average', name: '平均值'}
+                                    ]
+                                }
+                            }
+                        ]
+                    };
+                    salesStatisticsChart.setOption(salesStatisticsOption);
+                });
+        }
+    });
+</script>
+</body>
+</html>

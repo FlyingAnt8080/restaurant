@@ -4,4 +4,227 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lzy.liujing.restaurant.dao.OrderDetailDao">
 
+    <select id="findPage" parameterType="com.lzy.liujing.restaurant.entity.OrderDetail" resultMap="orderDetailMap">
+        select * from r_order_detail as a
+        <include refid="join"/>
+        <include refid="where"/>
+    </select>
+
+    <select id="findPageByStatus" parameterType="java.util.List"  resultMap="orderDetailMap">
+        select * from r_order_detail as a
+        <include refid="join"/>
+        where a.status in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and a.del=0
+        order by a.status DESC,b.create_time
+    </select>
+
+    <select id="findOderDetailByOdIds" parameterType="java.util.List" resultMap="orderDetailMap">
+        select * from r_order_detail
+        where od_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="countPriceByOdIds" parameterType="java.util.List" resultType="Double">
+        select sum(a.count*e.price) from  r_order_detail as a
+        <include refid="join"/>
+        where a.od_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and a.del = 0
+    </select>
+
+    <insert id="insert" parameterType="java.util.List">
+        insert into r_order_detail(order_id,goods_id,count,status,description,del) values
+        <foreach collection="list" index="index" item="item"  separator=",">
+            /*新的订单status都为0*/
+            (#{item.order.orderId},#{item.goods.goodsId},#{item.count},0,#{item.description},0)
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.lzy.liujing.restaurant.entity.OrderDetail">
+        update r_order_detail
+        <include refid="set"/>
+        where od_id =#{odId} and del=0
+    </update>
+    <update id="updateStatusByOdIds" parameterType="com.lzy.liujing.restaurant.entity.OrderDetail">
+        update r_order_detail
+        set status=#{status}
+        where od_id in
+        <foreach collection="odIdList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="deleteByIds" parameterType="java.util.List">
+      update r_order_detail
+      set del=1
+      where od_id in
+      <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+          #{item}
+      </foreach>
+    </update>
+
+    <update id="deleteByOrderIds" parameterType="java.util.List">
+        update r_order_detail
+        set del=1
+        where order_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+    <!--注意如果多表连接查询有的id字段可能为空，则将其放到最后用左连接查询(左连接查询如果左边为空则右边以null填充)-->
+    <sql id="join">
+        left join r_order as b on a.order_id = b.order_id
+        inner join r_goods as e on a.goods_id = e.goods_id
+        inner join r_category as f on e.category_id = f.category_id
+        left join r_member as c on b.member_code = c.member_code
+        left join r_merber_category as d on c.mc_id = d.mc_id
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="odId!=null">
+                a.od_id = #{odId} and
+            </if>
+            <if test="order!=null">
+                <if test="order.orderId!=null">
+                    a.order_id = #{order.orderId} and
+                </if>
+                <if test="order.payStatus!=null">
+                    b.pay_status = #{order.payStatus} and
+                </if>
+                <if test="order.orderCode!=null and order.orderCode!=''">
+                    b.order_code = #{order.orderCode} and
+                </if>
+                <if test="order.member!=null">
+                    <if test="order.member.memberCode!=null and order.member.memberCode!=''">
+                      b.member_code =#{order.member.memberCode} and
+                    </if>
+                </if>
+                <if test="order.deskCode!=null and order.deskCode!=''">
+                   b.desk_code = #{order.deskCode} and
+                </if>
+            </if>
+            <if test="goods!=null">
+                <if test="goods.goodsId!=null">
+                    a.goods_id = #{goods.goodsId} and
+                </if>
+                <if test="goods.goodsName!=null and goods.goodsName!=''">
+                    e.goods_name = #{goods.goodsName} and
+                </if>
+                <if test="goods.goodsCategory!=null">
+                    <if test="goods.goodsCategory.categoryId!=null and goods.goodsCategory.categoryId!=''">
+                        e.category_id = #{goods.goodsCategory.categoryId} and
+                    </if>
+                </if>
+            </if>
+            <if test="count!=null and count!=''">
+                a.count = #{count} and
+            </if>
+            <if test="status != null and status!=''">
+                a.status = #{status} and
+            </if>
+            <if test="description!=null and description!=''">
+                a.description = #{description} and
+            </if>
+            a.del = 0
+        </where>
+    </sql>
+
+    <sql id="set">
+        <set>
+            <if test="order!=null">
+                <if test="order.orderId!=null">
+                    order_id = #{order.orderId},
+                </if>
+            </if>
+            <if test="goods!=null">
+                <if test="goods.goodsId!=null">
+                    goods_id = #{goods.goodsId},
+                </if>
+            </if>
+            <if test="count!=null and count!=''">
+                count = #{count},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="description!=null and description!=''">
+                description = #{description},
+            </if>
+        </set>
+    </sql>
+
+    <resultMap id="orderDetailMap" type="com.lzy.liujing.restaurant.entity.OrderDetail">
+        <id column="od_id" property="odId"/>
+        <result column="count" property="count"/>
+        <result column="status" property="status"/>
+        <result column="description" property="description"/>
+        <association property="order" javaType="com.lzy.liujing.restaurant.entity.Order">
+            <id column="order_id" property="orderId"/>
+            <result column="desk_code" property="deskCode"/>
+            <result column="order_code" property="orderCode"/>
+            <result column="total_cost" property="totalCost"/>
+            <result column="total_price" property="totalPrice"/>
+            <result column="total_profit" property="totalProfit"/>
+            <result column="actual_pay" property="actualPay"/>
+            <result column="must_pay" property="mustPay"/>
+            <result column="change_pay" property="changeMoney"/>
+            <result column="discount_pay" property="discountMoney"/>
+            <result column="people_num" property="peopleNum"/>
+            <result column="pay_status" property="payStatus"/>
+            <result column="finish_status" property="finishStatus"/>
+            <result column="over_status" property="overStatus"/>
+            <result column="create_time" property="createTime"/>
+            <result column="modify_time" property="modifyTime"/>
+            <association property="member" javaType="com.lzy.liujing.restaurant.entity.Member">
+                <id column="member_id" property="memberId"/>
+                <result column="member_code" property="memberCode"/>
+                <result column="m_name" property="name"/>
+                <result column="m_gender" property="gender"/>
+                <result column="m_birthday" property="birthday"/>
+                <result column="m_phone" property="phone"/>
+                <result column="total_money" property="totalMoney"/>
+                <result column="create_time" property="createTime"/>
+                <result column="modify_time" property="modifyTime"/>
+                <result column="a.del" property="del"/>
+                <association property="memberCategory" javaType="com.lzy.liujing.restaurant.entity.MemberCategory">
+                    <id column="mc_id" property="mcId"/>
+                    <result column="mc_name" property="mcName"/>
+                    <result column="discount" property="discount"/>
+                    <result column="amount" property="amount"/>
+                    <result column="create_time" property="createTime"/>
+                    <result column=" modify_time" property="modifyTime"/>
+                    <result column="b.del" property="del"/>
+                </association>
+            </association>
+        </association>
+        <association property="goods" javaType="com.lzy.liujing.restaurant.entity.Goods">
+            <id column="goods_id" property="goodsId"/>
+            <result column="goods_name" property="goodsName"/>
+            <result column=" img_small_url" property="imgSmallUrl"/>
+            <result column="img_url" property="imgUrl"/>
+            <result column="img_circle_url" property="imgCircleUrl"/>
+            <result column="description" property="description"/>
+            <result column="cost" property="cost"/>
+            <result column="price" property="price"/>
+            <result column="discount" property="discount"/>
+            <result column="sold_state" property="soldState"/>
+            <result column="sold_count" property="soldCount"/>
+            <result column="store_count" property="storeCount"/>
+            <result column="type_state" property="typeState"/>
+            <result column="putaway_status" property="putawayStatus"/>
+            <result column="create_time" property="createTime"/>
+            <result column="modify_time" property="modifyTime"/>
+            <association property="goodsCategory" javaType="com.lzy.liujing.restaurant.entity.GoodsCategory">
+                <id column="category_id" property="categoryId"/>
+                <result column="category_name" property="categoryName"/>
+            </association>
+        </association>
+    </resultMap>
 </mapper>

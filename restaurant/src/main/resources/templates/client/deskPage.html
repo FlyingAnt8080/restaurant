@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" http-equiv="refresh" content="15">
     <title>桌位页面</title>
     <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" href="../../static/layui/css/layui.css"
           media="all"/>
@@ -11,18 +11,18 @@
         }
 
         body {
-            background: url(../image/background.jpg) fixed center center;
             font-family:"宋体";
         }
 
         .nav {
-            font-size: 30px;
-            line-height: 40px;
+            font-size: 20px;
+            line-height: 30px;
             text-align: center;
-            background-color:rgba(0,0,0,0);
-            color: #FFFFFF;
-            margin-top: 20px;
+            background: #393D49;
+            color: #ffffff;
+            padding:20px 0px;
         }
+
 
         .statue {
             font-size: 18px;
@@ -45,11 +45,13 @@
         }
 
         .color1 {
-            color: #FFFFFF;
+            color: #0C0C0C;
+            background: #F8F8F8;
         }
 
         .color2 {
-            color: #FFB800;
+            color: #FFFFFF;
+            background: #65cc33;
         }
 
         .con {
@@ -73,7 +75,6 @@
             border-radius: 4%;
             margin: 15px 50px;
             overflow: hidden;
-            background-color:rgba(0,0,0,0.35);
         }
         .footer{
             position: absolute;
@@ -100,7 +101,7 @@
                         <div class="desk_code" th:text="${desk.deskCode}"></div>
                         <div class="statue">
                             <input type="hidden" th:value="${desk.idleStatus}">
-                            空闲
+                            空台
                         </div>
                     </div>
                 </th:block>
@@ -111,7 +112,7 @@
                         <div class="desk_code" th:text="${desk.deskCode}"></div>
                         <div class="statue">
                             <input type="hidden" th:value="${desk.idleStatus}">
-                            有人
+                            就餐中
                         </div>
                     </div>
                 </th:block>
@@ -136,20 +137,19 @@
           var deskState = $(this).find(".statue input").val();
           var deskCode = $(this).find(".desk_code").text();
           if(deskState==0){
-              layer.msg("正在登录！");
             $.ajax({
-                url:'',
-                type:'get',
+                url:'/restaurant/guest/login.do',
+                type:'POST',
                 dataType:'json',
                 data:{
                     "deskCode":deskCode,
                 },
                 success:function (res) {
                     if(res.code==200){
-                        layer.msg("登录中");
-                        location = "";
+                        layer.msg("登录成功");
+                        location = "/restaurant/guest/main.html";
                     }else{
-                        layer.msg("登录失败,请重新点击！");
+                        layer.msg(res.msg,{icon:5});
                     }
                 }
             });
@@ -157,14 +157,13 @@
               layer.msg("非空闲状态,不能选择！",{icon:5});
           }
         });
-
         //调用分页
         laypage.render({
             elem: 'test1'
             , count: totalNum //数据总数
             , limit: limit//设置每页条数
             , curr:currentPage
-            ,theme:'#FFB800'
+            ,theme:'#393D49'
             , jump: function (obj, first){
                 console.log(obj.curr);
                 console.log(obj.limit);
@@ -176,6 +175,5 @@
             }
         });
     });
-
 </script>
 </html>

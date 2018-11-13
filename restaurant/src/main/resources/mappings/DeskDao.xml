@@ -36,8 +36,19 @@
             del = 0
         </where>
     </sql>
+    <sql id="where2">
+        <where>
+            <if test="deskCode!=null and deskCode!=''">
+                desk_code = #{deskCode} and
+            </if>
+            <if test="deskId!=null and deskId!=''">
+                desk_id = #{deskId} and
+            </if>
+            del = 0
+        </where>
+    </sql>
 
-    <select id="findPage" resultType="com.lzy.liujing.restaurant.entity.Desk">
+    <select id="findPage" parameterType="com.lzy.liujing.restaurant.entity.Desk" resultType="com.lzy.liujing.restaurant.entity.Desk">
         select * from r_desk
         <include refid="where"/>
     </select>
@@ -63,7 +74,7 @@
     <update id="update" parameterType="com.lzy.liujing.restaurant.entity.Desk">
         update r_desk
         <include refid="set"/>
-        where desk_id =#{deskId} and del = 0
+        <include refid="where2"/>
     </update>
 
     <update id="deleteByIds" parameterType="java.util.List">

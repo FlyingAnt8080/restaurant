@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzy.liujing.restaurant.dao.DataAnalysisDao">
+
+    <select id="findSalesSortByDays" parameterType="com.lzy.liujing.restaurant.entity.chart.GoodsSalesChart"
+            resultType="com.lzy.liujing.restaurant.entity.chart.GoodsSalesChart">
+        select goods_name as goodsName,sum(count) as count from r_order_detail as a left join r_order as b on a.order_id = b.order_id
+        inner join r_goods as e on a.goods_id = e.goods_id
+        where  date_sub(curdate(), interval #{day} day) <![CDATA[ <= ]]> date(b.create_time) and a.del=0 GROUP BY goods_name
+        ORDER BY count DESC LIMIT 0,#{number}
+    </select>
+
+    <select id="findGoodsCategorySalesByDays"
+            parameterType="com.lzy.liujing.restaurant.entity.chart.GoodsCategorySalesChart"
+            resultType="com.lzy.liujing.restaurant.entity.chart.GoodsCategorySalesChart">
+        select f.category_id,category_name as categoryName,sum(count) as count
+        from r_order_detail as a left join r_order as b on a.order_id = b.order_id
+        inner join r_goods as e on a.goods_id = e.goods_id inner join r_category as f
+        on e.category_id = f.category_id  where  date_sub(curdate(), interval #{day} day) <![CDATA[ <= ]]> date(b.create_time)
+        and a.del=0 GROUP BY category_name
+    </select>
+
+    <select id="findSalesStatisticsByDays" parameterType="com.lzy.liujing.restaurant.entity.chart.SalesStatisticsChart"
+            resultType="com.lzy.liujing.restaurant.entity.chart.SalesStatisticsChart">
+        select DATE_FORMAT(create_time,'%Y-%m-%d') as date,SUM(must_pay) as mustPay,SUM(total_profit) as totalProfit,
+        count(*) as totalOrder
+        from r_order where date_sub(curdate(), interval #{day} day) <![CDATA[ <= ]]> date(create_time)
+        and del=0 and pay_status = 1 GROUP BY DATE_FORMAT(create_time,'%Y-%m-%d');
+    </select>
+
+    <select id="findMemberAddByDays" parameterType="com.lzy.liujing.restaurant.entity.chart.MemberChart"
+            resultType="com.lzy.liujing.restaurant.entity.chart.MemberChart">
+        select  DATE_FORMAT(create_time,'%m-%d') as date,count(*) as count from r_member where date_sub(curdate(), interval #{day} day) <![CDATA[ <= ]]> date(create_time) and del=0 GROUP BY DATE_FORMAT(create_time,'%Y-%m-%d')
+    </select>
+
+    <select id="findMemberCategoryRate" parameterType="com.lzy.liujing.restaurant.entity.chart.MemberChart"
+            resultType="com.lzy.liujing.restaurant.entity.chart.MemberChart">
+        select mc_name as categoryName,count(*) as count from r_member as a inner join r_merber_category as b on a.mc_id = b.mc_id where a.del=0 GROUP BY b.mc_id
+    </select>
+
+    <select id="findPeopleByHours" resultType="com.lzy.liujing.restaurant.entity.chart.PeopleChart">
+        SELECT dayHour,IF(count IS NULL, 0, count) as count
+        FROM (SELECT SUM(people_num) AS count,DATE_FORMAT(create_time, '%H')AS hour
+        FROM r_order
+        where DATE(create_time) = CURDATE()
+        GROUP BY hour
+        ORDER BY 1) A
+        RIGHT JOIN (SELECT one.hours + two.hours AS dayHour
+        FROM (SELECT 0 hours
+        UNION ALL SELECT 1 hours
+        UNION ALL SELECT 2 hours
+        UNION ALL SELECT 3 hours
+        UNION ALL SELECT 4 hours
+        UNION ALL SELECT 5 hours
+        UNION ALL SELECT 6 hours
+        UNION ALL SELECT 7 hours
+        UNION ALL SELECT 8 hours
+        UNION ALL SELECT 9 hours) one
+        CROSS JOIN (SELECT 0 hours
+        UNION ALL SELECT 10 hours
+        UNION ALL SELECT 20 hours) two
+        WHERE (one.hours + two.hours) <![CDATA[<]]> 24 and(one.hours + two.hours)<![CDATA[>=]]> 7) B ON A.hour = CONVERT(B.dayHour, SIGNED)
+        ORDER BY dayHour
+    </select>
+</mapper>

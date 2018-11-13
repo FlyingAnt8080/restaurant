@@ -24,7 +24,7 @@ public class Desk extends BaseBean{
      */
     private Integer peopleCount;
     /**
-     * 空闲状态(0空闲，1有人)
+     * 空闲状态(0空闲，1有人,2待清理)
      */
     private Integer idleStatus;
 

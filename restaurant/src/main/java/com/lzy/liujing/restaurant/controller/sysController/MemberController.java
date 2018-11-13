@@ -105,4 +105,16 @@ public class MemberController {
         result.setData(resultPageInfo.getList());
         return result;
     }
+
+    /**
+     * 根据会员号查询会员接口
+     * @param member
+     * @return
+     */
+    @GetMapping("/findMemberByMemberCode.do")
+    @ResponseBody
+    public Result<Member> findMemberByMemberCode(Member member){
+        Member resultMember = memberService.findMemberByMemberCode(member);
+        return ResultUtil.success(resultMember);
+    }
 }

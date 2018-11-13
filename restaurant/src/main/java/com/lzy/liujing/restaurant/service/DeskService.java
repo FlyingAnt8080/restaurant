@@ -45,4 +45,23 @@ public interface DeskService {
      * @param strIds
      */
     void deleteByIds(String strIds);
+
+    /**
+     * 根据桌号查询
+     * @param desk
+     * @return
+     */
+    Desk findByDeskCode(Desk desk);
+
+    /**
+     * 桌位登录
+     * @param desk
+     */
+    void login(Desk desk);
+
+    /**
+     * 桌位退出登录
+     * @param desk
+     */
+    void logout(Desk desk);
 }

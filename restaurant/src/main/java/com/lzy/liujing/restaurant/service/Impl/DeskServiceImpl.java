@@ -11,6 +11,7 @@ import com.lzy.liujing.restaurant.service.DeskService;
 import com.lzy.liujing.restaurant.utils.SplitIdsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.List;
  * 桌位管理业务逻辑
  */
 @Service
+@Transactional
 public class DeskServiceImpl implements DeskService {
     @Autowired
     private DeskDao deskDao;
@@ -89,5 +91,40 @@ public class DeskServiceImpl implements DeskService {
        if(effect<=0){
            throw new CustomException(ResultEnum.DEL_DB_FAIL);
        }
+    }
+
+    /**
+     * 根据桌号查询
+     * @param desk
+     * @return
+     */
+    @Override
+    public Desk findByDeskCode(Desk desk) {
+        return deskDao.findByDeskCode(desk);
+    }
+
+    /**
+     * 桌位登录业务
+     * @param desk
+     */
+    @Override
+    public void login(Desk desk) {
+       Desk findDesk =  deskDao.findByDeskCode(desk);
+       if(findDesk==null){
+           throw new CustomException(ResultEnum.DESK_CODE_NO_EXIST);
+       }
+       if(findDesk.getIdleStatus()==1||findDesk.getIdleStatus()==2){
+           throw new CustomException(ResultEnum.DESK_CODE_NO_IDLE);
+       }
+       //将桌位设置成有人状态
+       desk.setIdleStatus(1);
+       deskDao.update(desk);
+    }
+
+    @Override
+    public void logout(Desk desk){
+        //将桌位状态设置为空闲0
+        desk.setIdleStatus(0);
+        deskDao.update(desk);
     }
 }

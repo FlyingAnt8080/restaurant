@@ -84,6 +84,16 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
+     * 根据会员号查询会员
+     * @param member
+     * @return
+     */
+    @Override
+    public Member findMemberByMemberCode(Member member) {
+        return memberDao.searchByMemberCode(member);
+    }
+
+    /**
      * 根据id删除会员
      * @param strIds
      */

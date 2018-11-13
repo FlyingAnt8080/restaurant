@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>详细情况</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}"
+          href="../../static/layuiadmin/layui/css/layui.css"
+          media="all"/>
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" href="../../static/layuiadmin/layui/css/layui.css"
+          media="all"/>
+    <style>
+        body {
+            margin: 10px;
+            background: #eeeeee;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <!--头部工具栏-->
+        <script type="text/html" id="test-table-toolbar-toolbarDemo">
+            <div class="layui-btn-container">
+
+            </div>
+        </script>
+        <!-- table表格-->
+        <table id="tableList" lay-filter="tableList">
+
+        </table>
+        <script type="text/html" id="imgUrl">
+            {{#
+            if( d.goods.imgUrl==null||d.goods.imgUrl=='')
+            { }}
+            <div style="color:red">无图片</div>
+            {{#  } else { }}
+            <img src="/restaurant/{{d.goods.imgUrl}}" class="laytable-cell-1-imgUrl">
+            {{#  } }}
+        </script>
+        <script type="text/html" id="status">
+            {{#
+                if( d.status==0){
+            }}
+                <div style="color: #01AAED">等待烹饪</div>
+            {{#
+                } else if(d.status==1){
+            }}
+                <div style="color: #FFB800">正在烹饪</div>
+            {{#
+                } else if(d.status==2){
+            }}
+                <div style="color: #FF5722">等待上菜</div>
+            {{#
+                } else if(d.status==3){
+            }}
+                <div style="color:#5FB878">上菜完成</div>
+            {{#
+                }
+            }}
+        </script>
+    </div>
+</div>
+<script th:src="@{/layuiadmin/layui/layui.js}" src="../static/layuiadmin/layui/layui.js"></script>
+<script th:inline="javascript">
+    layui.use(['table', 'laydate'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , table = layui.table
+        table.render({
+            elem: '#tableList'
+            , url: "/restaurant/service/ssd.do/[[${orderId}]]" //数据接口
+            , title: '详细情况'
+            , even: true//开启背景隔行
+            , request: {
+                pageName: 'pageNum' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: {
+                statusCode: 200
+            }
+            , limits: [1, 2, 5, 10, 20, 30]
+            , page: true
+            ,size:'lg'
+            , toolbar: '#test-table-toolbar-toolbarDemo' //开启工具栏，此处显示默认图标
+            , cols: [[ //表头
+                 {field: 'odId', title:'ID', align: 'center', cellMinWidth: 60, fixed: 'left', sort: true,templet:'<div>{{d.odId}}</div>',hide:true}
+                , {field: 'goodsName', title: '菜品名',align:'center', cellMinWidth: 150, sort: true,templet:'<div>{{d.goods.goodsName}}</div>'}
+                , {field: 'imgUrl', title: '菜品图片',align:'center', cellMinWidth:120, templet:'#imgUrl'}
+                , {field: 'goodsCategory', title: '菜品类型', align:'center',cellMinWidth: 100, templet: '<div>{{d.goods.goodsCategory.categoryName}}</div>'}
+                , {field: 'price', title: '价格',align:'center', cellMinWidth: 100,sort: true,templet:'<div>{{d.goods.price}}元</div>'}
+                , {field: 'count', title: '数量',align:'center', cellMinWidth: 100,sort:true,templet:'<div>{{d.count}}份</div>'}
+                , {field: 'status', title: '制作状态',align:'center', cellMinWidth: 100,sort: true,templet:"#status"}
+                ]]
+        });
+    });
+</script>
+</body>
+</html>

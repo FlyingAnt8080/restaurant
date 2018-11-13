@@ -1,5 +1,7 @@
 package com.lzy.liujing.restaurant.entity;
 
+import java.util.List;
+
 /**
  * Created with IDEA
  * author:LiuJing
@@ -34,6 +36,10 @@ public class OrderDetail extends BaseBean{
      * 制菜说明
      */
     private String description;
+    /**
+     * 订单id集
+     */
+    private List<Long> odIdList;
 
     public Long getOdId() {
         return odId;
@@ -83,6 +89,14 @@ public class OrderDetail extends BaseBean{
         this.description = description;
     }
 
+    public List<Long> getOdIdList() {
+        return odIdList;
+    }
+
+    public void setOdIdList(List<Long> odIdList) {
+        this.odIdList = odIdList;
+    }
+
     @Override
     public String toString() {
         return "OrderDetail{" +
@@ -92,6 +106,7 @@ public class OrderDetail extends BaseBean{
                 ", count=" + count +
                 ", status=" + status +
                 ", description='" + description + '\'' +
+                ", odIdList=" + odIdList +
                 '}';
     }
 }

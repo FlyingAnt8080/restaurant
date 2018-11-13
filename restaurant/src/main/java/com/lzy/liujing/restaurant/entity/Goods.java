@@ -41,7 +41,7 @@ public class Goods extends BaseBean{
     /**
      * 折扣
      */
-    private double discount;
+    private Double discount;
 
     /**
      * 菜品上架状态(0下架，1上架)
@@ -59,6 +59,10 @@ public class Goods extends BaseBean{
      * 销售状态(0 在售，1销售完)
      */
     private Integer soldState;
+    /**
+     * 类型状态(1普通菜，2新菜，3热菜）
+     */
+    private Integer typeState;
 
     public Integer getGoodsId() {
         return goodsId;
@@ -132,11 +136,11 @@ public class Goods extends BaseBean{
         this.price = price;
     }
 
-    public double getDiscount() {
+    public Double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(double discount) {
+    public void setDiscount(Double discount) {
         this.discount = discount;
     }
 
@@ -172,6 +176,14 @@ public class Goods extends BaseBean{
         this.soldState = soldState;
     }
 
+    public Integer getTypeState() {
+        return typeState;
+    }
+
+    public void setTypeState(Integer typeState) {
+        this.typeState = typeState;
+    }
+
     @Override
     public String toString() {
         return "Goods{" +
@@ -189,6 +201,7 @@ public class Goods extends BaseBean{
                 ", soldCount=" + soldCount +
                 ", storeCount=" + storeCount +
                 ", soldState=" + soldState +
+                ", typeState=" + typeState +
                 '}';
     }
 }

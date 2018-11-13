@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>收银台</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}"
+          href="../../static/layuiadmin/layui/css/layui.css"
+          media="all"/>
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" href="../../static/layuiadmin/layui/css/layui.css"
+          media="all"/>
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        * {
+            -moz-box-sizing: border-box; /*Firefox3.5+*/
+            -webkit-box-sizing: border-box; /*Safari3.2+*/
+            -o-box-sizing: border-box; /*Opera9.6*/
+            -ms-box-sizing: border-box; /*IE8*/
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: rgb(241, 241, 241)
+        }
+
+        .box {
+            width: 100%;
+            height: 98%;
+            overflow: hidden;
+        }
+
+        .box .left {
+            width: 44%;
+            height: 100%;
+            float: left;
+            background: #FFFFFF;
+            border-radius: 6px;
+            margin: 8px 0.5%;
+        }
+
+        .box .right {
+            width: 54%;
+            height: 100%;
+            float: left;
+            background: #FFFFFF;
+            margin: 8px 0.5%;
+            border-radius: 6px;
+        }
+
+        .float-left {
+            float: left;
+        }
+
+        .nav-item {
+            width: 100%;
+            height: 20%;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .nav-item-item1, .nav-item-item2 {
+            width: 100%;
+            display: inline-block;
+        }
+
+        .nav-item-item1 {
+            border-radius: 6px 6px 0px 0px;
+            height: 60px;
+            padding: 0px 20px;
+        }
+
+        .nav-item-item1 .left-item {
+            width: 60%;
+            height: 60px;
+            text-align: left;
+            line-height: 60px;
+        }
+
+        .nav-item-item1 .right-item {
+            width: 40%;
+            height: 60px;
+            line-height: 60px;
+            text-align: right;
+        }
+
+        .nav-item-item2 {
+            height: 60px;
+            background: rgb(248, 248, 248);
+            padding: 0px 20px;
+        }
+
+        .nav-item-item2 .left-item {
+            width: 60%;
+            height: 60px;
+            text-align: left;
+            line-height: 60px;
+        }
+
+        .nav-item-item2 .right-item {
+            width: 40%;
+            height: 60px;
+            line-height: 60px;
+            text-align: right;
+        }
+
+        .items {
+            height: 65%;
+            width: 100%;
+            overflow: auto;
+            font-size: 16px;
+        }
+
+        .item {
+            width: 100%;
+            height: 60px;
+            padding: 0px 20px;
+            border-bottom: 1.5px solid #e2e2e2;
+        }
+
+        .item div {
+            width: 25%;
+            line-height: 60px;
+        }
+
+        .item .item-price {
+            text-align: center;
+            color: #c2c2c2;
+        }
+
+        .item .item-count {
+            text-align: center;
+        }
+
+        .item .item-count-money {
+            text-align: right;
+        }
+
+        .left_footer {
+            width: 100%;
+            height: 50px;
+            border-top: 1.5px solid #e2e2e2;
+        }
+
+        .left_footer .left_footer-item1 {
+            width: 100%;
+            padding: 0 20px;
+            overflow: hidden;
+        }
+
+        .left_footer-item1 .item-left {
+            width: 50%;
+            text-align: left;
+            line-height: 50px;
+            font-size: 16px;
+        }
+
+        .left_footer-item1 .item-right {
+            width: 50%;
+            text-align: right;
+            line-height: 50px;
+            font-size: 16px;
+        }
+
+        .left_footer-item2 {
+            width: 100%;
+            height: 60px;
+            padding: 0 20px;
+            text-align: right;
+            color: #dc5d54;
+            font-size: 22px;
+        }
+
+        /**
+        右边
+         */
+        .right .top-nav {
+            width: 100%;
+            height: 70px;
+            line-height: 70px;
+            text-align: center;
+            font-size: 18px;
+            color: #FFFFFF;
+            background: #dc5d54;
+            border-radius: 6px 6px 0px 0px;
+        }
+
+        .counter-item1 {
+            width: 100%;
+            height: 200px;
+            border-top: 1.5px solid #e2e2e2;
+        }
+
+        .counter-item2 {
+            width: 100%;
+            height: 150px;
+            border-top: 1.5px solid #e2e2e2;
+        }
+
+        .counter-item3 {
+            width: 100%;
+            height: 200px;
+            border-top: 1.5px solid #e2e2e2;
+        }
+
+        .right .counter-item1 {
+            padding: 30px 20px;
+            overflow: hidden;
+        }
+
+        .right .counter-item1-left {
+            width: 40%;
+            height: 100%;
+            border-right: 1.5px solid #e2e2e2;
+            padding: 40px 0px;
+        }
+
+        .right .counter-item1-right {
+            width: 60%;
+            height: 100%;
+            padding: 40px 0px 40px 20px;
+            overflow: hidden;
+        }
+
+        .right .search {
+            height: 54px;
+            border: 2px solid #dc5d54;
+            border-radius: 40px;
+            padding-left: 20px;
+        }
+
+        .right .search-by-desk-code {
+            width: 240px;
+            overflow: hidden;
+        }
+
+        .right .search-by-desk-code #deskCode {
+            display: inline-block;
+            width: 68%;
+            height: 43px;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .right .search-by-desk-code button {
+            width: 30%;
+            border: none;
+            height: 52px;
+            background: #dc5d54;
+            border-radius: 0px 27px 28px 0px;
+            color: #FFFFFF;
+        }
+
+        .right .search-by-member-code {
+            width: 240px;
+            overflow: hidden;
+        }
+
+        .right .search-by-member-code #memberCode {
+            display: inline-block;
+            width: 66%;
+            height: 43px;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .right .search-by-member-code button {
+            width: 32%;
+            border: none;
+            height: 51px;
+            background: #dc5d54;
+            color: #FFFFFF;
+        }
+
+        .right .search input {
+            border: none;
+            display: inline-block;
+            height: 50px;
+        }
+
+        #register {
+            height: 54px;
+            border: none;
+            background: #dc5d54;
+            width: 120px;
+            color: #FFFFFF;
+            border-radius: 30px;
+        }
+
+        .right .counter-item2 {
+            padding: 20px 20px;
+        }
+
+        .counter-item2 .cards {
+            width: 100%;
+            height: 110px;
+            overflow: hidden;
+        }
+
+        .counter-item2 .card {
+            width: 30%;
+            height: 110px;
+            background: #44dded;
+            float: left;
+            border-radius: 8px;
+            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+            -webkit-box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+            -mozilla-box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+            color: #FFFFFF;
+            text-align: center;
+            padding: 30px 0px;
+        }
+
+        .counter-item2 .card-name {
+            margin-right: 5%;
+            background: #ffb977;
+        }
+
+        .counter-item2 .card-vip {
+            margin-right: 5%;
+            background: #4499dc;
+        }
+
+        .right .counter-item3 {
+            padding: 30px 20px;
+            overflow: hidden;
+        }
+
+        .right .counter-item3 .counter-item3-left {
+            width: 70%;
+            height: 100%;
+            border-right: 1.5px solid #e2e2e2;
+        }
+
+        .right .counter-item3 .counter-item3-right {
+            width: 30%;
+            height: 100%;
+            overflow: hidden;
+            text-align: right;
+            padding: 45px 0px;
+        }
+
+        .right .counter-item3 .counter-item3-left .money-item {
+            height: 35px;
+            line-height: 35px;
+        }
+
+        #truly-pay {
+            border: none;
+        }
+
+        #commit {
+            border: none;
+            width: 120px;
+            height: 40px;
+            background: #dc5d54;
+            color: #FFFFFF;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <div class="left">
+        <div class="nav-item">
+            <div class="nav-item-item1">
+                <div class="float-left left-item">
+                    <b>单号：</b>
+                    <b class="orderCode"></b>
+                </div>
+                <div class="float-left right-item">
+                    <b>桌号：</b>
+                    <b class="deskCode"></b>
+                    <b>号桌</b>
+                </div>
+            </div>
+            <div class="nav-item-item2">
+                <div class="float-left left-item">
+                    <span>菜品（单价 / 数量）</span>
+                </div>
+                <div class="float-left right-item">
+                    <span>小计</span>
+                </div>
+            </div>
+        </div>
+        <div class="items" id="items">
+
+        </div>
+        <div class="left_footer">
+            <div class="left_footer-item1">
+                <div class="float-left item-left">
+                    <b>附加费用:￥</b>
+                    <b class="otherMoney">0.00</b>
+                </div>
+                <div class="float-left item-right">
+                    <b>菜品合计消费：</b>
+                    <b class="totalPrice">0.00</b>
+                    <b>元</b>
+                </div>
+            </div>
+            <div class="left_footer-item2">
+                <span>消费:￥</span>
+                <b class="totalMoney">0.00</b>
+            </div>
+        </div>
+    </div>
+    <div class="right">
+        <div class="top-nav">
+            <div>
+                <img src="../image/counter_icon.png" width="22px" height="22px"
+                     style="margin-right: 5px;display: inline-block;line-height: 22px;height: 22px"/>
+                <span style="display: inline-block;line-height:22px;height: 22px">收银台</span>
+            </div>
+        </div>
+        <div class="counter-item1">
+            <div class="counter-item1-left float-left">
+                <div class="search-by-desk-code search">
+                    <input name="deskCode" style="text-align: center" placeholder="请输入桌号" id="deskCode" value=""
+                           type="text">
+                    <button id="desk-button">查询</button>
+                </div>
+            </div>
+            <div class="counter-item1-right float-left">
+                <div class="search-by-member-code search float-left">
+                    <input name="memberCode" style="text-align: center" placeholder="请输入会员号即手机号" id="memberCode"
+                           value="" type="text">
+                    <button id="member-button">确定</button>
+                </div>
+                <div style="float: right">
+                    <button id="register">注册会员</button>
+                </div>
+            </div>
+        </div>
+        <div class="counter-item2">
+            <div class="cards">
+                <div class="card-name card">
+                    <div>会员名</div>
+                    <div style="line-height: 40px;font-size: 18px" class="member-name">无</div>
+                </div>
+                <div class="card-vip card">
+                    <div>会员类型</div>
+                    <div style="line-height: 40px;font-size: 18px" class="member-category">非会员</div>
+                </div>
+                <div class="card-discount card">
+                    <div>享有折扣</div>
+                    <div style="line-height: 40px;font-size: 18px">
+                        <input type="hidden" id="discount" value="1">
+                        <b class="discount">无</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="counter-item3">
+            <div class="counter-item3-left float-left">
+                <div class="money-item">
+                    <span>打折优惠：－￥</span><span class="discount-money">0.00</span>
+                </div>
+                <div class="money-item" style="font-size: 18px;color:#dc5d54; ">
+                    <span>应付金额：￥</span><span class="must-pay">0.00</span>
+                </div>
+                <div class="money-item" style="font-size: 18px;">
+                    <span>实付金额：￥</span><input type="text" name="truly-pay" style="width: 80px" placeholder="请输入..."
+                                              id="truly-pay" value="">
+                </div>
+                <div class="money-item" style="font-size: 18px;">
+                    <span>找&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;零：￥</span><span id="change-money">0.00</span>
+                </div>
+            </div>
+            <div class="counter-item3-right float-left">
+                <button id="commit">结算</button>
+            </div>
+        </div>
+        <div style="display: none">
+            <div id="goods_template">
+                <div class="item">
+                    <div class="item-name float-left">
+
+                    </div>
+                    <div class="item-price float-left">
+                        <span>￥</span><span class="price"></span>
+                    </div>
+                    <div class="item-count float-left">
+                        <span class="count"></span>
+                    </div>
+                    <div class="item-count-money float-left">
+                        <span>￥</span><span class="countMoney"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/layuiadmin/layui/layui.js}" src="../../static/layuiadmin/layui/layui.js"></script>
+<script th:inline="javascript">
+    layui.use(['table', 'laydate'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , laydate = layui.laydate;
+        $("input[type=text]").change(function () {
+            //非数字
+            if (isNaN($(this).val())) {
+                $(this).val("");
+            }
+            //正数
+            if (!/^[0-9]+.?[0-9]*$/.test($(this).val())) {
+                $(this).val("");
+            }
+        });
+
+        $("#truly-pay").change(function () {
+            //正整数
+            if (/^[0-9]+.?[0-9]*$/.test($(this).val())) {
+                var counterItem3Node = $(this).parents(".counter-item3-left")[0];
+                //实付金额
+                var trulyMoney = parseFloat($(this).val());
+                //应付金额
+                var mustPay = parseFloat($(counterItem3Node).find(".must-pay").text());
+                if (mustPay == 0) {
+                    return;
+                }
+                //找零
+                var changeMoney = (trulyMoney - mustPay).toFixed(2);
+                if (changeMoney < 0) {
+                    $(this).val("");
+                    return;
+                }
+                $(counterItem3Node).find("#change-money").text(changeMoney);
+            }
+        })
+
+        $("#desk-button").click(function () {
+            var deskCode = $("#deskCode").val();
+            if (deskCode == '') {
+                return;
+            }
+            //先清空界面
+            clearAll();
+            $.ajax({
+                url: '/restaurant/order/findDetail.do'
+                , type: 'GET'
+                , dataType: "JSON"
+                , data: {
+                    deskCode: deskCode
+                }
+                , success: function (res) {
+                    if (res.code == 200) {
+                        if (res.data.length <= 0) {
+                            layer.msg("没有对应订单", {icon: 2});
+                            return;
+                        }
+                        console.log("data", res.data);
+                        //加载订单商品视图
+                        loadView(res.data);
+                    } else {
+                        layer.alert(res.msg, {
+                            title: '提交结果'
+                            , anim: 6
+                        });
+                    }
+                }
+            });
+        });
+        $("#member-button").click(function () {
+            var memberCode = $("#memberCode").val();
+            if (memberCode == '') {
+                return;
+            }
+            //验证手机号
+            if (!/^[1][3,4,5,7,8][0-9]{9}$/.test(memberCode)) {
+                $("#memberCode").val("");
+                layer.msg("会员号格式不正确！", {icon: 5});
+                return;
+            }
+            clearMemberInfo();
+            $.ajax({
+                url: '/restaurant/member/findMemberByMemberCode.do'
+                , type: 'GET'
+                , dataType: "JSON"
+                , data: {
+                    memberCode: memberCode
+                }
+                , success: function (res) {
+                    if (res.code == 200) {
+                        console.log("data", res.data);
+                        if (res.data == null) {
+                            layer.msg("没有找到该会员!", {icon: 2});
+                            $("#memberCode").val("");
+                            return;
+                        }
+                        loadMemberInfo(res.data);
+                    } else {
+                        layer.alert(res.msg, {
+                            title: '提交结果'
+                            , anim: 6
+                        });
+                    }
+                }
+            });
+        });
+        $("#register").click(function () {
+            layer.open({
+                type: 2
+                , title: '注册会员'
+                , content: '/restaurant/member/add.html'
+                , maxmin: true
+                , area: ['700px', '430px']
+                , btn: ['确定', '取消']
+                , yes: function (index, layero) {
+                    var iframeWindow = window['layui-layer-iframe' + index]
+                        //该id是窗口打开html页面中表单提交按钮的id
+                        , submitID = 'LAY-user-front-submit'
+                        , submit = layero.find('iframe').contents().find('#' + submitID);
+                    //监听提交
+                    iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                        var field = data.field; //获取提交的字段
+                        //提交 Ajax 成功后，静态更新表格中的数据
+                        $.ajax({
+                            url: "/restaurant/member/add.do",
+                            type: "post",
+                            dataType: "JSON",
+                            data: data.field,
+                            success: function (result) {
+                                if (result.code == 200) {
+                                    $("#memberCode").val(data.field.memberCode);
+                                    $("#member-button").click();
+                                    layer.close(index); //关闭弹层
+                                    layer.msg("注册成功！", {icon: 1});
+                                } else {
+                                    layer.alert(result.msg, {
+                                        title: '提交结果'
+                                        , anim: 6
+                                    });
+                                }
+                            }
+                        });
+                    });
+                    submit.trigger('click');
+                }
+            });
+        });
+        $("#commit").click(function () {
+            //结算函数
+            settleAccounts();
+        });
+
+        /**
+         * 加载左边商品明细视图
+         */
+        function loadView(data) {
+            //加载明细商品列表
+            for (var i = 0; i < data.length; i++) {
+                loadGoodsItemView(data[i]);
+            }
+            //订单号
+            $(".orderCode").text(data[0].order.orderCode);
+            //桌号
+            $(".deskCode").text(data[0].order.deskCode);
+            $(".totalPrice").text(parseFloat(data[0].order.totalPrice).toFixed(2));
+            $(".totalMoney").text(parseFloat(data[0].order.totalPrice).toFixed(2));
+            $(".must-pay").text(parseFloat(data[0].order.totalPrice).toFixed(2));
+        }
+
+        /**
+         * 加载一项商品的视图
+         * @param data
+         */
+        function loadGoodsItemView(data) {
+            var goodsItem = $("#goods_template").clone();
+            $(goodsItem).find(".item-name").text(data.goods.goodsName);
+            $(goodsItem).find(".price").text(parseFloat(data.goods.price).toFixed(2));
+            $(goodsItem).find(".count").text(data.count);
+            var countMoney = (parseFloat(data.count) * parseFloat(data.goods.price)).toFixed(2);
+            $(goodsItem).find(".countMoney").text(countMoney);
+            $("#items").append(goodsItem);
+        }
+
+        /**
+         * 加载会员信息
+         * @param data
+         */
+        function loadMemberInfo(data) {
+            $(".member-name").text(data.name);
+            $(".member-category").text(data.memberCategory.mcName);
+            $(".discount").text(parseFloat(data.memberCategory.discount) * 10 + "折");
+            //消费金额
+            var totalMoney = parseFloat($(".totalMoney").text());
+            var discountMoney = (totalMoney * (1 - data.memberCategory.discount)).toFixed(2);
+            $(".discount-money").text(discountMoney);
+            $(".must-pay").text(parseFloat(totalMoney - discountMoney).toFixed(2));
+        }
+
+        /**
+         * 清空所有数据
+         */
+        function clearAll() {
+            $("#items").empty();
+            $(".orderCode").text("");
+            $(".deskCode").text("");
+            $(".totalPrice").text("0.00");
+            $(".totalMoney").text("0.00");
+            $(".must-pay").text("0.00");
+            $("#change-money").text("0.00");
+            $(".member-name").text("无");
+            $(".member-category").text("非会员");
+            clearMemberInfo();
+        }
+        function  clearMemberInfo(){
+            $(".member-name").text("无");
+            $(".member-category").text("非会员");
+            $(".discount").text("无");
+            $(".discount-money").text("0.00");
+            $(".must-pay").text($(".totalMoney").text());
+        }
+        /**
+         * 结算函数
+         */
+        function settleAccounts(){
+            if($(".orderCode").text()==''){
+                return;
+            }
+            if ($("#truly-pay").val() == '') {
+                layer.alert("请输入实付金额！", {
+                    title: '警告'
+                    , anim: 6
+                });
+                return;
+            }
+            var data;
+            var order = {};
+            var member = {};
+            //会员号
+            member.memberCode = $("#memberCode").val();
+            order.member = member;
+            //应付金额
+            order.mustPay = parseFloat($(".must-pay").text());
+            //实付金额
+            order.actualPay = parseFloat($("#truly-pay").val());
+            //找零
+            order.changeMoney = parseFloat($("#change-money").text());
+            //打折金额
+            order.discountMoney = parseFloat($(".discount-money").text());
+            //订单号
+            order.orderCode = $(".orderCode").text();
+            data = JSON.stringify(order);
+            console.log("data", data);
+            $.ajax({
+                url:'/restaurant/order/settleAccounts.do'
+                ,type:'POST'
+                ,dataType:'JSON'
+                ,contentType: "application/json; charset=utf-8"
+                ,data:data
+                ,success:function (res){
+                    if(res.code==200){
+                        layer.msg("结算成功!",{icon:1});
+                        setTimeout(function () {
+                           $("#deskCode").val("");
+                           $("#memberCode").val("");
+                           $("#truly-pay").val("");
+                            //重载当前页面
+                            location.reload();
+                        },1000);
+                    }else{
+                        layer.alert(res.msg,{
+                            title: '信息'
+                            , anim: 6
+                        });
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

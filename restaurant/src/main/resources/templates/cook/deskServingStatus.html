@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>桌位上菜情况表</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}"
+          href="../../static/layuiadmin/layui/css/layui.css"
+          media="all"/>
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" href="../../static/layuiadmin/layui/css/layui.css"
+          media="all"/>
+    <style>
+        body {
+            margin: 10px;
+            background: #eeeeee;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-card">
+    <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">查询条件</label>
+                <div class="layui-input-inline" style="width:100px;">
+                    <input type="text" name="deskCode" id="deskCode" placeholder="桌号" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width: 170px">
+                    <label class="layui-form-label" style="width:60px;padding: 9px 0px">完成状态</label>
+                    <div class="layui-input-block" style="margin-left:70px;">
+                        <select name="finishStatus">
+                            <option value="">不限</option>
+                            <option value="0">未完成</option>
+                            <option value="1">已完成</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width:200px;">
+                    <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="Search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-card-body">
+        <!-- table表格-->
+        <table id="tableList" lay-filter="tableList"></table>
+        <!--右边工具栏-->
+        <script th:inline="javascript" type="text/html" id="barDemo">
+            <a class="layui-btn layui-btn-xs" lay-event="viewDetail">查看详情</a>
+        </script>
+        <script type="text/html" id="payStatus_templet">
+            {{#
+            if(d.payStatus==0){
+            }}
+            <div style="color: #FF1744;">未付款</div>
+            {{#
+            }else{
+            }}
+            <div style="color:#5FB878;">已付款</div>
+            {{#
+            }
+            }}
+        </script>
+        <script type="text/html" id="finishStatus_templet">
+            {{#
+            if(d.finishStatus==0){
+            }}
+            <div style="color: #FF1744;">未完成</div>
+            {{#
+            }else{
+            }}
+            <div style="color:#5FB878;">已完成</div>
+            {{#
+            }
+            }}
+        </script>
+        <script type="text/html" id="modifyTime_templet">
+            {{#
+            if(d.modifyTime==null){
+            }}
+            <div></div>
+            {{#
+            }else{
+            }}
+            <div>{{d.modifyTime}}</div>
+            {{#
+            }
+            }}
+        </script>
+    </div>
+</div>
+<script th:src="@{/layuiadmin/layui/layui.js}" src="../static/layuiadmin/layui/layui.js"></script>
+<script th:inline="javascript">
+    layui.use(['table', 'laydate'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , table = layui.table
+            , laydate = layui.laydate;
+
+        //执行一个 table 实例
+        table.render({
+            elem: '#tableList'
+            , height: "full"
+            , url: "/restaurant/service/dssList.do" //数据接口
+            , method: 'post'
+            , request: {
+                pageName: 'pageNum' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: {
+                statusCode: 200
+            }
+            , limits: [2, 5, 10, 20, 30]
+            , title: '桌位上菜情况表'
+            , page: true //开启分页
+            , even: true//开启背景隔行
+            , height: 500
+            //,size:"lg"设置表格尺寸
+            , toolbar: '#test-table-toolbar-toolbarDemo' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+            , cols: [[ //表头
+                , {field: 'orderId', title: 'ID', align: 'center', cellMinWidth: 70, sort: true, fixed: 'left', sort: true, hide: true}
+                , {field: 'deskCode', title: '桌号', align: 'center', cellMinWidth: 120,sort:true}
+                , {field: 'peopleNum', title: '人数', align: 'center', cellMinWidth: 120}
+                , {field: 'payStatus', title: '付款状态', align: 'center', cellMinWidth:120, templet: "#payStatus_templet"}
+                , {field: 'finishStatus', title: '上菜完成状态', align: 'center', cellMinWidth: 160, templet: "#finishStatus_templet"}
+                , {field: 'totalPrice', title: '总金额', align: 'center', cellMinWidth: 140, sort: true,templet:'<div>{{d.totalPrice}}元</div>'}
+                , {field: 'createTime', title: '创建时间', cellMinWidth: 170,sort: true,templet:'<div>{{d.createTime}}</div>'}
+                , {field: 'modifyTime', title: '修改时间', cellMinWidth: 170,sort: true,templet:'#modifyTime_templet'}
+                , {fixed: 'right', title: "工具栏",align:'center', cellMinWidth: 220, toolbar: '#barDemo'}
+            ]]
+        });
+
+        //监听行工具事件
+        table.on('tool(tableList)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                , layEvent = obj.event; //获得 lay-event 对应的值
+            if (layEvent === 'viewDetail') {
+                var url = "/restaurant/service/ssd.html/" + data.orderId;
+                layer.open({
+                    type: 2
+                    , title: '详细情况'
+                    , content: url
+                    , maxmin: true
+                    , anim: 1
+                    , area: ['900px', '500px']
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero){
+                        table.reload('tableList'); //数据刷新
+                        layer.close(index);
+                    }
+                });
+            }
+        });
+        //监听搜索
+        form.on('submit(Search)', function (data) {
+            var field = data.field;
+            //执行重载
+            table.reload('tableList', {
+                where: field
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

@@ -8,23 +8,26 @@
     </sql>
     <sql id="where">
         <where>
-            <if test="memberId!=null and memberId!=''">
+            <if test="memberId!=null">
                 a.member_id = #{memberId} and
             </if>
             <if test="memberCode!=null and memberCode!=''">
                 a.member_code = #{memberCode} and
             </if>
             <if test="name!=null and name!=''">
-                a.name like '%${name}%' and
+                a.m_name like '%${name}%' and
             </if>
             <if test="birthday!=null">
-                a.birthday = #{birthday} and
+                a.m_birthday = #{birthday} and
             </if>
             <if test="gender!=null and gender!=''">
-                a.gender = #{gender} and
+                a.m_gender = #{gender} and
             </if>
             <if test="phone!=null and phone!=''">
-                a.phone = #{phone} and
+                a.m_phone = #{phone} and
+            </if>
+            <if test="totalMoney!=null">
+                a.total_money =#{totalMoney},
             </if>
             <if test="memberCategory!=null">
                 <if test="memberCategory.mcId!=null and memberCategory.mcId!=''">
@@ -40,13 +43,13 @@
                 member_code = #{memberCode},
             </if>
             <if test="name!=null and name!=''">
-                name =#{name},
+                m_name =#{name},
             </if>
             <if test="gender!=null and gender!=''">
-                gender = #{gender},
+                m_gender = #{gender},
             </if>
             <if test="birthday!=null">
-                birthday = #{birthday},
+                m_birthday = #{birthday},
             </if>
             <if test="memberCategory!=null">
                 <if test="memberCategory.mcId!=null and memberCategory.mcId!=''">
@@ -54,7 +57,7 @@
                 </if>
             </if>
             <if test="phone!=null and phone!=''">
-                phone = #{phone},
+                m_phone = #{phone},
             </if>
             <if test="phone!=null and phone!=''">
                 create_time = #{createTime},
@@ -67,16 +70,19 @@
                 a.member_code = #{memberCode},
             </if>
             <if test="name!=null and name!=''">
-                a.name =#{name},
+                a.m_name =#{name},
             </if>
             <if test="gender!=null and gender!=''">
-                a.gender = #{gender},
+                a.m_gender = #{gender},
             </if>
             <if test="birthday!=null">
-                a.birthday = #{birthday},
+                a.m_birthday = #{birthday},
             </if>
             <if test="phone!=null and phone!=''">
-                a.phone = #{phone},
+                a.m_phone = #{phone},
+            </if>
+            <if test="totalMoney!=null">
+                a.total_money =#{totalMoney},
             </if>
             <if test="createTime!=null">
                 a.create_time = #{createTime},
@@ -94,10 +100,10 @@
     <resultMap id="memberResultMap" type="com.lzy.liujing.restaurant.entity.Member">
         <id column="member_id" property="memberId"/>
         <result column="member_code" property="memberCode"/>
-        <result column="name" property="name"/>
-        <result column="gender" property="gender"/>
-        <result column="birthday" property="birthday"/>
-        <result column="phone" property="phone"/>
+        <result column="m_name" property="name"/>
+        <result column="m_gender" property="gender"/>
+        <result column="m_birthday" property="birthday"/>
+        <result column="m_phone" property="phone"/>
         <result column="total_money" property="totalMoney"/>
         <result column="create_time" property="createTime"/>
         <result column="modify_time" property="modifyTime"/>
@@ -121,7 +127,7 @@
     <select id="searchByPhone" parameterType="com.lzy.liujing.restaurant.entity.Member" resultMap="memberResultMap">
         select * from r_member as a
         <include refid="join"/>
-         where a.phone = #{phone}
+         where a.m_phone = #{phone}
          <if test="memberId!=null and memberId!=''">
              and a.member_id !=#{memberId}
          </if>
@@ -152,4 +158,5 @@
         <include refid="set"/>
         where a.member_id = #{memberId} and a.del = 0
     </update>
+
 </mapper>

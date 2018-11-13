@@ -9,7 +9,8 @@
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" href="../static/layuiadmin/layui/css/layui.css"
           media="all"/>
-    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" href="../static/layuiadmin/style/admin.css" media="all"/>
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" href="../static/layuiadmin/style/admin.css"
+          media="all"/>
 </head>
 <body class="layui-layout-body">
 
@@ -33,17 +34,13 @@
                         <i class="layui-icon layui-icon-refresh-3"></i>
                     </a>
                 </li>
-                <li class="layui-nav-item layui-hide-xs" lay-unselect>
-                    <input type="text" placeholder="搜索..." autocomplete="off" class="layui-input layui-input-search"
-                           layadmin-event="serach" lay-action="template/search.html?keywords=">
-                </li>
             </ul>
             <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
 
                 <li class="layui-nav-item" lay-unselect>
-                    <a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">
+                   <!-- layadmin-event="message"-->
+                    <a lay-text="消息中心">
                         <i class="layui-icon layui-icon-notice"></i>
-
                         <!-- 如果有新消息，则显示小圆点 -->
                         <span class="layui-badge-dot"></span>
                     </a>
@@ -76,8 +73,7 @@
                 </li>
 
                 <li class="layui-nav-item layui-hide-xs" lay-unselect>
-                    <a href="javascript:;" layadmin-event="about"><i
-                            class="layui-icon layui-icon-more-vertical"></i></a>
+                    <a href="javascript:;"><i class="layui-icon layui-icon-more-vertical"></i></a>
                 </li>
                 <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-unselect>
                     <a href="javascript:;" layadmin-event="more"><i class="layui-icon layui-icon-more-vertical"></i></a>
@@ -101,8 +97,7 @@
                         </a>
                         <dl class="layui-nav-child">
                             <dd data-name="console" class="layui-this">
-                                <a th:href="@{/sysuser/console.html}" lay-href="../sysuser/console.html"
-                                   target="mainFrame">控制台</a>
+                                <a th:href="@{/sysuser/console.html}" lay-href="home/console.html" target="mainFrame">控制台</a>
                             </dd>
                         </dl>
                     </li>
@@ -153,8 +148,6 @@
                 </ul>
             </div>
         </div>
-
-
         <!-- 主体内容 -->
         <div class="layui-body" id="LAY_app_body">
             <div class="layadmin-tabsbody-item layui-show">
@@ -170,12 +163,10 @@
         <div class="layadmin-body-shade" layadmin-event="shade"></div>
     </div>
 </div>
-
 <script th:src="@{/layuiadmin/layui/layui.js}" src="../static/layuiadmin/layui/layui.js"></script>
-
 <script>
     layui.config({
-        base: '../layuiadmin/' //静态资源所在路径
+        base: '/restaurant/layuiadmin/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
     }).use('index');

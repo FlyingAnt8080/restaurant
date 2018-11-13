@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>交易记录</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}"
+          href="../../static/layuiadmin/layui/css/layui.css"
+          media="all"/>
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" href="../../static/layuiadmin/layui/css/layui.css"
+          media="all"/>
+    <style>
+        body {
+            margin: 10px;
+            background: #eeeeee;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-card">
+    <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">查询条件</label>
+                <div class="layui-input-inline" style="width:100px;">
+                    <input type="text" name="deskCode" id="deskCode" placeholder="桌号" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width:100px;">
+                    <input type="text" name="orderCode" id="orderCode" placeholder="订单号" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width:100px;">
+                    <input type="text" name="memberCode" id="memberCode" placeholder="会员号" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width:100px;">
+                    <input type="text" name="name" id="name" placeholder="会员名" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <input type="text" id="startTime" name="startTime" placeholder="开始日期时间" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">
+                    -
+                </div>
+                <div class="layui-input-inline">
+                    <input type="text" id="endTime" name="endTime" placeholder="结束日期时间" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width:100px;">
+                    <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="Search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-card-body">
+        <script th:inline="javascript" type="text/html" id="test-table-toolbar-toolbarDemo">
+            <div class="layui-btn-container">
+                {{#
+                    if( [[${session.user.role.roleId}]]==1) {
+                }}
+                <button class="layui-btn layui-btn-sm" lay-event="delete"><i class="layui-icon layui-icon-delete"></i></button>
+                {{#
+                    } else {
+                }}
+                <button class="layui-btn layui-btn-disabled layui-btn-sm"><i class="layui-icon layui-icon-delete"></i></button>
+                {{#
+                    }
+                }}
+            </div>
+        </script>
+        <!-- table表格-->
+        <table id="tableList" lay-filter="tableList"></table>
+        <!--右边工具栏-->
+        <script th:inline="javascript" type="text/html" id="barDemo">
+            <a class="layui-btn layui-btn-xs" lay-event="viewDetail">详细记录</a>
+            <!--在该语法中通过模板Thymeleaf模板引擎获取中文会被转换成编码-->
+            {{#
+            if( [[${session.user.role.roleId}]]==1)
+            { }}
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+            {{#  } else { }}
+            <a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a>
+            {{#  } }}
+        </script>
+        <script type="text/html" id="memberCode_templet">
+            {{#
+            if(d.member.memberCode!=null){
+            }}
+            <div>{{d.member.memberCode}}</div>
+            {{#
+            }else{
+            }}
+            <div style="color: #FF1744;">无</div>
+            {{#
+            }
+            }}
+        </script>
+        <script type="text/html" id="member_templet">
+            {{#
+            if(d.member.name!=null){
+            }}
+            <div>{{d.member.name}}</div>
+            {{#
+            }else{
+            }}
+            <div style="color: #FF1744;">非会员</div>
+            {{#
+            }
+            }}
+        </script>
+        <script type="text/html" id="actualPay_templet">
+            {{#
+            if(d.actualPay!=null){
+            }}
+            <div>{{d.actualPay}}元</div>
+            {{#
+            }else{
+            }}
+            <div style="color: #FF1744;">未付款</div>
+            {{#
+            }
+            }}
+        </script>
+        <script type="text/html" id="payStatus_templet">
+            {{#
+            if(d.payStatus==0){
+            }}
+            <div style="color: #FF1744;">未付款</div>
+            {{#
+            }else{
+            }}
+            <div style="color:#5FB878;">已付款</div>
+            {{#
+            }
+            }}
+        </script>
+        <script type="text/html" id="finishStatus_templet">
+            {{#
+            if(d.finishStatus==0){
+            }}
+            <div style="color: #FF1744;">未完成</div>
+            {{#
+            }else{
+            }}
+            <div style="color:#5FB878;">已完成</div>
+            {{#
+            }
+            }}
+        </script>
+        <script type="text/html" id="modifyTime_templet">
+            {{#
+            if(d.modifyTime==null){
+            }}
+            <div></div>
+            {{#
+            }else{
+            }}
+            <div>{{d.modifyTime}}</div>
+            {{#
+            }
+            }}
+        </script>
+        <!--下边分页条-->
+        <div class="layui-tab-item">
+            <div id="pageDemo"></div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/layuiadmin/layui/layui.js}" src="../static/layuiadmin/layui/layui.js"></script>
+<script th:inline="javascript">
+    layui.use(['table', 'laydate'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , table = layui.table
+            , laydate = layui.laydate;
+
+        //执行一个 table 实例
+        table.render({
+            elem: '#tableList'
+            , height: "full"
+            , url: "/restaurant/sold/tranRecordsList.do" //数据接口
+            , method: 'post'
+            , request: {
+                pageName: 'pageNum' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: {
+                statusCode: 200
+            }
+            , limits: [1, 2, 5, 10, 20, 30]
+            , title: '交易记录'
+            , page: true //开启分页
+            , even: true//开启背景隔行
+            , height: 500
+            //,size:"lg"设置表格尺寸
+            , toolbar: '#test-table-toolbar-toolbarDemo' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+            , cols: [[ //表头
+                 {type: 'checkbox', fixed: 'left'}
+                , {field: 'orderId', title: 'ID', align: 'center', width: 70, sort: true, fixed: 'left', sort: true, hide: true}
+                , {field: 'orderCode', title: '订单号', align: 'center', width: 230, sort: true}
+                , {field: 'deskCode', title: '桌号', align: 'center', width: 120}
+                , {field: 'member', title: '会员号', align: 'center', width: 140, templet: '#memberCode_templet'}
+                , {field: 'member', title: '会员名', align: 'center', width: 120, templet: '#member_templet'}
+                , {field: 'totalPrice', title: '菜品总价', align: 'center', width: 140, sort: true,templet:'<div>{{d.totalPrice}}元</div>'}
+                , {field: 'mustPay', title: '应付金额', align: 'center', width: 140, templet: "<div>{{d.mustPay}}元</div>"}
+                , {field: 'actualPay', title: '实付金额', align: 'center', width: 140, templet: "#actualPay_templet"}
+                , {field: 'discountMoney', title: '折扣金额', align: 'center', width: 140, templet: "<div>{{d.discountMoney}}元</div>"}
+                , {field: 'changeMoney', title: '找零', align: 'center', width: 140, templet: "<div>{{d.changeMoney}}元</div>"}
+                , {field: 'totalCost', title: '总成本', align: 'center', width: 140, templet: "<div>{{d.totalCost}}元</div>"}
+                , {field: 'totalProfit', title: '总利润', align: 'center', width: 140, templet: "<div>{{d.totalProfit}}元</div>"}
+                , {field: 'peopleNum', title: '人数', align: 'center', width: 120}
+                , {field: 'payStatus', title: '付款状态', align: 'center', width:120, templet: "#payStatus_templet"}
+                , {field: 'name', title: '收银员', align: 'center', width:120, templet: "<div>{{d.cashier.name}}</div>"}
+                , {field: 'createTime', title: '下单时间',align: 'center', width: 170,sort: true,templet:'<div>{{d.createTime}}</div>'}
+                , {field: 'modifyTime', title: '修改时间',align: 'center', width: 170,sort: true,templet:'#modifyTime_templet'}
+                , {fixed: 'right', title: "工具栏",align:'center', width: 220, toolbar: '#barDemo'}
+            ]]
+        });
+        //监听头工具栏事件
+        table.on('toolbar(tableList)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id)
+                , data = checkStatus.data; //获取选中的数据
+            switch (obj.event) {
+                case 'delete':
+                    if (data.length === 0) {
+                        layer.msg('请选择一行');
+                    } else {
+                        layer.confirm('确定删除?', function () {
+                            var ids = '';
+                            for (var i = 0; i < data.length; i++) {
+                                ids += data[i].orderId + ",";
+                            }
+                            $.ajax({
+                                url: "/restaurant/order/del.do",
+                                type: "post",
+                                dataType: "JSON",
+                                data: {ids: ids},
+                                success: function (result) {
+                                    if (result.code == 200) {
+                                        table.reload('tableList'); //数据刷新
+                                        layer.msg('删除成功!', {icon: 1});
+                                    } else {
+                                        layer.alert(result.msg, {
+                                            title: '提交结果'
+                                            , anim: 6
+                                        });
+                                    }
+                                }
+                            });
+                        });
+
+                    }
+                    break;
+            };
+        });
+
+        //监听行工具事件
+        table.on('tool(tableList)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                , layEvent = obj.event; //获得 lay-event 对应的值
+            if (layEvent === 'viewDetail') {
+                var url = "/restaurant/order/viewdetail.html/" + data.orderId;
+                layer.open({
+                    type: 2
+                    , title: '订单明细'
+                    , content: url
+                    , maxmin: true
+                    , anim: 1
+                    , area: ['900px', '500px']
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero){
+                        table.reload('tableList'); //数据刷新
+                        layer.close(index);
+                    }
+                });
+            }else if(layEvent=='del'){
+                layer.confirm('确定删除该交易记录?', function (index) {
+                    $.ajax({
+                        url: "/restaurant/order/del.do",
+                        type: "post",
+                        dataType: "JSON",
+                        data: {ids: data.orderId},
+                        success: function (result) {
+                            if (result.code == 200) {
+                                obj.del(); //删除对应行（tr）的DOM结构
+                                layer.msg('删除成功!', {icon: 1});
+                            } else {
+                                layer.alert(result.msg, {
+                                    title: '提交结果'
+                                    , anim: 6
+                                });
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+        //监听搜索
+        form.on('submit(Search)', function (data) {
+            var field = data.field;
+            //执行重载
+            table.reload('tableList', {
+                where: field
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        });
+        //开始日期
+        var insStart = laydate.render({
+            elem: '#startTime'
+            ,type: 'datetime'
+            ,done: function(value, date){
+                //更新结束日期的最小日期
+                insEnd.config.min = lay.extend({}, date, {
+                    month: date.month - 1
+                });
+                //自动弹出结束日期的选择器
+                insEnd.config.elem[0].focus();
+            }
+        });
+
+        //结束日期
+        var insEnd = laydate.render({
+            elem: '#endTime'
+            ,type: 'datetime'
+            ,done: function(value, date){
+                //更新开始日期的最大日期
+                insStart.config.max = lay.extend({}, date, {
+                    month: date.month - 1
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>销量统计</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" href="../../static/layui/css/layui.css"
+          media="all"/>
+    <style>
+        body, html {
+            background: #eeeeee;
+            margin: 5px;
+            height: 98%;
+        }
+
+        .content {
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-fluid content">
+    <div class="layui-row layui-col-space15 content">
+        <div class="layui-col-md8 content">
+            <div class="layui-card content">
+                <div class="layui-card-header">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <div class="layui-row">
+                                <div class="layui-col-md4 layui-col-md-offset8">
+                                    <div class="layui-inline">
+                                        <select name="day" lay-filter="chart1Day" style="border-color: #00FF00">
+                                            <option value="0">今天</option>
+                                            <option value="6" selected>近7天</option>
+                                            <option value="14">近15天</option>
+                                            <option value="29">近30天</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-card-body" style="height: 90%">
+                    <div id="chart1" style="height: 100%;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4 content">
+            <div class="layui-card content">
+                <div class="layui-card-header">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <div class="layui-row">
+                                <div class="layui-col-md4 layui-col-md-offset8">
+                                    <div class="layui-inline">
+                                        <select name="day" lay-filter="chart2Day" style="border-color: #00FF00">
+                                            <option value="0">今天</option>
+                                            <option value="7" selected>近7天</option>
+                                            <option value="15">近15天</option>
+                                            <option value="30">近30天</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-card-body" style="height: 90%">
+                    <div id="chart2" style="height: 100%;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/layuiadmin/layui/layui.js}" src="../../static/layuiadmin/layui/layui.js"></script>
+<script th:src="@{/js/dist/echarts.js}"></script>
+<script th:src="@{/js/macarons.js}" src="../../static/js/macarons.js"></script>
+<script type="text/javascript">
+    require.config({
+        paths: {
+            echarts: '/restaurant/js/dist'
+        }
+    });
+    layui.use(['table', 'laydate'], function () {
+        var $ = layui.$;
+        var form = layui.form;
+        //默认初始化近七天的销量排行
+        chart1NetworkRequest(6);
+        //默认初始化近七天的菜系销量统计
+        chart2NetworkRequest(6);
+
+        form.on('select(chart1Day)', function (data) {
+            var day = data.value;
+            chart1NetworkRequest(day);
+        });
+        form.on('select(chart2Day)', function (data) {
+            var day = data.value;
+            chart2NetworkRequest(day);
+        });
+
+        /**
+         * 菜品销售排行网络请求数据
+         */
+        function chart1NetworkRequest(day) {
+            $.ajax({
+                url: '/restaurant/analysis/gssByDays.do',
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    day: day
+                },
+                success: function (res) {
+                    if (res.code == 200) {
+                        var data = res.data;
+                        var nameArray = [];
+                        var countArray = [];
+                        console.log("data", data);
+                        for (var i = 0; i < data.length; i++) {
+                            nameArray.push(data[i].goodsName);
+                            countArray.push(data[i].count);
+                        }
+                        loadChart1(nameArray, countArray);
+                    } else {
+                        layer.msg(res.msg, {icon: 5});
+                    }
+                }
+            });
+        }
+
+        /**
+         * 菜系销售分析网络请求数据
+         */
+        function chart2NetworkRequest(day) {
+            $.ajax({
+                url: '/restaurant/analysis/gcsByDays.do',
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    day: day
+                },
+                success: function (res) {
+                    if (res.code == 200) {
+                        var data = res.data;
+                        var nameArray = [];
+                        var countArray = [];
+                        console.log("data", data);
+                        for (var i = 0; i < data.length; i++) {
+                            nameArray.push(data[i].categoryName);
+                            var valueAndName = {}
+                            valueAndName.name = data[i].categoryName;
+                            valueAndName.value = data[i].count;
+                            countArray.push(valueAndName);
+                        }
+                        loadChart2(nameArray, countArray);
+                    } else {
+                        layer.msg(res.msg, {icon: 5});
+                    }
+                }
+            });
+        }
+    });
+
+    //加载柱状图表
+    function loadChart1(nameArray, countArray) {
+        require(
+            [
+                'echarts',
+                'echarts/chart/line',
+                'echarts/chart/bar'
+            ],
+            function (echarts) {
+                // 基于准备好的dom，初始化echarts图表
+                var myChart1 = echarts.init(document.getElementById('chart1'), 'macarons');
+                var option1 = {
+                    title: {
+                        text: '菜品销量top12',
+                        // subtext: '纯属虚构'
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            crossStyle: {
+                                color: '#1e90ff',
+                                width: 1,
+                                type: 'dashed'
+                            },
+
+                        }
+                    },
+                    legend: {
+                        data: ['销量']
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataView: {show: true, readOnly: false},
+                            magicType: {show: true, type: ['line', 'bar']},
+                            restore: {show: true},
+                            saveAsImage: {show: true}
+                        }
+                    },
+                    itemStyle: {
+                        //默认样式
+                        normal: {
+                            //设置柱状条圆角
+                            barBorderRadius: [12, 12, 12, 12],
+                        }
+                    },
+                    calculable: true,
+                    xAxis: [
+                        {
+                            type: 'category',
+                            axisLabel: {
+                                rotate: 20
+                            },
+                            data: nameArray
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            axisLabel: {
+                                formatter: '{value}份'
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '销量',
+                            type: 'bar',
+                            data: countArray,
+                            markPoint: {
+                                data: [
+                                    {type: 'max', name: '最大值'},
+                                    {type: 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine: {
+                                data: [
+                                    {type: 'average', name: '平均值'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+                // 为echarts对象加载数据
+                myChart1.setOption(option1);
+            });
+    }
+
+    //加载图表2 饼状图表
+    function loadChart2(nameArray, countArray) {
+        require(
+            [
+                'echarts',
+                'echarts/chart/pie',
+                'echarts/chart/funnel'
+            ],
+            function (echarts) {
+                var myChart2 = echarts.init(document.getElementById('chart2'), 'macarons');
+                var option2 = {
+                    title: {
+                        text: '菜系销量分析',
+                        //subtext: '纯属虚构',
+                        x: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        x: 'left',
+                        data: nameArray
+                    },
+                    toolbox: {
+                        show: true,
+                        orient: 'vertical',
+                        feature: {
+                            dataView: {show: true, readOnly: false},
+                            magicType: {
+                                show: true,
+                                type: ['pie', 'funnel'],
+                                option: {
+                                    funnel: {
+                                        x: '25%',
+                                        width: '50%',
+                                        funnelAlign: 'left',
+                                        max: 1548
+                                    }
+                                }
+                            },
+                            restore: {show: true},
+                            saveAsImage: {show: true}
+                        }
+                    },
+                    calculable: true,
+                    series: [
+                        {
+                            name: '菜系',
+                            type: 'pie',
+                            radius: '55%',
+                            center: ['50%', '60%'],
+                            data: countArray
+                        }
+                    ]
+                };
+                myChart2.setOption(option2);
+            });
+    }
+</script>
+</body>
+</html>

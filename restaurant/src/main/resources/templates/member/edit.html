@@ -27,7 +27,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md4">
                         <label class="layui-form-label">会员类型</label>
                         <div class="layui-input-block">
-                            <select name="mcId">
+                            <select name="mcId" disabled>
                                 <th:block th:each="memberCategory:${memberCategoryList}">
                                     <th:block th:if="${memberCategory.mcId} eq ${member.memberCategory.mcId}">
                                         <option th:value="${memberCategory.mcId}" th:text="${memberCategory.mcName}"

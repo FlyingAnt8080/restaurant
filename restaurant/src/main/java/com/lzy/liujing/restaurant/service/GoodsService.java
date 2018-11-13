@@ -8,6 +8,7 @@ import java.util.List;
 public interface GoodsService {
     /**
      * 分页查询以及分页条件查询
+     *
      * @param pageInfo
      * @return
      */
@@ -15,6 +16,7 @@ public interface GoodsService {
 
     /**
      * 根据goodsId查询
+     *
      * @param goodsId
      * @return
      */
@@ -22,18 +24,21 @@ public interface GoodsService {
 
     /**
      * 添加菜品
+     *
      * @param goods
      */
     void insert(Goods goods);
 
     /**
      * 修改菜品
+     *
      * @param goods
      */
     void update(Goods goods);
 
     /**
      * 根据id删除菜品
+     *
      * @param strIds
      */
     void deleteByIds(String strIds);

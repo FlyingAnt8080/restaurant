@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>上次任务表</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}"
+          href="../../static/layuiadmin/layui/css/layui.css"
+          media="all"/>
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" href="../../static/layuiadmin/layui/css/layui.css"
+          media="all"/>
+    <style>
+        body {
+            margin: 10px;
+            background: #eeeeee;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <!--右边工具栏-->
+        <script th:inline="javascript" type="text/html" id="barDemo">
+            {{#
+            if([[${role.roleId}]]==3){
+            }}
+                {{#
+                    if(d.status==2){
+                }}
+                    <a class="layui-btn layui-btn-warm" lay-event="finishServing">完成上菜</a>
+                {{#
+                    }
+                }}
+            {{#
+                }else{
+            }}
+                <a class="layui-btn layui-btn-disabled">完成上菜</a>
+            {{#
+                }
+            }}
+        </script>
+        <!-- table表格-->
+        <table id="tableList" lay-filter="tableList">
+
+        </table>
+        <script type="text/html" id="imgUrl">
+            {{#
+            if( d.goods.imgUrl==null||d.goods.imgUrl=='')
+            { }}
+            <div style="color:red">无图片</div>
+            {{#  } else { }}
+            <img src="/restaurant/{{d.goods.imgUrl}}" class="laytable-cell-1-imgUrl">
+            {{#  } }}
+        </script>
+        <script type="text/html" id="status">
+            {{#
+            if( d.status==2){
+            }}
+            <div style="color: red">等待上菜</div>
+            {{#
+            }
+            }}
+        </script>
+    </div>
+</div>
+<script th:src="@{/layuiadmin/layui/layui.js}" src="../static/layuiadmin/layui/layui.js"></script>
+<script th:inline="javascript">
+    layui.use(['table', 'laydate'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , table = layui.table
+        //执行一个 table 实例
+        table.render({
+            elem: '#tableList'
+            , url: "/restaurant/service/servingTask.do" //数据接口
+            , title: '订单明细'
+            , even: true//开启背景隔行
+            , request: {
+                pageName: 'pageNum' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , response: {
+                statusCode: 200
+            }
+            , size: 'lg'
+            , toolbar: '#test-table-toolbar-toolbarDemo' //开启工具栏，此处显示默认图标
+            , cols: [[ //表头
+                {
+                    field: 'odId',
+                    title: 'ID',
+                    align: 'center',
+                    cellMinWidth: 60,
+                    fixed: 'left',
+                    sort: true,
+                    templet: '<div>{{d.odId}}</div>',
+                    hide: true
+                }
+                , {
+                    field: 'deskCode',
+                    title: '桌号',
+                    align: 'center',
+                    cellMinWidth: 150,
+                    templet: '<div><span style="color:#FF5722 ">{{d.order.deskCode}}号</span></div>'
+                }
+                , {field: 'imgUrl', title: '菜品图片', align: 'center', cellMinWidth: 120, templet: '#imgUrl'}
+                , {
+                    field: 'goodsName',
+                    title: '菜品名',
+                    align: 'center',
+                    cellMinWidth: 150,
+                    templet: '<div>{{d.goods.goodsName}}</div>'
+                }
+                , {
+                    field: 'count',
+                    title: '数量',
+                    align: 'center',
+                    cellMinWidth: 100,
+                    templet: '<div><span style="color: #FF5722">{{d.count}}份</span></div>'
+                }
+                , {
+                    field: 'goodsCategory',
+                    title: '菜品类型',
+                    align: 'center',
+                    cellMinWidth: 100,
+                    templet: '<div>{{d.goods.goodsCategory.categoryName}}</div>'
+                }
+                , {field: 'status', title: '上菜状态', align: 'center', cellMinWidth: 100, templet: "#status"}
+                , {fixed: 'right', title: "工具栏", align: 'center', cellMinWidth: 300, toolbar: '#barDemo'}
+            ]]
+        });
+        //监听行工具事件
+        table.on('tool(tableList)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                , layEvent = obj.event; //获得 lay-event 对应的值
+            if (layEvent === 'finishServing') {
+                $.ajax({
+                    url: "/restaurant/service/finishServing.do",
+                    type: "GET",
+                    dataType: "JSON",
+                    data: {
+                        odId: data.odId,
+                        orderId: data.order.orderId
+                    },
+                    success: function (result) {
+                        if (result.code == 200) {
+                            table.reload('tableList'); //数据刷新
+                            layer.msg('成功!', {icon: 1});
+                        } else {
+                            layer.alert(result.msg, {
+                                title: '提交结果'
+                                , anim: 6
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

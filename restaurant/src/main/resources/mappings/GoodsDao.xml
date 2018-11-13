@@ -10,6 +10,14 @@
         <include refid="where"/>
     </select>
 
+    <select id="findByGoodsIds" parameterType="java.util.List" resultMap="goodsResultMap">
+        select * from r_goods
+        where goods_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
     <select id="findById" parameterType="Integer" resultMap="goodsResultMap">
         select * from r_goods as a
         <include refid="join"/>
@@ -63,6 +71,7 @@
         <result column="sold_state" property="soldState"/>
         <result column="sold_count" property="soldCount"/>
         <result column="store_count" property="storeCount"/>
+        <result column="type_state" property="typeState"/>
         <result column="putaway_status" property="putawayStatus"/>
         <result column="create_time" property="createTime"/>
         <result column="modify_time" property="modifyTime"/>
@@ -81,6 +90,9 @@
             </if>
             <if test="soldState!=null">
                 a.sold_state = #{soldState} and
+            </if>
+            <if test="typeState!=null">
+                a.type_state = #{typeState} and
             </if>
             <if test="goodsCategory!=null">
                 <if test="goodsCategory.categoryId!=null">
@@ -118,6 +130,9 @@
             </if>
             <if test="soldState!=null">
                 sold_state = #{soldState},
+            </if>
+            <if test="typeState!=null">
+               type_state = #{typeState},
             </if>
             <if test="cost!=null">
                 cost = #{cost},

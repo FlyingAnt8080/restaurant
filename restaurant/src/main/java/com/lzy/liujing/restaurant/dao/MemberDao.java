@@ -13,7 +13,7 @@ import java.util.List;
  * Time:23:36
  */
 @Mapper
-public interface MemberDao extends tk.mybatis.mapper.common.Mapper<Member>{
+public interface MemberDao{
     List<Member> findPage(Member condition);
     Member searchByPhone(Member member);
     Member searchByMemberCode(Member member);

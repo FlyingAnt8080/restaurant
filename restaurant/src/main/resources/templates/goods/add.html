@@ -77,6 +77,27 @@
             <div class="layui-form-item">
                 <div class="layui-row layui-col-space5">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">库存量</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="storeCount" lay-verify="required|int_number" placeholder=""
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">类型状态</label>
+                        <div class="layui-input-block">
+                            <select name="typeState">
+                                <option value="1" selected>普通菜</option>
+                                <option value="2">新菜</option>
+                                <option value="3">特色菜</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-row layui-col-space5">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <div class="layui-form-text">
                             <label class="layui-form-label">菜品描述</label>
                             <div class="layui-input-block">
@@ -85,17 +106,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">库存量</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="storeCount" lay-verify="required|int_number" placeholder=""
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-row layui-col-space5">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">菜品照片</label>
                         <!--上传按钮-->
@@ -106,18 +116,6 @@
                         <div class="layui-upload-list">
                             <img class="layui-upload-img" width="98px" height="132px" id="demo1"/>
                             <p id="demoText1"></p>
-                        </div>
-                    </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">轮播图片</label>
-                        <!--上传按钮-->
-                        <button type="button" class="layui-btn" id="upload2">上传图片</button>
-                        <!--隐藏的input-->
-                        <input type="hidden" id="img_circle_url" name="imgCircleUrl" value=""/>
-                        <!--预览区域-->
-                        <div class="layui-upload-list">
-                            <img class="layui-upload-img" width="98px" height="132px" id="demo2"/>
-                            <p id="demoText2"></p>
                         </div>
                     </div>
                 </div>

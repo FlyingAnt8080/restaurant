@@ -44,6 +44,13 @@ public interface MemberService {
     Member findMemberById(Member member);
 
     /**
+     * 根据会员号查询会员
+     * @param member
+     * @return
+     */
+    Member findMemberByMemberCode(Member member);
+
+    /**
      *根据id删除用户
      */
     void deleteByIds(String ids);

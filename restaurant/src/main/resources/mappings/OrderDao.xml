@@ -4,4 +4,212 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lzy.liujing.restaurant.dao.OrderDao">
 
+    <select id="findPage" parameterType="com.lzy.liujing.restaurant.entity.CustomPageInfo" resultMap="orderResultMap">
+        select * from r_order as a
+        <include refid="join"/>
+        <include refid="where"/>
+    </select>
+
+    <select id="findById" parameterType="Long" resultMap="orderResultMap">
+        select * from r_order
+        where order_id = #{orderId} and del=0
+    </select>
+
+    <update id="deleteByIds" parameterType="java.util.List">
+        update r_order
+        set del = 1
+        where order_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="update" parameterType="com.lzy.liujing.restaurant.entity.Order">
+        update r_order
+        <include refid="set"/>
+        where order_id = #{orderId} and del = 0
+    </update>
+
+    <update id="updateByOrderCode" parameterType="com.lzy.liujing.restaurant.entity.Order">
+        update r_order
+        <include refid="set"/>
+        where order_code = #{orderCode} and del = 0
+    </update>
+
+    <insert id="insert" parameterType="com.lzy.liujing.restaurant.entity.Order" keyColumn="order_id" keyProperty="orderId" useGeneratedKeys="true">
+        insert into r_order
+        <include refid="set"/>
+    </insert>
+
+    <sql id="set">
+        <set>
+            <if test="orderCode!=null and orderCode!=''">
+                order_code = #{orderCode},
+            </if>
+            <if test="deskCode!=null and deskCode!=''">
+                desk_code = #{deskCode},
+            </if>
+            <if test="member!=null">
+                <if test="member.memberCode!=null and member.memberCode!=''">
+                    member_code = #{member.memberCode},
+                </if>
+            </if>
+            <if test="cashier!=null">
+                <if test="cashier.userId!=null">
+                    user_id = #{cashier.userId},
+                </if>
+            </if>
+            <if test="totalCost!=null">
+                total_cost = #{totalCost},
+            </if>
+            <if test="totalPrice!=null">
+                total_price = #{totalPrice},
+            </if>
+            <if test="totalProfit!=null">
+                total_profit = #{totalProfit},
+            </if>
+            <if test="actualPay!=null">
+                actual_pay = #{actualPay},
+            </if>
+            <if test="mustPay!=null">
+                must_pay = #{mustPay},
+            </if>
+            <if test="changeMoney!=null">
+                change_money = #{changeMoney},
+            </if>
+            <if test="discountMoney!=null">
+                discount_money = #{discountMoney},
+            </if>
+            <if test="peopleNum!=null">
+                people_num = #{ peopleNum},
+            </if>
+            <if test="payStatus!=null">
+                pay_status = #{payStatus},
+            </if>
+            <if test="finishStatus!=null">
+                finish_status = #{finishStatus},
+            </if>
+            <if test="overStatus!=null">
+                over_status = #{overStatus},
+            </if>
+            <if test="createTime!=null">
+                create_time = #{createTime},
+            </if>
+            <if test="modifyTime!=null">
+                modify_time = #{modifyTime},
+            </if>
+        </set>
+    </sql>
+    <sql id="where">
+        <where>
+            <if test="t.orderId!=null">
+                a.order_id = #{t.orderId} and
+            </if>
+            <if test="t.orderCode!=null and t.orderCode!=''">
+                a.order_code = #{t.orderCode} and
+            </if>
+            <if test="t.deskCode!=null and t.deskCode!=''">
+                a.desk_code = #{t.deskCode} and
+            </if>
+            <if test="t.member!=null">
+                <if test="t.member.memberCode!=null and t.member.memberCode!=''">
+                    a.member_code = #{t.member.memberCode} and
+                </if>
+                <if test="t.member.name!=null and t.member.name!=''">
+                    b.m_name = #{t.member.name} and
+                </if>
+            </if>
+            <if test="t.totalCost!=null and t.totalCost!=''">
+                a.total_cost = #{t.totalCost} and
+            </if>
+            <if test="t.totalPrice!=null and t.totalPrice!=''">
+                a.total_price = #{t.totalPrice} and
+            </if>
+            <if test="t.actualPay!=null and t.actualPay!=''">
+                actual_pay = #{t.actualPay} and
+            </if>
+            <if test="t.peopleNum!=null and t.peopleNum!=''">
+                a.people_num = #{t.peopleNum} and
+            </if>
+            <if test="t.payStatus!=null">
+                a.pay_status = #{t.payStatus} and
+            </if>
+            <if test="t.finishStatus!=null">
+                a.finish_status = #{t.finishStatus} and
+            </if>
+            <if test="t.overStatus!=null">
+                a.over_status = #{t.overStatus} and
+            </if>
+            a.del = 0
+            <if test="t.startTime!=null and t.endTime!=null">
+                and a.create_time between #{t.startTime} and #{t.endTime}
+            </if>
+            <if test="orderBy!=null">
+                <if test="orderBy=='DESC'">
+                    order by a.create_time DESC
+                </if>
+                <if test="orderBy=='ASC'">
+                    order by a.create_time ASC
+                </if>
+            </if>
+        </where>
+    </sql>
+    <sql id="join">
+        left join r_member as b on a.member_code = b.member_code
+        left join r_merber_category as c on b.mc_id = c.mc_id
+        left join sys_user as d on a.user_id = d.user_id
+    </sql>
+    <resultMap id="orderResultMap" type="com.lzy.liujing.restaurant.entity.Order">
+        <id column="order_id" property="orderId"/>
+        <result column="desk_code" property="deskCode"/>
+        <result column="order_code" property="orderCode"/>
+        <result column="total_cost" property="totalCost"/>
+        <result column="total_price" property="totalPrice"/>
+        <result column="total_profit" property="totalProfit"/>
+        <result column="actual_pay" property="actualPay"/>
+        <result column="must_pay" property="mustPay"/>
+        <result column="change_money" property="changeMoney"/>
+        <result column="discount_money" property="discountMoney"/>
+        <result column="people_num" property="peopleNum"/>
+        <result column="pay_status" property="payStatus"/>
+        <result column="finish_status" property="finishStatus"/>
+        <result column="over_status" property="overStatus"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <association property="member" javaType="com.lzy.liujing.restaurant.entity.Member">
+            <id column="member_id" property="memberId"/>
+            <result column="member_code" property="memberCode"/>
+            <result column="m_name" property="name"/>
+            <result column="m_gender" property="gender"/>
+            <result column="m_birthday" property="birthday"/>
+            <result column="m_phone" property="phone"/>
+            <result column="total_money" property="totalMoney"/>
+            <result column="create_time" property="createTime"/>
+            <result column="modify_time" property="modifyTime"/>
+            <result column="a.del" property="del"/>
+            <association property="memberCategory" javaType="com.lzy.liujing.restaurant.entity.MemberCategory">
+                <id column="mc_id" property="mcId"/>
+                <result column="mc_name" property="mcName"/>
+                <result column="discount" property="discount"/>
+                <result column="amount" property="amount"/>
+                <result column="create_time" property="createTime"/>
+                <result column=" modify_time" property="modifyTime"/>
+                <result column="b.del" property="del"/>
+            </association>
+        </association>
+        <association property="cashier" javaType="com.lzy.liujing.restaurant.entity.SysUser">
+            <id column="user_id" property="userId"/>
+            <result column="login_code" property="loginCode"/>
+            <result column="password" property="password"/>
+            <result column="name" property="name"/>
+            <result column="phone" property="phone"/>
+            <result column="email" property="email"/>
+            <result column="gender" property="gender"/>
+            <result column="birthday" property="birthday"/>
+            <result column="id_number" property="idNumber"/>
+            <result column="address" property="address"/>
+            <result column="create_time" property="createTime"/>
+            <result column="modify_time" property="modifyTime"/>
+        </association>
+    </resultMap>
 </mapper>

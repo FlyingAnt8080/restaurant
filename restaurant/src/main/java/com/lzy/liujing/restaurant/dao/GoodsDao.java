@@ -16,6 +16,7 @@ public interface GoodsDao extends tk.mybatis.mapper.common.Mapper<Goods>{
     List<Goods> findPage(Goods goods);
     Goods findById(Integer goodsId);
     Goods findByGoodsName(Goods goods);
+    List<Goods> findByGoodsIds(List<Integer> goodsIdList);
     int insert(Goods goods);
     int update(Goods goods);
     int deleteByIds(List<Integer> idList);
