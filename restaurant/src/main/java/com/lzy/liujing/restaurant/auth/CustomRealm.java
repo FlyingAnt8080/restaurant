@@ -37,7 +37,7 @@ public class CustomRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-        String loginCode = token.getUsername();
+        String loginCode = (String) token.getPrincipal();
        //此处username 即loginCode登录账号
         SysUser user = sysUserService.findByLoginCode(loginCode);
         if(user==null){
@@ -46,11 +46,9 @@ public class CustomRealm extends AuthorizingRealm {
         }else if(!user.getPassword().equals(new String((char[]) token.getCredentials()))){
             throw new CustomAuthenticationException(ResultEnum.PWD_ERROR);
         }
-        //new SimpleAuthenticationInfo(token.getPrincipal(),user.getPassword(),getName());
         // 当验证都通过后，把用户信息放在session里
         Session session = SecurityUtils.getSubject().getSession();
         session.setAttribute("user",user);
-
         //身份信息
         return new SimpleAuthenticationInfo(
                 user,//用户
@@ -87,8 +85,9 @@ public class CustomRealm extends AuthorizingRealm {
                 System.out.println(menu.getPermission());
             }
         }
+        // 将权限名称提供给info
         //set集合不会出现重复数据
-        info.addStringPermissions(permissions);
+        info.setStringPermissions(permissions);
         return info;
     }
 }

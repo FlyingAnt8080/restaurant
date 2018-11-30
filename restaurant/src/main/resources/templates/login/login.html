@@ -20,10 +20,10 @@
 				</fieldset>
 				<div class="layui-form" action="" method="post">
 					<div class="layui-form-item">
-						<input type="text" id="loginCode" lay-verify="required|loginCode" maxlength="20" placeholder="请输入账号" autocomplete="off" autofocus="autofocus" class="layui-input"/>
+						<input type="text" id="loginCode" lay-verify="required|account" lay-verType="tips" maxlength="20" placeholder="请输入账号" autocomplete="off" autofocus="autofocus" class="layui-input"/>
 					</div>
 					<div class="layui-form-item">
-						<input type="password" id="password" lay-verify="required" maxlength="20" placeholder="请输入密码" autocomplete="off" class="layui-input"/>
+						<input type="password" id="password" lay-verType="tips" lay-verify="pwd" maxlength="20" placeholder="请输入密码" autocomplete="off" class="layui-input"/>
 					</div>
 					<!--<div class="layui-form-item form_code">
 						<input type="text" id="code" lay-verify="required|code" maxlength="6" placeholder="请输入验证码" autocomplete="off" class="layui-input">
@@ -43,11 +43,13 @@
 		<script type="text/javascript" th:src="@{/layuiadmin/layui/layui.all.js}"  src="../../static/layui/layui.all.js"></script>
 		<script type="text/javascript" th:src="@{/js/login.js}"  src="../../static/js/login.js"></script>
 		<script>
+
 			$("#click").click(function () {
                 layui.use('layer', function(){
                     var layer = layui.layer;
                     layer.alert("请联系经理！",{
-                        title:"提示"
+                        title:"提示",
+						anim:6,
 					})
                 });
             });

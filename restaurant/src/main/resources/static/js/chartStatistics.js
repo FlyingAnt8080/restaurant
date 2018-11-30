@@ -336,7 +336,7 @@ function loadMemberCategoryRateChart(nameArray, countArray) {
                     x: 'right',
                     data: nameArray
                 },
-                calculable: true,
+                calculable: false,
                 series: [
                     {
                         name: '类型名称',
@@ -381,7 +381,6 @@ function loadChart2(nameArray, countArray) {
                     show: true,
                     orient: 'vertical',
                     feature: {
-                        /*mark: {show: true},*/
                         dataView: {show: true, readOnly: false},
                         magicType: {
                             show: true,
@@ -399,7 +398,7 @@ function loadChart2(nameArray, countArray) {
                         saveAsImage: {show: true}
                     }
                 },
-                calculable: true,
+                calculable: false,
                 series: [
                     {
                         name: '菜系',

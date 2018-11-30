@@ -189,7 +189,7 @@
         //执行一个 table 实例
         table.render({
             elem: '#tableList'
-            , height: "full"
+            , height: 535
             , url: "/restaurant/sold/tranRecordsList.do" //数据接口
             , method: 'post'
             , request: {
@@ -199,11 +199,10 @@
             , response: {
                 statusCode: 200
             }
-            , limits: [1, 2, 5, 10, 20, 30]
+            , limits: [10, 20, 30,40]
             , title: '交易记录'
             , page: true //开启分页
             , even: true//开启背景隔行
-            , height: 500
             //,size:"lg"设置表格尺寸
             , toolbar: '#test-table-toolbar-toolbarDemo' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
             , cols: [[ //表头
@@ -278,7 +277,7 @@
                     , content: url
                     , maxmin: true
                     , anim: 1
-                    , area: ['900px', '500px']
+                    , area: ['900px', '540px']
                     ,btn: ['确定', '取消']
                     ,yes: function(index, layero){
                         table.reload('tableList'); //数据刷新

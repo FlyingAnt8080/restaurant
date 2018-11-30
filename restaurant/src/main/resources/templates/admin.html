@@ -24,11 +24,6 @@
                         <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
                     </a>
                 </li>
-                <li class="layui-nav-item layui-hide-xs" lay-unselect>
-                    <a href="" target="_blank" title="前台">
-                        <i class="layui-icon layui-icon-website"></i>
-                    </a>
-                </li>
                 <li class="layui-nav-item" lay-unselect>
                     <a href="javascript:;" layadmin-event="refresh" title="刷新">
                         <i class="layui-icon layui-icon-refresh-3"></i>
@@ -37,14 +32,6 @@
             </ul>
             <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
 
-                <li class="layui-nav-item" lay-unselect>
-                   <!-- layadmin-event="message"-->
-                    <a lay-text="消息中心">
-                        <i class="layui-icon layui-icon-notice"></i>
-                        <!-- 如果有新消息，则显示小圆点 -->
-                        <span class="layui-badge-dot"></span>
-                    </a>
-                </li>
                 <li class="layui-nav-item layui-hide-xs" lay-unselect>
                     <a href="javascript:;" layadmin-event="theme">
                         <i class="layui-icon layui-icon-theme"></i>
@@ -65,9 +52,8 @@
                         <cite th:text="${session.user.name}"></cite>
                     </a>
                     <dl class="layui-nav-child">
-                        <dd><a th:attr="lay-href=@{/user/curuserinfo.html}">基本资料</a></dd>
+                        <dd><a th:attr="lay-href=@{/user/curuserinfo.html}">个人资料</a></dd>
                         <dd><a th:attr="lay-href=@{/user/updatepwd.html}">修改密码</a></dd>
-                        <hr>
                         <dd layadmin-event="logout" style="text-align: center;"><a th:href="@{/sysuser/logout.do}">退出</a></dd>
                     </dl>
                 </li>

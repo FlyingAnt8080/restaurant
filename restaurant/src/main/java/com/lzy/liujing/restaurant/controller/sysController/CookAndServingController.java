@@ -6,6 +6,7 @@ import com.lzy.liujing.restaurant.service.OrderDetailService;
 import com.lzy.liujing.restaurant.service.OrderService;
 import com.lzy.liujing.restaurant.utils.ResultUtil;
 import org.apache.catalina.User;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +34,7 @@ public class CookAndServingController{
      * @return
      */
     @GetMapping("/cookTask.html")
+    @RequiresPermissions("cooking:view")
     public String cookTaskList(HttpSession session,Model model){
         SysUser user = (SysUser) session.getAttribute("user");
         model.addAttribute("role",user.getRole());
@@ -45,6 +47,7 @@ public class CookAndServingController{
      * @return
      */
     @GetMapping("/cookTask.do")
+    @RequiresPermissions("cooking:view")
     @ResponseBody
     public Result<OrderDetail> cookTaskList(CustomPageInfo<OrderDetail> pageInfo){
         List<OrderDetail> resultList = cookAndServingService.cookTaskFindPage(pageInfo);
@@ -58,6 +61,7 @@ public class CookAndServingController{
      * @return
      */
     @PostMapping("/startCook.do")
+    @RequiresPermissions("cooking:edit")
     @ResponseBody
     public Result<OrderDetail> startCook(@RequestParam(value = "odIdList[]") List<Long> odIdList){
         OrderDetail orderDetail = new OrderDetail();
@@ -74,6 +78,7 @@ public class CookAndServingController{
      * @return
      */
     @PostMapping("/finishCook.do")
+    @RequiresPermissions("cooking:edit")
     @ResponseBody
     public Result<OrderDetail> finishCook(@RequestParam(value = "odIdList[]") List<Long> odIdList){
         OrderDetail orderDetail = new OrderDetail();
@@ -88,6 +93,7 @@ public class CookAndServingController{
      * @return
      */
     @GetMapping("/servingTask.html")
+    @RequiresPermissions("serving:view")
     public String servingTaskList(HttpSession session,Model model){
         SysUser user = (SysUser) session.getAttribute("user");
         model.addAttribute("role",user.getRole());
@@ -100,6 +106,7 @@ public class CookAndServingController{
      * @return
      */
     @GetMapping("/servingTask.do")
+    @RequiresPermissions("serving:view")
     @ResponseBody
     public Result<OrderDetail> servingTask(CustomPageInfo<OrderDetail> pageInfo){
         CustomPageInfo<OrderDetail> resultInfo = cookAndServingService.servingTaskFindPage(pageInfo);
@@ -113,6 +120,7 @@ public class CookAndServingController{
      * @return
      */
     @GetMapping("/finishServing.do")
+    @RequiresPermissions("serving:edit")
     @ResponseBody
     public Result<OrderDetail> finishServing(OrderDetail orderDetail,Order order){
         orderDetail.setOrder(order);
@@ -125,6 +133,7 @@ public class CookAndServingController{
      * @return
      */
     @GetMapping("/dssList.html")
+    @RequiresPermissions("deskServing:view")
     public String deskServingStatusList(){
         return "/cook/deskServingStatus";
     }
@@ -136,6 +145,7 @@ public class CookAndServingController{
      * @return
      */
     @PostMapping("/dssList.do")
+    @RequiresPermissions("deskServing:view")
     @ResponseBody
     public Result<Order> deskServingStatusList(CustomPageInfo<Order> pageInfo,Order order){
         order.setOverStatus(0);
@@ -151,6 +161,7 @@ public class CookAndServingController{
      * @return
      */
     @GetMapping("/ssd.html/{orderId}")
+    @RequiresPermissions("deskServing:view")
     public String servingStatusDetail(@PathVariable(value = "orderId") Long orderId, Model model){
         model.addAttribute("orderId",orderId);
         return "/cook/servingStatusDetail";
@@ -163,6 +174,7 @@ public class CookAndServingController{
      * @return
      */
     @GetMapping("/ssd.do/{orderId}")
+    @RequiresPermissions("deskServing:view")
     @ResponseBody
     public Result<OrderDetail> servingStatusDetail(CustomPageInfo pageInfo,@PathVariable(value = "orderId") Long orderId){
         OrderDetail detail = new OrderDetail();

@@ -166,26 +166,6 @@
                             <p id="demoText1"></p>
                         </div>
                     </div>
-                    <!--<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">轮播图片</label>
-                        &lt;!&ndash;上传按钮&ndash;&gt;
-                        <button type="button" class="layui-btn" id="upload2">上传图片</button>
-                        &lt;!&ndash;隐藏的input&ndash;&gt;
-                        <input type="hidden" id="img_circle_url" name="imgCircleUrl"/>
-                        &lt;!&ndash;预览区域&ndash;&gt;
-                        <div class="layui-upload-list">
-                            <th:block th:if="${goods.imgCircleUrl}==null or ${goods.imgCircleUrl}==''">
-                                <img class="layui-upload-img" width="98px" height="132px" id="demo2"/>
-                            </th:block>
-                            <th:block th:if="${goods.imgCircleUrl}!=null">
-                                <div id="layer-photos-demo2" class="layer-photos-demo">
-                                    <img th:attr="layer-src=@{'/'+${goods.imgCircleUrl}},src=@{'/'+${goods.imgCircleUrl}}"
-                                         class="layui-upload-img" width="98px" height="132px" id="demo2"/>
-                                </div>
-                            </th:block>
-                            <p id="demoText2"></p>
-                        </div>
-                    </div>-->
                 </div>
             </div>
             <div class="layui-form-item layui-hide">
@@ -264,35 +244,6 @@
                 demoText1.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
                 demoText1.find('.demo-reload').on('click', function () {
                     uploadInst1.upload();
-                });
-            }
-        });
-        var uploadInst2 = upload.render({
-            elem: '#upload2' //绑定元素
-            , url: '/restaurant/upload/img.do' //上传接口
-            , field: 'image'
-            , before: function (obj) {
-                //预读本地文件示例，不支持ie8
-                obj.preview(function (index, file, result) {
-                    $('#demo2').attr('src', result); //图片链接（base64）
-                });
-            }
-            , done: function (res) {
-                //如果上传失败
-                if (res.code !== 200) {
-                    return layer.msg('上传失败', {icon: 2, anim: 6});
-                }
-                //上传成功
-                layer.msg("上传成功", {icon: 6});
-                console.log("图片路径：" + res.data.src);
-                document.getElementById("img_circle_url").value = res.data.src;
-            }
-            , error: function () {
-                //演示失败状态，并实现重传
-                var demoText2 = $('#demoText2');
-                demoText2.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
-                demoText2.find('.demo-reload').on('click', function () {
-                    uploadInst2.upload();
                 });
             }
         });

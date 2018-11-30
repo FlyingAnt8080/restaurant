@@ -7,6 +7,12 @@
           media="all"/>
     <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" href="../../static/layuiadmin/layui/css/layui.css"
           media="all"/>
+    <style>
+        body{
+            margin: 10px;
+            background: #eeeeee;
+        }
+    </style>
 </head>
 <body>
     <div class="layui-card">
@@ -90,9 +96,9 @@
                 {{#
                 if( [[${role.roleId}]]==1)
                 { }}
-                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
                 {{#  } else { }}
-                <a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                <a class="layui-btn layui-btn-disabled layui-btn-xs">删除</a>
                 {{#  } }}
             </script>
             <!--下边分页条-->
@@ -122,11 +128,11 @@
                 , response: {
                     statusCode: 200
                 }
-                //,toolbar:'#test-table-toolbar-toolbarDemo'
-                , limits: [1,2, 5, 10, 20, 30]
+                , limits: [10, 20, 30,40,50,60]
                 , title: '会员表'
                 , page: true //开启分页
                 , even: true//开启背景隔行
+                ,height:540
                 //,size:"lg"设置表格尺寸
                 , toolbar: '#test-table-toolbar-toolbarDemo' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
                 , cols: [[ //表头
@@ -157,7 +163,7 @@
                             ,title: '添加会员'
                             ,content: '/restaurant/member/add.html'
                             ,maxmin: true
-                            ,area: ['650px', '345px']
+                            ,area: ['650px', '450px']
                             ,btn: ['确定', '取消']
                             ,yes: function(index, layero){
                                 var iframeWindow = window['layui-layer-iframe'+ index]
@@ -203,7 +209,7 @@
                                 ,title: '编辑会员'
                                 ,content:url
                                 ,maxmin: true
-                                ,area: ['650px', '345px']
+                                ,area: ['650px', '450px']
                                 ,btn: ['确定', '取消']
                                 ,yes: function(index, layero){
                                     var iframeWindow = window['layui-layer-iframe'+ index]
@@ -303,7 +309,7 @@
                         ,title: '编辑会员'
                         ,content:url
                         ,maxmin: true
-                        ,area: ['650px', '345px']
+                        ,area: ['650px', '450px']
                         ,btn: ['确定', '取消']
                         ,yes: function(index, layero){
                             var iframeWindow = window['layui-layer-iframe'+ index]

@@ -3,10 +3,12 @@ package com.lzy.liujing.restaurant.service.Impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.lzy.liujing.restaurant.Enums.ResultEnum;
+import com.lzy.liujing.restaurant.dao.DeskDao;
 import com.lzy.liujing.restaurant.dao.GoodsDao;
 import com.lzy.liujing.restaurant.dao.OrderDao;
 import com.lzy.liujing.restaurant.dao.OrderDetailDao;
 import com.lzy.liujing.restaurant.entity.CustomPageInfo;
+import com.lzy.liujing.restaurant.entity.Desk;
 import com.lzy.liujing.restaurant.entity.Order;
 import com.lzy.liujing.restaurant.entity.OrderDetail;
 import com.lzy.liujing.restaurant.exception.CustomException;
@@ -28,11 +30,10 @@ public class CookAndServingServiceImpl implements CookAndServingService {
     @Autowired
     private OrderDao orderDao;
     @Autowired
-    private GoodsDao goodsDao;
+    private DeskDao deskDao;
 
     /**
-     * 制菜任务表分页查询
-     *
+     * 制菜任务列表查询
      * @param pageInfo
      * @return
      */
@@ -149,6 +150,12 @@ public class CookAndServingServiceImpl implements CookAndServingService {
              */
             if(queryOrderDetailList.get(0).getOrder().getPayStatus()==1){
                 order.setOverStatus(1);
+                //将对应餐桌状态设置成'待清理'
+                String currDeskCode = queryOrderDetailList.get(0).getOrder().getDeskCode();
+                Desk desk = new Desk();
+                desk.setDeskCode(currDeskCode);
+                desk.setIdleStatus(2);
+                deskDao.update(desk);
             }
             orderDao.update(order);
         }

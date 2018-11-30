@@ -81,8 +81,7 @@
         </div>
 
         <!-- 侧边菜单 -->
-        <div class="layui-side layui-side-menu"
-             style="background:url('../image/background.jpg') no-repeat;box-shadow:none; ">
+        <div class="layui-side layui-side-menu" style="background:url('../image/background.jpg') no-repeat;box-shadow:none; ">
             <div class="layui-side-scroll">
                 <div class="layui-logo"
                      style="text-align: left;background-color:rgba(255,255,255,0);font-size: 20px;padding-left: 20px;border:0px;box-shadow:none;">
@@ -145,8 +144,9 @@
 <script th:inline="javascript" th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
 <script type="text/javascript">
     function logout() {
-        layer.confirm('确定退出?', function (index) {
-            location.href = '/restaurant/guest/logout.do'
+        layer.confirm('确定退出?', function () {
+            var curDeskCode = document.getElementById("deskCode").innerText;
+            location.href = '/restaurant/guest/logout.do/'+curDeskCode;
         });
     }
 </script>

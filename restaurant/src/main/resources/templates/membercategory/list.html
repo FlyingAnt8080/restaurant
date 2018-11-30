@@ -47,13 +47,13 @@
             //执行一个 table 实例
             table.render({
                 elem: '#tableList'
-                , height: "full"
                 , url: "/restaurant/membercategory/list.do" //数据接口
                 , method: 'post'
                 , title: '会员类型表'
                 , response: {
                     statusCode: 200
                 }
+                , height: 620
                 //,size:"lg"设置表格尺寸
                 , toolbar: '#test-table-toolbar-toolbarDemo' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
                 , cols: [[ //表头

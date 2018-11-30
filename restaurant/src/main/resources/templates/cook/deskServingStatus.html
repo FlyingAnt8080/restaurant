@@ -106,7 +106,6 @@
         //执行一个 table 实例
         table.render({
             elem: '#tableList'
-            , height: "full"
             , url: "/restaurant/service/dssList.do" //数据接口
             , method: 'post'
             , request: {
@@ -148,12 +147,7 @@
                     , content: url
                     , maxmin: true
                     , anim: 1
-                    , area: ['900px', '500px']
-                    ,btn: ['确定', '取消']
-                    ,yes: function(index, layero){
-                        table.reload('tableList'); //数据刷新
-                        layer.close(index);
-                    }
+                    , area: ['900px', '485px']
                 });
             }
         });

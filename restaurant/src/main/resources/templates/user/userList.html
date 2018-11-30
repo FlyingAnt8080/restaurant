@@ -92,10 +92,6 @@
                 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
             </script>
-            <!--下边分页条-->
-            <div class="layui-tab-item">
-                <div id="pageDemo"></div>
-            </div>
         </div>
     </div>
     <script th:src="@{/layuiadmin/layui/layui.js}" src="../static/layuiadmin/layui/layui.js"></script>
@@ -119,11 +115,11 @@
                 , response: {
                     statusCode: 200
                 }
-                , limits: [1,2, 5, 10, 20, 30]
+                , limits: [10, 20, 30,40,50,60]
                 , title: '用户表'
                 , page: true //开启分页
                 , even: true//开启背景隔行
-                ,height:500
+                ,height:540
                 //,size:"lg"设置表格尺寸
                 , toolbar: '#test-table-toolbar-toolbarDemo' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
                 , cols: [[ //表头
@@ -139,7 +135,7 @@
                     , {field: 'address', title: '家庭住址',align:'center', width: 160, sort: true}
                     /*取嵌套json数据用模板 templet: '<div>{{d.role.roleName}}</div>'*/
                     , {field: 'role', title: '角色',align:'center', width: 100, templet: '<div>{{d.role.roleName}}</div>'}
-                    , {fixed: 'right', title: "工具栏",align:'center', width: 180, toolbar: '#barDemo'}
+                    , {fixed: 'right', title: "工具栏",align:'center', width: 200, toolbar: '#barDemo'}
                 ]]
             });
 
@@ -154,7 +150,7 @@
                             ,title: '添加用户'
                             ,content: '/restaurant/user/adduser.html'
                             ,maxmin: true
-                            ,area: ['700px', '450px']
+                            ,area: ['700px', '510px']
                             ,btn: ['确定', '取消']
                             ,yes: function(index, layero){
                                 var iframeWindow = window['layui-layer-iframe'+ index]
@@ -201,7 +197,7 @@
                                 ,title: '编辑用户'
                                 ,content:url
                                 ,maxmin: true
-                                ,area: ['700px', '450px']
+                                ,area: ['700px', '460px']
                                 ,btn: ['确定', '取消']
                                 ,yes: function(index, layero){
                                     var iframeWindow = window['layui-layer-iframe'+ index]
@@ -320,7 +316,7 @@
                         ,title: '编辑用户'
                         ,content:url
                         ,maxmin: true
-                        ,area: ['700px', '450px']
+                        ,area: ['750px', '460px']
                         ,btn: ['确定', '取消']
                         ,yes: function(index, layero){
                             var iframeWindow = window['layui-layer-iframe'+ index]

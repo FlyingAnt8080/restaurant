@@ -4,6 +4,7 @@ import com.lzy.liujing.restaurant.entity.*;
 import com.lzy.liujing.restaurant.service.OrderDetailService;
 import com.lzy.liujing.restaurant.service.OrderService;
 import com.lzy.liujing.restaurant.utils.ResultUtil;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +32,8 @@ public class OrderController {
     @PostMapping("/list.do")
     @ResponseBody
     public Result<Order> orderList(CustomPageInfo<Order> pageInfo,Order order){
+        //订单是未完成状态的，（以付款、已完成制菜的）是已完成订单即交易记录
+        order.setOverStatus(0);
         pageInfo.setT(order);
         pageInfo.setOrderBy("ASC");
        CustomPageInfo<Order> resultInfo =  orderService.findPage(pageInfo);

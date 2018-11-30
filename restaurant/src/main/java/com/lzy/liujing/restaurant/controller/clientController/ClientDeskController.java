@@ -32,9 +32,8 @@ public class ClientDeskController{
         return ResultUtil.success();
     }
 
-    @GetMapping("/logout.do")
-    private String deskLoginOut(HttpSession session){
-        String deskCode = (String) session.getAttribute("deskCode");
+    @GetMapping("/logout.do/{deskCode}")
+    private String deskLoginOut(@PathVariable("deskCode") String deskCode,HttpSession session){
         Desk desk = new Desk();
         desk.setDeskCode(deskCode);
         deskService.logout(desk);

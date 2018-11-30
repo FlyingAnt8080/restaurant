@@ -14,16 +14,20 @@
 		anim: 'fade',
 		indicator: 'none'
 	});
-	/*// 自定义验证规则
+	// 自定义验证规则
 	form.verify({
 		account: function(value) {
 			var regPhone = /^1[34578]\d{9}$/;
-			if(!regPhone.test(value.trim())) {
+			if(!regPhone.test(value.trim())){
 				return "请输入正确的账号";
 			}
-		}
-	});*/
-
+		},
+		pwd:function (value) {
+			if(value.trim()==''||value.trim()==null){
+				return'密码不能为空';
+			}
+        }
+	});
 	//监听提交  
 	form.on("submit(login)", function() {
 		$.ajax({
@@ -39,9 +43,7 @@
 					location = "/restaurant/sysuser/admin.html";
 				} else {
 					$("#password").val("");
-					layer.alert(result.msg, {
-						title: '提交结果'
-					});
+					layer.msg("密码或账户错误!",{icon:2,anim:6});
 				}
 			}
 		});

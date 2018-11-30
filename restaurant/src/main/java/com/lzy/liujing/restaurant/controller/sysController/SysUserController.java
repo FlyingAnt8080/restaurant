@@ -9,6 +9,7 @@ import com.lzy.liujing.restaurant.entity.request.UserRequest;
 import com.lzy.liujing.restaurant.service.SysUserService;
 import com.lzy.liujing.restaurant.utils.ResultUtil;
 import org.apache.catalina.User;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,13 +25,14 @@ public class SysUserController {
     @Autowired
     private SysUserService sysUserService;
 
-
     /**
      * 用户列表数据接口
      * @param userRequest
      * @return
      */
+
     @PostMapping("/userlist.do")
+    @RequiresPermissions("userManage:view")
     @ResponseBody
     public Result<List<SysUser>> userList(UserRequest userRequest){
         SysRole role = new SysRole();
@@ -51,6 +53,7 @@ public class SysUserController {
      * @return
      */
     @GetMapping("/userlist.html")
+    @RequiresPermissions("userManage:view")
     public String userList(Model model){
         model.addAttribute("roleList",sysUserService.findRoleList());
         return "/user/userList";
@@ -61,12 +64,14 @@ public class SysUserController {
      * @return
      */
     @GetMapping("/adduser.html")
+    @RequiresPermissions("userManage:edit")
     public String addUser(Model model){
         model.addAttribute("roleList",sysUserService.findRoleList());
         return "/user/addUser";
     }
 
     @PostMapping("/adduser.do")
+    @RequiresPermissions("userManage:edit")
     @ResponseBody
     public Result<SysUser> addUser(SysUser user,SysRole role){
         user.setRole(role);
@@ -78,7 +83,9 @@ public class SysUserController {
      * 编辑用户页面
      * @return
      */
+
     @GetMapping("/edituser.html/{userId}")
+    @RequiresPermissions("userManage:edit")
     public String editUser(@PathVariable("userId") Long userId,Model model){
         SysUser user = sysUserService.findById(userId);
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
@@ -104,19 +111,22 @@ public class SysUserController {
     }
 
     @PostMapping("/del.do")
+    @RequiresPermissions("userManage:edit")
     @ResponseBody
     public Result<SysUser> delete(@RequestParam String ids){
         sysUserService.deleteByIds(ids);
         return ResultUtil.success("删除成功！");
     }
 
+
     @GetMapping("/resetpwd/{userId}")
+    @RequiresPermissions("userManage:edit")
     @ResponseBody
     public Result<SysUser> resetPwd(@PathVariable("userId") Long userId){
         SysUser user = new SysUser();
         user.setPassword("123456");
         user.setUserId(userId);
-        sysUserService.updatePwd(user);
+        sysUserService.resetPwd(user);
         return ResultUtil.success();
     }
 
@@ -145,6 +155,7 @@ public class SysUserController {
     public String updatePwd(){
         return "user/updatePwd";
     }
+
     @PostMapping("/updatepwd.do")
     @ResponseBody
     public Result<SysUser> updatePwd(SysUser user){

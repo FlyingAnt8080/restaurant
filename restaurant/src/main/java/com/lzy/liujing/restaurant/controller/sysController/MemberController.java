@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -27,8 +26,8 @@ public class MemberController {
      * @param model
      * @return
      */
-    @RequiresPermissions("manage:cashier:view")
     @GetMapping("/list.html")
+    @RequiresPermissions("memberManage:view")
     public String memberList(Model model){
         model.addAttribute("memberCategoryList",memberCategoryService.findAll());
         SysUser user = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("user");
@@ -36,15 +35,16 @@ public class MemberController {
         return "/member/list";
     }
 
-    @RequiresPermissions("manage:cashier:edit")
     @GetMapping("/add.html")
+    @RequiresPermissions("memberManage:edit")
     public String addMember(Model model){
         model.addAttribute("memberCategoryList",memberCategoryService.findAll());
         return "/member/add";
     }
 
-    @RequiresPermissions("manage:cashier:edit")
+
     @PostMapping("/add.do")
+    @RequiresPermissions("memberManage:edit")
     @ResponseBody
     public Result<Member> addMember(Member member,MemberCategory memberCategory){
         member.setMemberCategory(memberCategory);
@@ -52,8 +52,8 @@ public class MemberController {
         return ResultUtil.success();
     }
 
-    @RequiresPermissions("manage:cashier:edit")
     @GetMapping("/edit.html/{memberId}")
+    @RequiresPermissions("memberManage:edit")
     public String editMember(@PathVariable("memberId") Long memberId, Model model){
         Member member = new Member();
         member.setMemberId(memberId);
@@ -66,8 +66,8 @@ public class MemberController {
         return "/member/edit";
     }
 
-    @RequiresPermissions("manage:cashier:edit")
     @PostMapping("/edit.do")
+    @RequiresPermissions("memberManage:edit")
     @ResponseBody
     public Result<Member> editMember(Member member,MemberCategory memberCategory){
         member.setMemberCategory(memberCategory);
@@ -75,8 +75,8 @@ public class MemberController {
         return ResultUtil.success();
     }
 
-    @RequiresPermissions("manage:del")
     @PostMapping("/del.do")
+    @RequiresPermissions("memberManage:edit")
     @ResponseBody
     public Result<Member> deleteMember(@RequestParam String ids){
         memberService.deleteByIds(ids);
@@ -89,9 +89,8 @@ public class MemberController {
      * @param memberCategory 接收类型条件的id
      * @return
      */
-
-    @RequiresPermissions("manage:cashier:view")
     @PostMapping("/list.do")
+    @RequiresPermissions("memberManage:view")
     @ResponseBody
     public Result<List<Member>> memberList(CustomPageInfo<Member> pageInfo,Member member,
                                            MemberCategory memberCategory){

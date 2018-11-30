@@ -29,7 +29,8 @@ public class OrderServiceImpl implements OrderService {
     private MemberDao memberDao;
     @Autowired
     private MemberCategoryDao memberCategoryDao;
-
+    @Autowired
+    private DeskDao deskDao;
     /**
      * 添加订单
      *
@@ -156,9 +157,14 @@ public class OrderServiceImpl implements OrderService {
          */
         if(resultDetailList.get(0).getOrder().getFinishStatus()==1){
             order.setOverStatus(1);
+            //将对应餐桌状态设置成'待清理'
+            String currDeskCode = resultDetailList.get(0).getOrder().getDeskCode();
+            Desk desk = new Desk();
+            desk.setDeskCode(currDeskCode);
+            desk.setIdleStatus(2);
+            deskDao.update(desk);
         }
         int effect = orderDao.updateByOrderCode(order);
-
         /**
          *  增加会员的总消费额
          *  1先根据会员号查出会员信息
@@ -183,7 +189,7 @@ public class OrderServiceImpl implements OrderService {
 
         MemberCategory memberCategory = new MemberCategory();
         memberCategory.setMcId(mcId);
-        //根据会员id来修改
+        //根据会员id来修改会员信息
         member.setMemberCode(null);
         member.setMemberId(queryMember.getMemberId());
         member.setMemberCategory(memberCategory);

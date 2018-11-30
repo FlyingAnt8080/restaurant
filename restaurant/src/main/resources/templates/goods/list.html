@@ -166,19 +166,18 @@
             //执行一个 table 实例
             table.render({
                 elem: '#tableList'
-                , height: "full"
                 , url: "/restaurant/goods/list.do" //数据接口
                 , method: 'post'
                 , request: {
                     pageName: 'pageNum' //页码的参数名称，默认：page
                     , limitName: 'pageSize' //每页数据量的参数名，默认：limit
                 }
-                ,height:511
                 , response: {
                     statusCode: 200
                 }
-                //,toolbar:'#test-table-toolbar-toolbarDemo'
-                , limits: [5,7, 10, 20, 30]
+                ,height:540
+                , limits: [7,10, 20, 30,40]
+                ,limit:7
                 , title: '菜品列表'
                 , page: true //开启分页
                 , even: true//开启背景隔行
@@ -196,7 +195,7 @@
                     , {field: 'storeCount', title: '库存量',align:'center',width: 100,sort: true,templet:'<div>{{d.storeCount}}份</div>'}
                     , {field: 'putawayStatus', title: '上架状态',align:'center',templet: '#putawayStatus',width: 100}
                     , {field: 'soldState', title: '销售状态',align:'center',templet: '#soldState',width: 100}
-                    , {field:  'typeState',title: '销售状态',align:'center',templet: '#typeState',width: 100}
+                    , {field:  'typeState',title: '销售类型',align:'center',templet: '#typeState',width: 100}
                     , {field: 'createTime', title: '创建时间', width: 170,sort: true}
                     , {field: 'modifyTime', title: '修改时间', width: 170,sort: true}
                     , {fixed: 'right', title: "工具栏",align:'center', width: 180, toolbar: '#barDemo'}
@@ -214,7 +213,7 @@
                             ,title: '添加菜品'
                             ,content: '/restaurant/goods/add.html'
                             ,maxmin: true
-                            ,area: ['800px', '450px']
+                            ,area: ['800px', '565px']
                             ,btn: ['确定', '取消']
                             ,yes: function(index, layero){
                                 var iframeWindow = window['layui-layer-iframe'+ index]
@@ -263,7 +262,7 @@
                                 ,title: '编辑菜品'
                                 ,content:url
                                 ,maxmin: true
-                                ,area: ['800px', '450px']
+                                ,area: ['800px', '565px']
                                 ,btn: ['确定', '取消']
                                 ,yes: function(index, layero){
                                     var iframeWindow = window['layui-layer-iframe'+ index]
@@ -365,7 +364,7 @@
                         ,title: '编辑菜品'
                         ,content:url
                         ,maxmin: true
-                        ,area: ['800px', '450px']
+                        ,area: ['800px', '565px']
                         ,btn: ['确定', '取消']
                         ,yes: function(index, layero){
                             var iframeWindow = window['layui-layer-iframe'+ index]

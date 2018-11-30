@@ -106,7 +106,12 @@
                         <div class="layui-input-block">
                             <select name="roleId">
                                 <th:block th:each="role:${roleList}">
-                                    <option th:value="${role.roleId}" th:text="${role.roleName}"></option>
+                                    <th:block th:if="${role.roleId}==4">
+                                        <option selected th:value="${role.roleId}" th:text="${role.roleName}"></option>
+                                    </th:block>
+                                    <th:block th:if="${role.roleId}!=4">
+                                        <option th:value="${role.roleId}" th:text="${role.roleName}"></option>
+                                    </th:block>
                                 </th:block>
                             </select>
                         </div>
@@ -117,8 +122,6 @@
                 <input type="button" lay-submit lay-filter="LAY-user-front-submit" id="LAY-user-front-submit"
                        value="确认">
             </div>
-            <!--<button class="layui-btn" id="hide-add-submit" lay-submit lay-filter="component-form-element">立即提交</button>-->
-            <!--<button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
         </form>
     </div>
 </div>

@@ -38,7 +38,6 @@ var popDom;
  */
 function countTotalMoney(goodsItemsNode) {
     var topItemNode = popDom.find(".top-item");
-    console.log("init", goodsItemsNode.children().size());
     var itemArray = goodsItemsNode.children();
     var totalMoneyNode = topItemNode.find("#totalMoney");
     var totalMoney = 0.00;
@@ -48,7 +47,6 @@ function countTotalMoney(goodsItemsNode) {
         totalMoney += price * number;
     })
     totalMoneyNode.val(parseFloat(totalMoney).toFixed(2));
-    console.log("totalMoney", topItemNode.find("#totalMoney").val());
 }
 
 //添加菜到菜单
@@ -125,7 +123,6 @@ layui.use(['index', "jquery"], function () {
                 id: 'LAY_adminPopupLayerTest'
                 , area: '500px'
                 , success: function (){
-
                     $('#' + this.id).css({"width": "100%", "height": "100%", "background": "#f2f2f2"});
                     $('#' + this.id).html(popDom);
 
@@ -162,7 +159,6 @@ layui.use(['index', "jquery"], function () {
                             order.peopleNum = parseInt($(peopleNode).val());
                             order.totalPrice = parseFloat($("#totalMoney").val());
                             var data = JSON.stringify(order);
-                            console.log("data", data);
                             $.ajax({
                                 url: '/restaurant/guest/client/addorder.do',
                                 type: 'post',
@@ -171,7 +167,6 @@ layui.use(['index', "jquery"], function () {
                                 dataType: 'JSON',
                                 success: function (res) {
                                     if (res.code == 200) {
-                                        console.log("orderCode",res.data);
                                         orderCode = res.data;
                                         popDom.empty();
                                         //注意通过a标签跳转Iframe页面，有几个页面会生成几个iframe

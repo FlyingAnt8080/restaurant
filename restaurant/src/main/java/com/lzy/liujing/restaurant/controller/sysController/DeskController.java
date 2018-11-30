@@ -21,7 +21,6 @@ public class DeskController {
 
     @GetMapping("/list.html")
     private String deskList(HttpSession session,Model model){
-        System.out.println("session时长:"+session.getMaxInactiveInterval());
         SysUser user = (SysUser) session.getAttribute("user");
         model.addAttribute("role",user.getRole());
         return "/desk/list";

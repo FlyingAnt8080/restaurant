@@ -18,20 +18,18 @@ import java.util.List;
 public class GoodsCategoryController{
     @Autowired
     private GoodsCategoryService goodsCategoryService;
-    
-    @RequiresPermissions("manage:cashier:view")
+
     @GetMapping("/list.html")
     public String memberList(){
         return "/goodscategory/list";
     }
 
-    @RequiresPermissions("manage:cashier:edit")
+
     @GetMapping("/add.html")
     public String addMember(){
         return "/goodscategory/add";
     }
 
-    @RequiresPermissions("manage:cashier:edit")
     @PostMapping("/add.do")
     @ResponseBody
     public Result<Member> addMember(GoodsCategory GoodsCategory){
@@ -39,21 +37,19 @@ public class GoodsCategoryController{
         return ResultUtil.success();
     }
 
-    @RequiresPermissions("manage:cashier:edit")
     @GetMapping("/edit.html/{mcId}")
     public String editMember(@PathVariable("mcId") Long mcId, Model model){
         model.addAttribute("goodsCategory",goodsCategoryService.findById(mcId));
         return "/goodscategory/edit";
     }
 
-    @RequiresPermissions("manage:cashier:edit")
     @PostMapping("/edit.do")
     @ResponseBody
     public Result<Member> editMember(GoodsCategory category){
         goodsCategoryService.update(category);
         return ResultUtil.success();
     }
-    @RequiresPermissions("manage:del")
+
     @PostMapping("/del.do")
     @ResponseBody
     public Result<GoodsCategory> deleteMember(@RequestParam String ids){
@@ -62,10 +58,9 @@ public class GoodsCategoryController{
     }
 
     /**
-     * 会员类型列表数据接口
+     * 菜品类型
      * @return
      */
-    @RequiresPermissions("manage:cashier:view")
     @PostMapping("/list.do")
     @ResponseBody
     public Result<List<GoodsCategory>> memberListData(){
