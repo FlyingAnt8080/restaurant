@@ -159,7 +159,7 @@
                             </th:block>
                             <th:block th:if="${goods.imgUrl}!=null">
                                 <div id="layer-photos-demo1" class="layer-photos-demo">
-                                    <img th:attr="layer-src=@{'/'+${goods.imgUrl}},src=@{'/'+${goods.imgUrl}}"
+                                    <img th:attr="layer-src=@{${goods.imgUrl}},src=@{${goods.imgUrl}}"
                                          class="layui-upload-img" width="98px" height="132px" id="demo1"/>
                                 </div>
                             </th:block>

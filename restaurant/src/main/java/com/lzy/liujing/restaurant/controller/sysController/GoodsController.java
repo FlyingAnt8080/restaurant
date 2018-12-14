@@ -22,10 +22,9 @@ public class GoodsController{
     @GetMapping("/list.html")
     public String goodsList(Model model, HttpSession session){
         model.addAttribute("goodsCategoryList",goodsCategoryService.findAll());
-        System.out.println("session时长:"+session.getMaxInactiveInterval());
         SysUser user = (SysUser) session.getAttribute("user");
         model.addAttribute("role",user.getRole());
-        return "/goods/list";
+        return "goods/list";
     }
 
     @PostMapping("/list.do")
@@ -40,7 +39,7 @@ public class GoodsController{
     @GetMapping("/add.html")
     public String addGoods(Model model){
         model.addAttribute("goodsCategoryList",goodsCategoryService.findAll());
-        return "/goods/add";
+        return "goods/add";
     }
 
     @PostMapping("/add.do")
@@ -55,7 +54,7 @@ public class GoodsController{
     public String editGoods(Model model, @PathVariable("goodsId") Integer goodsId){
         model.addAttribute("goodsCategoryList",goodsCategoryService.findAll());
         model.addAttribute("goods",goodsService.findById(goodsId));
-        return "/goods/edit";
+        return "goods/edit";
     }
 
     @PostMapping("/edit.do")

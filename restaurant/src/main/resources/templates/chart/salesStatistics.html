@@ -106,6 +106,7 @@
         var form = layui.form;
         //默认初始化近七天的销售额统计数据
         ssChartNetworkRequest(6);
+        loadCurDaySalesStatistics();
         form.on('select(salesStatisticsChartDay)', function (data) {
             var day = data.value;
             ssChartNetworkRequest(day);
@@ -135,9 +136,6 @@
                             totalProfitArray.push(data[i].totalProfit);
                             totalOrderArray.push(data[i].totalOrder);
                         }
-                        //加载当天销售情况
-                        loadCurDaySalesStatistics(mustPayArray[mustPayArray.length - 1]
-                            , totalProfitArray[totalProfitArray.length - 1], totalOrderArray[totalOrderArray.length - 1]);
                         //加载销售额统计图表
                         loadSalesStatisticsChart(dateArray, mustPayArray, totalProfitArray, totalOrderArray);
                     } else {
@@ -147,10 +145,33 @@
             });
         }
 
-        function loadCurDaySalesStatistics(mustPay, totalProfit, totalOrder) {
-            $("#mustPay").text(mustPay);
-            $("#totalProfit").text(totalProfit);
-            $("#totalOrder").text(totalOrder);
+        function loadCurDaySalesStatistics() {
+            $.ajax({
+                url: '/restaurant/analysis/ssByDays.do',
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    day: 0
+                },
+                success: function (res) {
+                    if (res.code == 200) {
+                        var data = res.data;
+                        console.log("datas",data);
+                        if(data.length==0){
+                            $("#mustPay").text(0);
+                            $("#totalProfit").text(0);
+                            $("#totalOrder").text(0);
+                        }else{
+                            $("#mustPay").text(data[0].mustPay);
+                            $("#totalProfit").text(data[0].totalProfit);
+                            $("#totalOrder").text(data[0].totalOrder);
+                        }
+                    } else {
+                        layer.msg(res.msg, {icon: 5});
+                    }
+                }
+            });
+
         }
 
         /**

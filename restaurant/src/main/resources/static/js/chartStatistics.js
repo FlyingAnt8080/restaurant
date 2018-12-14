@@ -169,8 +169,10 @@ layui.use(['index', 'console'], function () {
                         dateArray.push(item.date);
                         countArray.push(item.count);
                     })
-                    //加载近几天会员增加数量折线图
-                    loadMemberAddChart(dateArray, countArray);
+                    if(data.length!=0){
+                        //加载近几天会员增加数量折线图
+                        loadMemberAddChart(dateArray, countArray);
+                    }
                 } else {
                     layer.msg(res.msg, {icon: 5});
                 }

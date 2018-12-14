@@ -43,7 +43,7 @@ public class OrderController {
     @GetMapping("/viewdetail.html/{orderId}")
     public String viewOrderDetail(@PathVariable(value = "orderId") Long orderId, Model model){
         model.addAttribute("orderId",orderId);
-        return "/order/orderDetail";
+        return "order/orderDetail";
     }
 
     @GetMapping("/viewdetail.do/{orderId}")

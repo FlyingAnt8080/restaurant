@@ -22,13 +22,13 @@ public class MemberCategoryController {
     @GetMapping("/list.html")
     @RequiresPermissions("memberTypes:view")
     public String memberList(){
-        return "/membercategory/list";
+        return "membercategory/list";
     }
 
     @GetMapping("/add.html")
     @RequiresPermissions("memberTypes:edit")
     public String addMember(){
-        return "/membercategory/add";
+        return "membercategory/add";
     }
 
     @PostMapping("/add.do")
@@ -43,7 +43,7 @@ public class MemberCategoryController {
     @RequiresPermissions("memberTypes:edit")
     public String editMember(@PathVariable("mcId") Long mcId, Model model){
         model.addAttribute("memberCategory",memberCategoryService.findById(mcId));
-        return "/membercategory/edit";
+        return "membercategory/edit";
     }
 
     @PostMapping("/edit.do")

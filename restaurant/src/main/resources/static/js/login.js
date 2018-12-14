@@ -43,7 +43,7 @@
 					location = "/restaurant/sysuser/admin.html";
 				} else {
 					$("#password").val("");
-					layer.msg("密码或账户错误!",{icon:2,anim:6});
+					layer.msg(result.msg,{icon:2,anim:6});
 				}
 			}
 		});

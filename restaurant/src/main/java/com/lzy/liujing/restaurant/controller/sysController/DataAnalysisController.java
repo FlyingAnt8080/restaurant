@@ -26,7 +26,7 @@ public class DataAnalysisController{
      */
     @GetMapping("/salesVolume.html")
     public String salesVolume(){
-        return "/chart/salesVolume";
+        return "chart/salesVolume";
     }
 
     /**

@@ -64,4 +64,4 @@ server:
     context-path: /restaurant
 
 web:
-  upload-image-path: F:/restaurant/upload
+  upload-image-path: D:/restaurant/upload

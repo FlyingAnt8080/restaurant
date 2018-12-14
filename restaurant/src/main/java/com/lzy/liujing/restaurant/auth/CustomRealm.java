@@ -20,9 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * 自定义拦截器
- */
+
 @Service
 public class CustomRealm extends AuthorizingRealm {
     @Autowired

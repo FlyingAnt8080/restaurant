@@ -33,16 +33,15 @@ public class FileUploadController {
             String contentType = multipartFile.getContentType();
             //打印日志
             logger.info("上传图片:name={},type={}",rootFileName,contentType);
-            //返回给前端的访问路径
-            String returnPath = File.separator+"image";
             //储存图片路径
-            String filePath = location+returnPath;
+            String filePath = location+File.separator+"image";
             logger.info("储存图片路径：={}",filePath);
             //保存图片，并返回UUID生成的图片名
             String fileName = ImageUtil.saveImage(multipartFile,filePath);
             ResultUrl url = new ResultUrl();
-            url.setSrc(returnPath+File.separator+fileName);
-            System.out.println(returnPath+File.separator+fileName);
+            //返回给前端的访问路径
+            String returnPath = "/image/"+fileName;
+            url.setSrc(returnPath);
             return ResultUtil.success(url);
         }else{
             return ResultUtil.error(ResultEnum.IMAGE_UPLOAD_FAIL);

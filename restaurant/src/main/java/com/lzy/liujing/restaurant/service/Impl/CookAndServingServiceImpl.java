@@ -62,9 +62,6 @@ public class CookAndServingServiceImpl implements CookAndServingService {
      */
     @Override
     public void cookTaskManage(List<OrderDetail> cookList) {
-        //查询所有等待制作的菜
-        List<Integer> statusList = new ArrayList<>();
-        statusList.add(0);
         //有序
         Map<Integer, OrderDetail> map = new LinkedHashMap<>();
         for (OrderDetail detail : cookList){

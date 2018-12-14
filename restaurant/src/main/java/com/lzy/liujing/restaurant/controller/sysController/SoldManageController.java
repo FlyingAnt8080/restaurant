@@ -22,7 +22,7 @@ public class SoldManageController {
      */
     @GetMapping("/tranRecordsList.html")
     public String transactionRecordsList(){
-        return "/sold/transactionRecordsList";
+        return "sold/transactionRecordsList";
     }
 
     /**

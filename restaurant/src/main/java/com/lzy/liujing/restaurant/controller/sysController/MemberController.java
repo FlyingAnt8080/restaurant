@@ -32,14 +32,14 @@ public class MemberController {
         model.addAttribute("memberCategoryList",memberCategoryService.findAll());
         SysUser user = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("user");
         model.addAttribute("role",user.getRole());
-        return "/member/list";
+        return "member/list";
     }
 
     @GetMapping("/add.html")
     @RequiresPermissions("memberManage:edit")
     public String addMember(Model model){
         model.addAttribute("memberCategoryList",memberCategoryService.findAll());
-        return "/member/add";
+        return "member/add";
     }
 
 
@@ -63,7 +63,7 @@ public class MemberController {
         model.addAttribute("member",resultMember);
         model.addAttribute("birthday",birthday);
         model.addAttribute("memberCategoryList",memberCategoryService.findAll());
-        return "/member/edit";
+        return "member/edit";
     }
 
     @PostMapping("/edit.do")

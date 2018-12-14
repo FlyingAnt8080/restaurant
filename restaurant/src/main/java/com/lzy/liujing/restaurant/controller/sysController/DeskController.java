@@ -23,7 +23,7 @@ public class DeskController {
     private String deskList(HttpSession session,Model model){
         SysUser user = (SysUser) session.getAttribute("user");
         model.addAttribute("role",user.getRole());
-        return "/desk/list";
+        return "desk/list";
     }
 
     @PostMapping("/list.do")
@@ -36,7 +36,7 @@ public class DeskController {
 
     @GetMapping("/add.html")
     private String addDesk(){
-        return "/desk/add";
+        return "desk/add";
     }
 
     @PostMapping("/add.do")
@@ -49,7 +49,7 @@ public class DeskController {
     @GetMapping("/edit.html/{deskId}")
     private String editDesk(@PathVariable("deskId") Integer deskId, Model model){
         model.addAttribute("desk",deskService.findById(deskId));
-        return "/desk/edit";
+        return "desk/edit";
     }
 
     @PostMapping("/edit.do")

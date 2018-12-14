@@ -67,7 +67,7 @@ public class LoginController{
      */
     @GetMapping("/login.html")
     public String login(HttpSession session){
-        return "/login/login";
+        return "login/login";
     }
 
     /**
@@ -79,7 +79,7 @@ public class LoginController{
         SysUser sysUser = (SysUser) session.getAttribute("user");
         //查询菜单格式后的结构树并返回视图
        model.addAttribute("menuList",sysUserService.findMenuTreeByUser(sysUser));
-        return "/admin";
+        return "admin";
     }
 
     /**
@@ -88,10 +88,10 @@ public class LoginController{
      */
    @GetMapping("/console.html")
     public String console(){
-        return "/home/console";
+        return "home/console";
     }
     @GetMapping("/403.html")
     public String eorror(){
-       return "/eorror/403";
+       return "eorror/403";
     }
 }

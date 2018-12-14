@@ -56,7 +56,7 @@ public class SysUserController {
     @RequiresPermissions("userManage:view")
     public String userList(Model model){
         model.addAttribute("roleList",sysUserService.findRoleList());
-        return "/user/userList";
+        return "user/userList";
     }
 
     /**
@@ -67,7 +67,7 @@ public class SysUserController {
     @RequiresPermissions("userManage:edit")
     public String addUser(Model model){
         model.addAttribute("roleList",sysUserService.findRoleList());
-        return "/user/addUser";
+        return "user/addUser";
     }
 
     @PostMapping("/adduser.do")
@@ -93,7 +93,7 @@ public class SysUserController {
         model.addAttribute("user",user);
         model.addAttribute("birthday",birthday);
         model.addAttribute("roleList",sysUserService.findRoleList());
-        return "/user/editUser";
+        return "user/editUser";
     }
 
     @PostMapping("/saveEdit.do")
@@ -144,7 +144,7 @@ public class SysUserController {
         String birthday = sf.format(currentUser.getBirthday());
         model.addAttribute("birthday",birthday);
         model.addAttribute("roleList",sysUserService.findRoleList());
-        return "/user/userInfo";
+        return "user/userInfo";
     }
 
     /**

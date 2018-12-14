@@ -38,7 +38,7 @@ public class CookAndServingController{
     public String cookTaskList(HttpSession session,Model model){
         SysUser user = (SysUser) session.getAttribute("user");
         model.addAttribute("role",user.getRole());
-        return "/cook/cookTaskList";
+        return "cook/cookTaskList";
     }
 
     /**
@@ -97,7 +97,7 @@ public class CookAndServingController{
     public String servingTaskList(HttpSession session,Model model){
         SysUser user = (SysUser) session.getAttribute("user");
         model.addAttribute("role",user.getRole());
-        return "/cook/servingTaskList";
+        return "cook/servingTaskList";
     }
 
     /**
@@ -164,7 +164,7 @@ public class CookAndServingController{
     @RequiresPermissions("deskServing:view")
     public String servingStatusDetail(@PathVariable(value = "orderId") Long orderId, Model model){
         model.addAttribute("orderId",orderId);
-        return "/cook/servingStatusDetail";
+        return "cook/servingStatusDetail";
     }
 
     /**

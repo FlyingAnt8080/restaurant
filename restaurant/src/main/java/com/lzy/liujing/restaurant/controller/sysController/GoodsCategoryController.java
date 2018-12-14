@@ -21,13 +21,13 @@ public class GoodsCategoryController{
 
     @GetMapping("/list.html")
     public String memberList(){
-        return "/goodscategory/list";
+        return "goodscategory/list";
     }
 
 
     @GetMapping("/add.html")
     public String addMember(){
-        return "/goodscategory/add";
+        return "goodscategory/add";
     }
 
     @PostMapping("/add.do")
@@ -40,7 +40,7 @@ public class GoodsCategoryController{
     @GetMapping("/edit.html/{mcId}")
     public String editMember(@PathVariable("mcId") Long mcId, Model model){
         model.addAttribute("goodsCategory",goodsCategoryService.findById(mcId));
-        return "/goodscategory/edit";
+        return "goodscategory/edit";
     }
 
     @PostMapping("/edit.do")
